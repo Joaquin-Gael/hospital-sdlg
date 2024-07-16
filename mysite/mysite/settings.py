@@ -13,7 +13,6 @@ ALLOWED_HOSTS = []
 if not DEBUG:
     ALLOWED_HOSTS.append(os.environ.get('RENDER_EXTERNAL_HOSTNAME'))
 
-# Application definition
 
 HOSPITAL_APPS = [
     'blog',
@@ -111,7 +110,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = f'{BASE_DIR}/media'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = f'{BASE_DIR}/staticfiles'
+STATIC_ROOT = f'{BASE_DIR}/static'
 
 if not DEBUG:
     STATIC_ROOT = f'{BASE_DIR}/staticfiles'

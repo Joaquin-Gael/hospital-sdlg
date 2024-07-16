@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital SDLG</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="flex flex-col min-h-dvh">
+        <header class="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
+          <a class="flex items-center gap-2" href="#">
+            <img
+              src="/placeholder.svg"
+              width="32"
+              height="32"
+              style="aspect-ratio: 32 / 32; object-fit: cover;"
+              alt="Hospital Logo"
+              class="rounded-full"
+            />
+            <span class="text-lg font-semibold">Hospital SDLG</span>
+          </a>
+          <button id="menu-button" class="md:hidden">
+            <i class="fas fa-bars"></i>
+          </button>
+          <nav class="flex-col hidden gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 ml-auto" id="navbar">
+            <a class="text-muted-foreground" href="#">Home</a>
+            <a class="text-muted-foreground" href="#">Turnero</a>
+            <a class="text-muted-foreground" href="#">Comentarios</a>
+            <a class="text-muted-foreground" href="#">Data</a>
+            <a class="text-muted-foreground" href="#">Contactos</a>
+          </nav>
+        </header>
+        <main class="flex-1">
+            {% block main %}
+            {% endblock main %}
+        </main>
+        <footer class="bg-muted p-6 md:py-12 w-full">
+          <div class="container max-w-7xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 text-sm">
+            <div class="grid gap-1">
+              <h3 class="font-semibold">Hospital SDLG</h3>
+              <p>123 Main St, Anytown USA</p>
+              <p>Phone: (123) 456-7890</p>
+              <p>Email: info@acmehospital.com</p>
+            </div>
+            <div class="grid gap-1">
+              <h3 class="font-semibold">Departments</h3>
+              <a href="#">Emergency</a>
+              <a href="#">Surgery</a>
+              <a href="#">Pediatrics</a>
+              <a href="#">Radiology</a>
+            </div>
+            <div class="grid gap-1">
+              <h3 class="font-semibold">Services</h3>
+              <a href="#">Primary Care</a>
+              <a href="#">Specialty Care</a>
+              <a href="#">Diagnostics</a>
+              <a href="#">Rehabilitation</a>
+            </div>
+            <div class="grid gap-1">
+              <h3 class="font-semibold">About</h3>
+              <a href="#">Mission</a>
+              <a href="#">History</a>
+              <a href="#">Leadership</a>
+              <a href="#">Careers</a>
+            </div>
+            <div class="grid gap-1"></div>
+          </div>
+        </footer>
+      </div>
+</body>
+<script src="{% static 'js/nav.js' %}"></script>
+</html>
