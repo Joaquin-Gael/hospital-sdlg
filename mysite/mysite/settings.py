@@ -32,8 +32,8 @@ DJANGO_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + HOSPITAL_APPS
 
-if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
+#if DEBUG:
+#    INSTALLED_APPS.append('debug_toolbar')
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -96,7 +96,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-AUHT_USER_MODEL = 'user.Usuarios'
+AUTH_USER_MODEL = 'user.Usuarios'
 
 LANGUAGE_CODE = 'en-us'
 
