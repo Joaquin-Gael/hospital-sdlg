@@ -1,5 +1,6 @@
 from django.db import models
-from user.models import (Usuarios, Medicos, Horario_medicos, Departamentos)
+from user.models import Usuarios
+from medicos.models import (Medicos, Horario_medicos, Departamentos)
 from django.utils import timezone
 from datetime import timedelta
 

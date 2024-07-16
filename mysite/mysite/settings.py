@@ -18,7 +18,8 @@ if not DEBUG:
 HOSPITAL_APPS = [
     'blog',
     'turnero',
-    'user'
+    'user',
+    'medicos'
 ]
 
 DJANGO_APPS = [
