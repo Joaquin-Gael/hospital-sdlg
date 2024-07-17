@@ -1,5 +1,9 @@
 $(document).ready(()=>{
-    $('#menu-button').click(()=>{
-        $('#navbar').toggleClass('hidden')
+    $('.navbar-burger').click(()=>{
+        $('.navbar-burger').toggleClass('is-active')
+        $('.navbar-menu').toggleClass('is-active')
+    })
+    $('#navbarDropdownLink').click(()=>{
+        $('#navbarDropdown').toggleClass('is-active')
     })
 })
