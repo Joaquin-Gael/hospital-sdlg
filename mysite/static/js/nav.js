@@ -3,7 +3,10 @@ $(document).ready(()=>{
         $('.navbar-burger').toggleClass('is-active')
         $('.navbar-menu').toggleClass('is-active')
     })
-    $('#navbarDropdownLink').click(()=>{
-        $('#navbarDropdown').toggleClass('is-active')
+    $('#navbarDropdownLinkMore').click(()=>{
+        $('#navbarDropdownMore').toggleClass('is-active')
+    })
+    $('#navbarDropdownLinkUser').click(()=>{
+        $('#navbarDropdownUser').toggleClass('is-active')
     })
 })
