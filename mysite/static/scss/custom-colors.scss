@@ -1,0 +1,28 @@
+// Set your brand colors
+$UranianBlue: #A9CEF4;
+$Characoal: #353A47;
+$brown: #757763;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
+$Cerise: #CF4D6F;
+$Celadon: #8FCB9B;
+$MidingBlue: #372772;
+$EartYellow: #DBAD6A;
+
+// Path to Bulma's sass folder
+@use "../node_modules/bulma/sass/_index.scss" with (
+  $family-primary: '"Nunito", sans-serif',
+  $grey-dark: $brown,
+  $grey-light: $beige-light,
+  $primary: $Characoal,
+  $link: $UranianBlue,
+  $control-border-width: 2px,
+  $input-shadow: none,
+  $danger: $Cerise,
+  $success: $Celadon,
+  $info: $MidingBlue,
+  $warning: $EartYellow
+);
+
+// Import the Google Font
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");

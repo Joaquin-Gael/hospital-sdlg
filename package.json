@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "bulma": "^1.0.1",
+    "sass": "^1.77.8"
+  },
+  "name": "hospital-sdlg",
+  "description": "A Django starter template as per the docs: https://docs.djangoproject.com/en/5.0/intro/tutorial01/",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "sass --load-path=node_modules mysite/static/scss/custom-colors.scss mysite/static/css/styles.css",
+    "start": "npm run sass -- --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

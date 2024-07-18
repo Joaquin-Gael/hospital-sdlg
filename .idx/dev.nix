@@ -8,6 +8,7 @@
     pkgs.python3
     pkgs.python-launcher
     pkgs.cope
+    pkgs.dart-sass
   ];
   # Sets environment variables in the workspace
   env = {};

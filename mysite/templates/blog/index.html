@@ -1,13 +1,31 @@
 {% extends 'layouts/nav_foot.html' %}
 
+{% load static %}
+
 {% block title %}
     - Home
 {% endblock title %}
 
 {% block main %}
 <div>
-    <h3>
-        body
-    </h3>
+    <!--hero-->
+    <section class="hero is-primary is-medium">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <p class="title">Bienvenido al Hopital SDLG</p>
+                <p class="subtitle">Atención médica de calidad para usted y su familia</p>
+                <a role="button" id="btn-turnero" class="button is-medium is-primary">Solicitar Turno</a>
+            </div>
+        </div>
+    </section>
+    <section class="section is-danger">
+        <div class="container">
+            <h2>hola</h2>
+        </div>
+    </section>
 </div>
 {% endblock main %}
+
+{% block scrips %}
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock scrips %}

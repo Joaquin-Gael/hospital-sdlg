@@ -21,40 +21,85 @@
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-          "></a>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
         <div id="navbarHospital" class="navbar-menu">
           <div class="navbar-start">
-            <a href="/medicos/" class="navbar-item">
-              medicos
-            </a>
             <div id="navbarDropdownUser" class="navbar-item has-dropdown">
+              {% if user.is_authenticated %}
               <a id="navbarDropdownLinkUser" class="navbar-link">
-                user
+                {{ user.username }}
               </a>
               <div class="navbar-dropdown is-boxed">
                 <a href="/user/panel" class="navbar-item">
                   panel
                 </a>
               </div>
+              {% else %}
+              <a id="navbarDropdownLinkUser" class="navbar-link">
+                user
+              </a>
+              <div class="navbar-dropdown is-boxed">
+                <a href="/user/login" class="navbar-item is-selected">
+                  login
+                </a>
+                <a href="/user/register" class="navbar-item">
+                  register
+                </a>
+              </div>
+              {% endif %}
             </div>
           </div>
           <div class="navbar-end">
             <a href="/turnero/" class="navbar-item">
-              turnero
+              <span>turnero</span>
+              <span class="icon">
+                <i class="fa-regular fa-calendar-minus"></i>  
+              </span>
             </a>
             <div id="navbarDropdownMore" class="navbar-item has-dropdown">
               <a id="navbarDropdownLinkMore" class="navbar-link">
-                more
+                opciones
               </a>
               <div class="navbar-dropdown is-boxed">
                 <a href="/blog/" class="navbar-item">
-                  blog
+                  <span>blog</span>
+                  <span class="icon">
+                    <i class="fa-solid fa-blog"></i>
+                  </span>
+                </a>
+                <a href="/blog/" class="navbar-item">
+                  <span>atencion</span>
+                  <span class="icon">
+                    <i class="fa-solid fa-user-nurse"></i>
+                  </span>
+                </a>
+                <a href="/blog/" class="navbar-item">
+                  <span>contacto</span>
+                  <span class="icon">
+                    <i class="fa-solid fa-phone"></i>
+                  </span>
+                </a>
+                <a href="/blog/" class="navbar-item">
+                  <span>nosotros</span>
+                  <span class="icon">
+                    <i class="fa-solid fa-address-card"></i>
+                  </span>
                 </a>
               </div>
             </div>
           </div>
         </div>
+      </nav>
+      <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+          <li>
+            <a href="{{.Site.Params.homepage}}">home</a>
+          </li>
+          {% block breadcrumb %}
+          {% endblock breadcrumb %}
+        </ul>
       </nav>
     </header>
     <main id="body-page">
@@ -68,4 +113,6 @@
     </footer>
 </body>
 <script src="{% static 'js/nav.js' %}"></script>
+{% block scrips %}
+{% endblock scrips %}
 </html>

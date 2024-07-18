@@ -1,0 +1,27 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    - Turnero
+{% endblock title %}
+
+{% block main %}
+<div class="container">
+    <form>
+        <div class="fixed-grid has-2-cols">
+            <div class="grid is-column-gap-2">
+                <div class="field">
+                    <label for="nameInput">Nombre:</label>
+                    <div class="control">
+                        <input id="nameInput" class="input" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock main %}
+
+{% block scrips %}
+{% endblock scrips %}
