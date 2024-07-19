@@ -1,0 +1,56 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    - Login
+{% endblock title %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/user/login/">Login</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container" style="min-height: 80vh;">
+    <h4 class="mb-4 is-size-2 has-text-centered">Login</h4>
+    <div id="responce"></div>
+    <div class="columns is-vcentered is-centered">
+        <div class="column is-5">
+            <form id="loginForm" class="box">
+                {% csrf_token %}
+                <div class="field mb-4">
+                    <label for="">DNI</label>
+                    <div class="control">
+                        <input type="text" id="dniInput" class="input" placeholder="00000000">
+                    </div>
+                </div>
+                <div class="field mb-4">
+                    <label for="">Contraseña</label>
+                    <div class="control">
+                        <input type="text" id="contraseñaInput" class="input" placeholder="********">
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="button is-fullwidth is-info">
+                        <span>Login</span>
+                        <span class="icon">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block scrips %}
+{% endblock scrips %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block scripts %}
+{% endblock scripts %}

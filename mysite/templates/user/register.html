@@ -1,0 +1,97 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% block title %}
+    - Register
+{% endblock title %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock styles %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/user/register/">Register</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container">
+    <h4 class="mb-4 is-size-2 has-text-centered">Register</h4>
+    <div id="responce"></div>
+    <div class="columns is-vcentered is-centered">
+        <div class="column is-5">
+            <form id="registerForm" class="box">
+                {% csrf_token %}
+                <div class="field mb-4">
+                    <label for="dniInput">DNI:</label>
+                    <div class="control has-icons-left">
+                        <input type="text" id="dniInput" class="input" placeholder="00000000">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field mb-4">
+                    <label for="nombreInput">Nombre:</label>
+                    <div class="control has-icons-left">
+                        <input type="text" id="nombreInput" class="input" placeholder="Jonn">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field mb-4">
+                    <label for="apellidoInput">Apellido:</label>
+                    <div class="control has-icons-left">
+                        <input type="text" id="apellidoInput" class="input" placeholder="Doe">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field mb-4">
+                    <label for="nacidoInput">Fecha de nacimiento:</label>
+                    <div class="control">
+                        <input type="date" id="nacidoInput" class="input">
+                    </div>
+                </div>
+                <div class="field mb-4">
+                    <label for="emailInput">Email:</label>
+                    <div class="control has-icons-left">
+                        <input type="email" id="emailInput" class="input" placeholder="john.rutledge@examplepetstore.com">
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-at"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field mb-4">
+                    <label for="contraseñaInput">Contraseña:</label>
+                    <div class="control has-icons-left">
+                        <input type="text" id="contraseñaInput" class="input" placeholder="********">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <button id="registrarButton" class="button is-fullwidth mt-5 is-info" type="button">
+                        <span>Registrar</span>
+                        <span class="icon">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </span>
+                    </button>
+                </div>
+                <p class="has-text-centered mt-5">
+                    Ya tienes cuenta? <a href="/user/login/">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block scrips %}
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock scrips %}

@@ -18,9 +18,29 @@ class Turnos(models.Model):
     TurnoID = models.AutoField(primary_key=True)
     userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     citaID = models.ForeignKey(Citas,on_delete=models.CASCADE)
+    medicoID = models.ForeignKey(Medicos,on_delete=models.CASCADE)
+    motivo = models.CharField(max_length=255)
     estado = models.CharField(max_length=25)
     fecha_created = models.DateTimeField(auto_now=True)
     fecha = models.DateField(default=timezone.now)
+
+    def get_medico(self):
+        return {
+            'nombre':self.medicoID.nombre,
+            'id':self.medicoID.id
+        }
+    
+    def get_motivo(self):
+        return self.motivo
+    
+    def get_estado(self):
+        return self.estado
+    
+    def get_fecha(self):
+        return self.fecha
+    
+    def get_fecha_created(self):
+        return self.fecha_created
 
     @classmethod
     def eliminar_registros_antiguos(cls, dias=0):
@@ -34,6 +54,23 @@ class Turnos(models.Model):
         if dias > 0:
             registros_actuales = registros_actuales.filter(fecha_created__gte=fecha_limite)
         registros_actuales.delete()
+    
+    @classmethod
+    def create_turnos(cls, medicoID, horarioID, motivo, userID, estado='pendiente'):
+        try:
+            instancia:cls = cls(
+                medicoID=medicoID,
+                horarioID=horarioID,
+                motivo=motivo,
+                userID=userID,
+                estado=estado
+            )
+            instancia.save()
+
+            return instancia
+
+        except Exception as err:
+            print('Error al crear el turno ',err)
     
     def __str__(self):
         return f"Turno de {self.pacienteID} el día {self.fecha}"

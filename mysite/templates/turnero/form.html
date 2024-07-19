@@ -6,22 +6,101 @@
     - Turnero
 {% endblock title %}
 
+{% block breadcrumb %}
+<li>
+    <a href="/turnero/">Turnero</a>
+</li>
+{% endblock breadcrumb %}
+
 {% block main %}
 <div class="container">
-    <form>
+    <h4 class="mb-4 is-size-2 has-text-centered">Solicitar un turno</h4>
+    <div id="responce"></div>
+    <form id="turneroForm">
+        {% csrf_token %}
         <div class="fixed-grid has-2-cols">
             <div class="grid is-column-gap-2">
                 <div class="field">
-                    <label for="nameInput">Nombre:</label>
+                    <label for="medicoSelect" class="mb-2">Medico:</label>
+                    <div class="control has-icon-rigth">
+                        <div class="select">
+                            <select name="medico" id="medicoSelect">
+                                <option value="" disabled selected>Area medica</option>
+                                <option value="1">Medico 1</option>
+                                <option value="2">Medico 2</option>
+                                <option value="3">Medico 3</option>
+                                <option value="4">Medico 4</option>
+                                {% for medico in medicos %}
+                                <option value="{{ medico.id }}">{{ medico.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <span id="medicoIcon" class="icon is-small is-right">
+                            
+                        </span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="motivoTextarea">Motivo:</label>
                     <div class="control">
-                        <input id="nameInput" class="input" type="text">
+                        <textarea class="textarea" name="motivo" id="motivoTextarea"></textarea>
+                    </div>
+                    <span id="motivoIcon" class="icon is-small is-right">
+                            
+                    </span>
+                </div>
+                <div class="field">
+                    <label for="horarioSelect" class="mb-2">Horarios:</label>
+                    <div class="control has-icon-right">
+                        <div class="select">
+                            <select name="horario" id="horarioSelect">
+                                <option value="" disabled selected>00:00</option>
+                                <option value="1">08:00</option>
+                                <option value="2">09:00</option>
+                                <option value="3">10:00</option>
+                                <option value="4">12:00</option>
+                                {% for horario in horarios %}
+                                <option value="{{ horario.id }}">{{ horario.hora }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <span id="horarioIcon" class="icon is-small is-right">
+                            
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <label for="comprobanteButton">Comprobante:</label>
+                    <div class="control">
+                        <button type="button" id="comprobanteButton" class="button is-static">
+                            <span>Descargar</span>
+                            <span class="icon">
+                                <i class="fa-solid fa-download"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="field">
+                    <label name="fecha" for="fechaInput" class="mb-2">Fecha:</label>
+                    <div class="control has-icon-right">
+                        <input type="date" id="fechaInput" class="input">
+                        <span id="fechaIcon" class="icon is-small is-right">
+                                
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+    <button id="solicitarButton" type="button" class="button is-primary is-fullwidth mt-5">
+        <span>Solicitar</span>
+        <span class="icon">
+            <i class="fa-solid fa-paper-plane"></i>
+        </span>
+    </button>
 </div>
 {% endblock main %}
 
 {% block scrips %}
+<script src="{% static 'js/from.js' %}"></script>
 {% endblock scrips %}

@@ -9,4 +9,10 @@ $(document).ready(()=>{
     $('#navbarDropdownLinkUser').click(()=>{
         $('#navbarDropdownUser').toggleClass('is-active')
     })
+    $('#navbarDropdownLinkLogin').click(()=>{
+        $(this).toggleClass('is-active')
+    })
+    $('#navbarDropdownLinkRegister').click(()=>{
+        $(this).toggleClass('is-selected')
+    })
 })
