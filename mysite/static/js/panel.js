@@ -30,68 +30,93 @@ $(document).ready(()=>{
         content:'testimonio de Jonn Doe'
     }
 
-    var userPerfilFomr = (userData)=>{
-        if(userData){
+    var userPerfilForm = (userData) => {
+        if (userData) {
             return `
-        <form id="perfilForm" class="box">
-            <div class="columns is-multiline">
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <div class="field">
-                        <label for="dniInput">DNI</label>
-                        <div class="control">
-                            <input type="text" id="dniInput" class="input" placeholder="00000000" value="${userData.dni}">
+                <form id="perfilForm" class="box">
+                    <div class="columns is-multiline">
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <label for="dniInput">DNI</label>
+                                <div class="control">
+                                    <input type="text" id="dniInput" class="input" placeholder="00000000" value="${userData.dni}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <label for="nombreInput">Nombre</label>
+                                <div class="control">
+                                    <input type="text" id="nombreInput" class="input" placeholder="Jonn" value="${userData.nombre}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <label for="apellidoInput">Apellido</label>
+                                <div class="control">
+                                    <input type="text" id="apellidoInput" class="input" placeholder="Doe" value="${userData.apellido}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <label for="emailInput">Email</label>
+                                <div class="control">
+                                    <input type="text" id="emailInput" class="input" placeholder="jonn@gmail.com" value="${userData.email}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <label for="contraseñaInput">Contraseña</label>
+                                <div class="control">
+                                    <input type="text" id="contraseñaInput" class="input" placeholder="00000000" value="${userData.contraseña}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <div class="control">
+                                    <div class="file is-normal is-boxed has-name">
+                                        <label class="file-label">
+                                            <input class="file-input" type="file" name="resume">
+                                            <span class="file-cta">
+                                                <span class="file-icon">
+                                                    <i class="fas fa-upload"></i>
+                                                </span>
+                                                <span class="file-label">
+                                                    Seleccionar archivo
+                                                </span>
+                                            </span>
+                                            <span class="file-name">
+                                                imagen.jpg
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <div class="field">
+                                <div class="control">
+                                    <button id="actualizarButton" type="button" class="button is-fullwidth is-info">
+                                        <span>Actualizar</span>
+                                        <span class="icon">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <div class="field">
-                        <label for="nombreInput">Nombre</label>
-                        <div class="control">
-                            <input type="text" id="nombreInput" class="input" placeholder="Jonn" value="${userData.nombre}">
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <div class="field">
-                        <label for="apellidoInput">Apellido</label>
-                        <div class="control">
-                            <input type="text" id="apellidoInput" class="input" placeholder="Doe" value="${userData.apellido}">
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <div class="field">
-                        <label for="emailInput">Email</label>
-                        <div class="control">
-                            <input type="text" id="emailInput" class="input" placeholder="jonn@gmail.com" value="${userData.email}">
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <div class="field">
-                        <label for="contraseñaInput">Contraseña</label>
-                        <div class="control">
-                            <input type="text" id="contraseñaInput" class="input" placeholder="00000000" value="${userData.contraseña}">
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <div class="field">
-                        <div class="control">
-                            <button id="actualizarButton" type="button" class="button is-fullwidth is-info">
-                                <span>Actualizar</span>
-                                <span class="icon">
-                                    <i class="fa-solid fa-paper-plane"></i>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-            `
+                </form>
+            `;
+        } else {
+            return '';
         }
     }
+    
 
     var turnosLink = (turnosData)=>{
         let turnos = ''
