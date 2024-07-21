@@ -3,5 +3,6 @@ from django.shortcuts import redirect
 from . import views
 
 urlpatterns = [
-    path('', views.TurneroForm.as_view(), name='Turnero')
+    path('', views.TurneroForm.as_view(), name='Turnero'),
+    path('turnos/<int:id>/', views.TurnoData.as_view(), name='Turnos')
 ]

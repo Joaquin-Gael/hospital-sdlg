@@ -13,7 +13,7 @@
 {% endblock breadcrumb %}
 
 {% block main %}
-<div class="container" style="min-height: 80vh;">
+<div class="container container-60">
     <h4 class="mb-4 is-size-2 has-text-centered">Login</h4>
     <div id="responce"></div>
     <div class="columns is-vcentered is-centered">
@@ -40,6 +40,9 @@
                         </span>
                     </button>
                 </div>
+                <p class="has-text-centered mt-5">
+                    No tienes cuenta? <a href="/user/register/">Register</a>
+                </p>
             </form>
         </div>
     </div>
@@ -50,6 +53,7 @@
 {% endblock scrips %}
 
 {% block styles %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock styles %}
 
 {% block scripts %}

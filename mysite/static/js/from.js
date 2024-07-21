@@ -36,16 +36,20 @@ $(document).ready(()=>{
                 valid = false
                 switch(key){
                     case 'medico':
-                        $('#medicoIcon').append(`<i class="fas fa-exclamation-triangle"></i>`)
+                        $('#medicoIcon').remove()
+                        $('#medicoIcon').append(`<i id="iconMedico" class="fas fa-exclamation-triangle"></i>`)
                         break;
                     case 'motivo':
-                        $('#motivoIcon').append(`<i class="fas fa-exclamation-triangle"></i>`)
+                        $('#motivoIcon').remove()
+                        $('#motivoIcon').append(`<i id="iconMotivo" class="fas fa-exclamation-triangle"></i>`)
                         break;
                     case 'horario':
-                        $('#horarioIcon').append(`<i class="fas fa-exclamation-triangle"></i>`)
+                        $('#horarioIcon').remove()
+                        $('#horarioIcon').append(`<i id="iconHorario" class="fas fa-exclamation-triangle"></i>`)
                         break;
                     case 'fecha':
-                        $('#fechaIcon').append(`<i class="fas fa-exclamation-triangle"></i>`)
+                        $('#fechaIcon').remove()
+                        $('#fechaIcon').append(`<i id="iconFecha" class="fas fa-exclamation-triangle"></i>`)
                         break;
                     case 'csrfmiddlewaretoken':
                         break;
@@ -55,16 +59,20 @@ $(document).ready(()=>{
             }else{
                 switch(key){
                     case 'medico':
-                        $('#medicoIcon').append(`<i class="fas fa-check"></i>`)
+                        $('#medicoIcon').remove()
+                        $('#medicoIcon').append(`<i id="iconMedico" class="fas fa-check"></i>`)
                         break;
                     case 'motivo':
-                        $('#motivoIcon').append(`<i class="fas fa-check"></i>`)
+                        $('#motivoIcon').remove()
+                        $('#motivoIcon').append(`<i id="iconMotivo" class="fas fa-check"></i>`)
                         break;
                     case 'horario':
-                        $('#horarioIcon').append(`<i class="fas fa-check"></i>`)
+                        $('#horarioIcon').remove()
+                        $('#horarioIcon').append(`<i id="iconHorario" class="fas fa-check"></i>`)
                         break;
                     case 'fecha':
-                        $('#fechaIcon').append(`<i class="fas fa-check"></i>`)
+                        $('#fechaIcon').remove()
+                        $('#fechaIcon').append(`<i id="iconFecha" class="fas fa-check"></i>`)
                         break;
                     case 'csrfmiddlewaretoken':
                         break;
@@ -112,5 +120,9 @@ $(document).ready(()=>{
     })
     $('#responce').on('click','.delete',()=>{
         $('#responceMsg').remove()
+    })
+    $('#comprobanteButton').click(()=>{
+        console.log('pasa')
+        $('#comprobanteButton').addClass('is-loading')
     })
 })

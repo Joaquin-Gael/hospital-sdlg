@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not Found</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main>
+        <div class="container">
+            <!-- 404 Error Section -->
+            <section class="section has-text-centered">
+                <h1 class="title">404 - Página No Encontrada</h1>
+                <p class="subtitle">Lo sentimos, la página que estás buscando no existe.</p>
+                <figure class="image is-128x128 is-inline-block">
+                    <img src="ruta-a-la-imagen-404.jpg" alt="404 Error">
+                </figure>
+                <br><br>
+                <a role="button" class="button is-primary" href="{% url 'Home' %}">Volver al Inicio</a>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

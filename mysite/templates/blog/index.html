@@ -8,16 +8,57 @@
 
 {% block main %}
 <div>
-    <!--hero-->
+    <!-- Hero -->
     <section class="hero is-primary is-medium">
         <div class="hero-body">
             <div class="container has-text-centered">
-                <p class="title">Bienvenido al Hopital SDLG</p>
+                <p class="title">Bienvenido al Hospital SDLG</p>
                 <p class="subtitle">Atención médica de calidad para usted y su familia</p>
                 <a role="button" id="btn-turnero" class="button is-medium is-primary">Solicitar Turno</a>
             </div>
         </div>
     </section>
+
+    <!-- Founder Section -->
+    <section class="section">
+        <div class="container has-text-centered">
+            <figure class="image is-128x128 is-inline-block is-rounded">
+                <img src="ruta-a-la-imagen-del-fundador.jpg" alt="Fundador del Hospital SDLG">
+            </figure>
+            <h2 class="title is-4">San Dario Lazaro Gorosito</h2>
+            <p class="subtitle is-6">Fundador del Hospital SDLG</p>
+            <p class="content">San Dario Lazaro Gorosito, nuestro fundador, dedicó su vida a brindar atención médica de calidad a nuestra comunidad. Su legado perdura en cada rincón de nuestro hospital.</p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section">
+        <div class="container has-text-centered">
+            <h2 class="title is-4">Testimonios de Pacientes</h2>
+            <p class="subtitle is-6">Conozca las experiencias de nuestros pacientes</p>
+            <a id="btn-testimonios" role="button" class="button is-info">Ver Testimonios</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-vcentered">
+                <div class="column is-half">
+                    <figure class="image is-4by3">
+                        <img src="{% static 'img/Medic-draws.svg' %}" alt="Servicios del Hospital SDLG">
+                    </figure>
+                </div>
+                <div class="column is-half">
+                    <h2 class="title is-4">Nuestros Servicios</h2>
+                    <p class="subtitle is-6">Atención Médica Integral</p>
+                    <p class="content">En el Hospital SDLG, ofrecemos una amplia gama de servicios médicos para satisfacer las necesidades de nuestros pacientes. Desde consultas generales hasta tratamientos especializados, nuestro equipo de profesionales está aquí para brindarle la mejor atención posible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Section -->
     <section class="section is-danger">
         <div class="container">
             <h2>hola</h2>

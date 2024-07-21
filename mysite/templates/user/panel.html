@@ -1,0 +1,38 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    - Panel
+{% endblock title %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/user/panel/">Panel</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container">
+    <h4 class="mb-4 is-size-2 has-text-centered">Panel</h4>
+    <div id="responce"></div>
+    {% csrf_token %}
+    <article id="panelUser" class="panel is-info">
+        <p class="panel-heading">info</p>
+        <div class="panel-tabs">
+            <a id="turnosTab" class="is-active">turnos</a>
+            <a id="perfilTab" class="">perfil</a>
+            <a id="testimoniosTab" class="">testimonio</a>
+        </div>
+        <div id="contentPanel">
+        </div>
+    </article>
+</div>
+{% endblock main %}
+
+{% block scrips %}
+<script src="{% static 'js/panel.js' %}"></script>
+{% endblock scrips %}
+
+{% block styles %}
+{% endblock styles %}

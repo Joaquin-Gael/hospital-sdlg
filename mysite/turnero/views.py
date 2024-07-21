@@ -22,3 +22,17 @@ class TurneroForm(views.View):
             userID=request.user
         )
         return render(request, 'turnero/form.html')
+
+class TurnoData(views.View):
+    def get(self, request, id):
+        try:
+            turno = models.Turnos.objects.get(id=id)
+            return render(request, 'turnero/turno-data.html',{'turno':turno})
+        
+        except Exception as err:
+            return redirect('NotFound')
+    
+    def delete(self, request, id):
+        turno = models.Turnos.objects.get(id=id)
+        turno.delete()
+        return redirect('Home')

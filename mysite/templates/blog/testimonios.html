@@ -1,0 +1,101 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    - Testimonios
+{% endblock title %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/blog/testimonios/">Testimonios</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container">
+    <!-- Testimonials Section -->
+    <section class="section">
+        <div class="container has-text-centered">
+            <h1 class="title">Testimonios de Pacientes</h1>
+            <p class="subtitle">Conozca las experiencias de nuestros pacientes</p>
+            
+            <div class="columns is-multiline">
+                <!-- Example Testimonial 1 -->
+                <div class="column is-one-third">
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64">
+                                    <img src="ruta-a-la-imagen-paciente1.jpg" alt="Paciente 1">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>María López</strong>
+                                        <br>
+                                        "El Hospital SDLG me brindó una atención excepcional durante mi tratamiento. Estoy muy agradecida con todo el equipo médico."
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Example Testimonial 2 -->
+                <div class="column is-one-third">
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64">
+                                    <img src="ruta-a-la-imagen-paciente2.jpg" alt="Paciente 2">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>Carlos Martínez</strong>
+                                        <br>
+                                        "La dedicación y el profesionalismo del personal del hospital hicieron toda la diferencia en mi recuperación. ¡Recomiendo este hospital a todos!"
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Example Testimonial 3 -->
+                <div class="column is-one-third">
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64">
+                                    <img src="ruta-a-la-imagen-paciente3.jpg" alt="Paciente 3">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>Ana González</strong>
+                                        <br>
+                                        "Gracias al Hospital SDLG, hoy puedo decir que estoy completamente sana. La atención personalizada y el cariño del personal son incomparables."
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <a role="button" class="button is-link" href="{% url 'Home' %}">Volver al Inicio</a>
+        </div>
+    </section>
+</div>
+{% endblock main %}
+
+{% block scrips %}
+{% endblock scrips %}
+
+{% block styles %}
+{% endblock styles %}

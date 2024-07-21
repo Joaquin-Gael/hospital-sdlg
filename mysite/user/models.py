@@ -51,3 +51,10 @@ class Usuarios(AbstractUser):
             user.set_logout(request)
             return True
         return False
+    
+    def get_turnos(self):
+        try:
+            from turnero.models import Turnos
+            return Turnos.objects.filter(userID=self.id)
+        except:
+            return None

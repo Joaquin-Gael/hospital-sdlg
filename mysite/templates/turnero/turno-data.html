@@ -1,0 +1,47 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    - Turno Data
+{% endblock title %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/turnero/turnos/{{turno.id}}/">Turno {{turno.id}}</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container">
+    <!-- Turn Details Section -->
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Detalles del Turno</h1>
+            <div class="box">
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>Nombre del Paciente:</strong> <span id="nombre-paciente">Juan Pérez</span><br>
+                                <strong>Fecha del Turno:</strong> <span id="fecha-turno">20 de Julio de 2024</span><br>
+                                <strong>Hora del Turno:</strong> <span id="hora-turno">10:00 AM</span><br>
+                                <strong>Especialidad:</strong> <span id="especialidad">Cardiología</span><br>
+                                <strong>Médico:</strong> <span id="medico">Dr. Carlos González</span><br>
+                                <strong>Estado:</strong> <span id="estado">Confirmado</span>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <a role="button" class="button is-primary" href="{% url 'PanelUser' %}">Regresar a la Lista de Turnos</a>
+        </div>
+    </section>
+</div>
+{% endblock main %}
+
+{% block scrips %}
+{% endblock scrips %}
+
+{% block styles %}
+{% endblock styles %}
