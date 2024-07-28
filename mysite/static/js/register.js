@@ -1,24 +1,8 @@
+import { successMessage, errorMessage } from './utils/messages.js';
+import { getToken } from './utils/tokens.js';
+
 $(document).ready(()=>{
-    var getToken = ()=>{
-        return document.getElementsByName('csrfmiddlewaretoken')[0].value
-    }
     $('#registrarButton').click(()=>{
-        var successMessage = (message)=>{
-            return `
-            <div id="responceMsg" class="notification is-success">
-                    <button class="delete"></button>
-                    ${message}
-            </div>
-            `
-        }
-        var errorMessage = (messgae)=>{
-            return `
-            <div id="responceMsg" class="notification is-danger">
-                    <button class="delete"></button>
-                    ${messgae}
-            </div>
-            `
-        }
 
         var formdata = {
             dni: $('#dniInput').val(),

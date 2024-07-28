@@ -64,7 +64,7 @@
                 <div>
                     <label for="comprobanteButton">Comprobante:</label>
                     <div class="control">
-                        <button type="button" id="comprobanteButton" class="button is-info is-static">
+                        <button type="button" id="comprobanteButton" class="button is-info">
                             <span>Descargar</span>
                             <span class="icon">
                                 <i class="fa-solid fa-download"></i>
@@ -94,5 +94,5 @@
 {% endblock main %}
 
 {% block scrips %}
-<script src="{% static 'js/from.js' %}"></script>
+<script type="module" src="{% static 'js/from.js' %}"></script>
 {% endblock scrips %}

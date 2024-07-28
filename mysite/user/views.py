@@ -74,6 +74,8 @@ class PanelUser(views.View):
         try:
             user:models.Usuarios = models.Usuarios.objects.get(userID=request.user.id)
             turnos:list | None = user.get_turnos()
+            if not request.user.is_authenticated:
+                return redirect('Home')
             return render(request, 'user/panel.html', {'turnos':turnos})
     
         except Exception as err:    

@@ -2,7 +2,7 @@ from django.shortcuts import (render, redirect)
 from django.http import response
 from django import views
 from . import models
-import json
+import json, io
 
 # Create your views here.
 class TurneroForm(views.View):
@@ -63,3 +63,23 @@ class TurnoData(views.View):
 
         except Exception as err:
             pass
+
+class ComprobanteDownload(views.View):
+    def get(self,request,*args,**kwargs):
+        try:
+            turno = models.Turnos.objects.get(userID=request.user.id)
+
+            content = f'Fecha: {turno.fecha}\nMedico: {turno.medicoID.nombre}\nCita: {turno.citaID.horarioID.hora_inicio}-{turno.citaID.horarioID.hora_fin}'
+
+            file_in_memori = io.BytesIO()
+
+            file_in_memori.write(content.encode('utf-8'))
+
+            file_in_memori.seek(0)
+
+            response_file = response.FileResponse(file_in_memori, as_attachment=True, filename='comprobante.txt', status=200)
+
+            return response_file
+        except Exception as err:
+            print(err)
+            return response.JsonResponse({'error':f'{err}'},status=404)

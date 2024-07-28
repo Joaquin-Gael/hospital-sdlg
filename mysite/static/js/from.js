@@ -1,24 +1,7 @@
+import { successMessage, errorMessage } from './utils/messages.js';
+import { getToken } from './utils/tokens.js';
+
 $(document).ready(() => {
-    var getToken = () => {
-        return document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    };
-    
-    var successMessage = (message) => {
-        return `
-        <div id="responceMsg" class="notification is-success">
-                <button class="delete"></button>
-                ${message}
-        </div>`;
-    };
-    
-    var errorMessage = (message) => {
-        return `
-        <div id="responceMsg" class="notification is-danger">
-                <button class="delete"></button>
-                ${message}
-        </div>`;
-    };
-    
     $('#solicitarButton').click((e) => {
         e.preventDefault();
         
@@ -115,7 +98,31 @@ $(document).ready(() => {
     });
 
     $('#comprobanteButton').click(() => {
-        console.log('pasa');
-        $('#comprobanteButton').addClass('is-loading');
+        const BUTTON = $('#comprobanteButton');
+        BUTTON.addClass('is-loading');
+
+        fetch('/turnero/comprobantes/',{
+            method:'GET'
+        }).then(response =>{
+            if (!response.ok) {
+                $('#responce').append(errorMessage(response.statusText));
+                throw new Error('Network response was not ok');
+            }
+            return response.blob();
+        }).then(blob =>{
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'comprobante.txt';
+            document.body.appendChild(a)
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            BUTTON.removeClass('is-loading')
+        }).catch(error=>{
+            console.error('Error al descargar el archivo: ',error);
+            BUTTON.removeClass('is-loading')
+        })
     });
 });
