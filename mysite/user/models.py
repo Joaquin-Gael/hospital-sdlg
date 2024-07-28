@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import (login, logout, authenticate)
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
+import os
 
 # Create your models here.
 
@@ -11,7 +13,7 @@ class Usuarios(AbstractUser):
     dni = models.CharField(max_length=100, unique=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
-    fecha_nacimiento = models.DateField()
+    fecha_nacimiento = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True,null=True,unique=True)
     telefono = models.CharField(blank=True,null=True, max_length=15)
     contraseña = models.CharField(max_length=100)
@@ -19,6 +21,7 @@ class Usuarios(AbstractUser):
     date_joined = models.DateField(auto_now_add=True)
     last_login = models.DateField(null=True, blank=True)
     last_logout = models.DateField(null=True, blank=True)
+    imagen = models.ImageField(upload_to='user/',null=True, blank=True)
 
     def set_login(self, request):
         self.last_login = timezone.now()
@@ -58,3 +61,21 @@ class Usuarios(AbstractUser):
             return Turnos.objects.filter(userID=self.id)
         except:
             return None
+    
+    def get_imagen_url(self):
+        if self.imagen:
+            return self.imagen.url
+        else:
+            return os.path.join(settings.MEDIA_URL, 'imagenes/default_image.jpg')
+    
+    def update_data(self,nombre = None,apellido = None,email = None,contraseña = None,img = None):
+        self.nombre = nombre if self.nombre != nombre and nombre is not None else self.nombre
+        self.apellido = apellido if self.apellido != apellido and apellido is not None else self.apellido
+        self.email = email if self.email != email and email is not None else self.email
+        self.set_password(contraseña if self.contraseña != contraseña and contraseña is not None else self.contraseña)
+        self.imagen = img if self.imagen != img and img is not None else self.imagen
+
+        self.save()
+
+    def __str__(self) -> str:
+        return super().__str__()

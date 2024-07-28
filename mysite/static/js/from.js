@@ -1,80 +1,76 @@
-$(document).ready(()=>{
-    var getToken = ()=>{
-        return document.getElementsByName('csrfmiddlewaretoken')[0].value
-    }
-    $('#solicitarButton').click(()=>{
-        var successMessage = (message)=>{
-            return `
-            <div id="responceMsg" class="notification is-success">
-                    <button class="delete"></button>
-                    ${message}
-            </div>
-            `
-        }
-        var errorMessage = (messgae)=>{
-            return `
-            <div id="responceMsg" class="notification is-danger">
-                    <button class="delete"></button>
-                    ${messgae}
-            </div>
-            `
-        }
-
+$(document).ready(() => {
+    var getToken = () => {
+        return document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    };
+    
+    var successMessage = (message) => {
+        return `
+        <div id="responceMsg" class="notification is-success">
+                <button class="delete"></button>
+                ${message}
+        </div>`;
+    };
+    
+    var errorMessage = (message) => {
+        return `
+        <div id="responceMsg" class="notification is-danger">
+                <button class="delete"></button>
+                ${message}
+        </div>`;
+    };
+    
+    $('#solicitarButton').click((e) => {
+        e.preventDefault();
+        
         var formdata = {
             medico: $('#medicoSelect').val(),
             motivo: $('#motivoTextarea').val(),
             horario: $('#horarioSelect').val(),
             fecha: $('#fechaInput').val()
-        }
-
-        var valid = true
-
-        console.table(formdata)
-
-        for(let key in formdata){
-            if(formdata[key] == '' || formdata[key] == null){
-                valid = false
-                switch(key){
+        };
+        
+        var valid = true;
+        
+        for (let key in formdata) {
+            if (formdata[key] == '' || formdata[key] == null) {
+                valid = false;
+                switch (key) {
                     case 'medico':
-                        $('#medicoIcon').remove()
-                        $('#medicoIcon').append(`<i id="iconMedico" class="fas fa-exclamation-triangle"></i>`)
+                        $('#medicoIcon').remove();
+                        $('#medicoSelect').parent().append(`<i id="iconMedico" class="fas fa-exclamation-triangle"></i>`);
                         break;
                     case 'motivo':
-                        $('#motivoIcon').remove()
-                        $('#motivoIcon').append(`<i id="iconMotivo" class="fas fa-exclamation-triangle"></i>`)
+                        $('#motivoIcon').remove();
+                        $('#motivoTextarea').parent().append(`<i id="iconMotivo" class="fas fa-exclamation-triangle"></i>`);
                         break;
                     case 'horario':
-                        $('#horarioIcon').remove()
-                        $('#horarioIcon').append(`<i id="iconHorario" class="fas fa-exclamation-triangle"></i>`)
+                        $('#horarioIcon').remove();
+                        $('#horarioSelect').parent().append(`<i id="iconHorario" class="fas fa-exclamation-triangle"></i>`);
                         break;
                     case 'fecha':
-                        $('#fechaIcon').remove()
-                        $('#fechaIcon').append(`<i id="iconFecha" class="fas fa-exclamation-triangle"></i>`)
-                        break;
-                    case 'csrfmiddlewaretoken':
+                        $('#fechaIcon').remove();
+                        $('#fechaInput').parent().append(`<i id="iconFecha" class="fas fa-exclamation-triangle"></i>`);
                         break;
                     default:
                         break;
                 }
-            }else{
-                switch(key){
+            } else {
+                switch (key) {
                     case 'medico':
-                        $('#medicoIcon').remove()
-                        $('#medicoIcon').append(`<i id="iconMedico" class="fas fa-check"></i>`)
+                        $('#iconMedico').remove();
+                        $('#medicoSelect').parent().append(`<i id="iconMedico" class="fas fa-check"></i>`);
                         break;
                     case 'motivo':
-                        $('#motivoIcon').remove()
-                        $('#motivoIcon').append(`<i id="iconMotivo" class="fas fa-check"></i>`)
+                        $('#iconMotivo').remove();
+                        $('#motivoTextarea').parent().append(`<i id="iconMotivo" class="fas fa-check"></i>`);
                         break;
                     case 'horario':
-                        $('#horarioIcon').remove()
-                        $('#horarioIcon').append(`<i id="iconHorario" class="fas fa-check"></i>`)
+                        $('#iconHorario').remove();
+                        $('#horarioSelect').parent().append(`<i id="iconHorario" class="fas fa-check"></i>`);
                         break;
                     case 'fecha':
-                        $('#fechaIcon').remove()
-                        $('#fechaIcon').append(`<i id="iconFecha" class="fas fa-check"></i>`)
-                        break;
-                    case 'csrfmiddlewaretoken':
+                        $('#iconFecha').remove();
+                        $('#fechaInput').parent().append(`<i id="iconFecha" class="fas fa-check"></i>`);
                         break;
                     default:
                         break;
@@ -82,47 +78,44 @@ $(document).ready(()=>{
             }
         }
 
-        if (!valid){
-            $('#responce').append(errorMessage('Todos los campos son obligatorios'))
-        }else{
-            $('#comprobanteButton').toggleClass('is-static')
-            $('#comprobanteButton').toggleClass('is-info')
-            fetch('/turnero/',{
+        $('#responce').empty();  // Limpiar mensajes anteriores
+
+        if (!valid) {
+            $('#responce').append(errorMessage('Todos los campos son obligatorios'));
+        } else {
+            $('#comprobanteButton').toggleClass('is-static is-info');
+            fetch('/turnero/', {
                 method: 'POST',
                 body: JSON.stringify(formdata),
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getToken()
                 }
-            }
-            ).then(
-                response => {
-                    if(!response.ok){
-                        $('#comprobanteButton').toggleClass('is-static')
-                        $('#comprobanteButton').toggleClass('is-primary')
-                        $('#responce').append(errorMessage(response.statusText))
-                        throw Error(response.statusText)
-                    }else{
-                        $('#responce').append(successMessage('Solicitud enviada'))
-                        response.json()
-                    }
+            }).then(response => {
+                $('#comprobanteButton').toggleClass('is-static is-info');
+                if (!response.ok) {
+                    $('#responce').append(errorMessage(response.statusText));
+                    throw Error(response.statusText);
+                } else {
+                    $('#responce').append(successMessage('Solicitud enviada'));
+                    return response.json();
                 }
-            ).then(
-                data => console.log(data)
-            ).catch(error => {
-                $('#comprobanteButton').addClass('is-static')
-                $('#comprobanteButton').removeClass('is-primary')
-                $('#responce').append(errorMessage(error))
-                alert(error)
-                console.log(error)
-            })
+            }).then(data => {
+                console.log(data);
+            }).catch(error => {
+                $('#responce').append(errorMessage(error));
+                alert(error);
+                console.log(error);
+            });
         }
-    })
-    $('#responce').on('click','.delete',()=>{
-        $('#responceMsg').remove()
-    })
-    $('#comprobanteButton').click(()=>{
-        console.log('pasa')
-        $('#comprobanteButton').addClass('is-loading')
-    })
-})
+    });
+
+    $('#responce').on('click', '.delete', () => {
+        $('#responceMsg').remove();
+    });
+
+    $('#comprobanteButton').click(() => {
+        console.log('pasa');
+        $('#comprobanteButton').addClass('is-loading');
+    });
+});

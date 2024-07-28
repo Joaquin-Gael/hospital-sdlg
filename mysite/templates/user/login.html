@@ -21,19 +21,19 @@
             <form id="loginForm" class="box">
                 {% csrf_token %}
                 <div class="field mb-4">
-                    <label for="">DNI</label>
+                    <label for="dniInput">DNI</label>
                     <div class="control">
                         <input type="text" id="dniInput" class="input" placeholder="00000000">
                     </div>
                 </div>
                 <div class="field mb-4">
-                    <label for="">Contraseña</label>
+                    <label for="contraseñaInput">Contraseña</label>
                     <div class="control">
                         <input type="text" id="contraseñaInput" class="input" placeholder="********">
                     </div>
                 </div>
                 <div>
-                    <button type="button" class="button is-fullwidth is-info">
+                    <button id="loginButton" type="button" class="button is-fullwidth is-info">
                         <span>Login</span>
                         <span class="icon">
                             <i class="fa-solid fa-paper-plane"></i>
@@ -50,6 +50,7 @@
 {% endblock main %}
 
 {% block scrips %}
+<script type="module" src="{% static 'js/login.js'%}"></script>
 {% endblock scrips %}
 
 {% block styles %}

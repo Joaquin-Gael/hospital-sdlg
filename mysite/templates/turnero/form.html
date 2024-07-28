@@ -26,10 +26,6 @@
                         <div class="select">
                             <select name="medico" id="medicoSelect">
                                 <option value="" disabled selected>Area medica</option>
-                                <option value="1">Medico 1</option>
-                                <option value="2">Medico 2</option>
-                                <option value="3">Medico 3</option>
-                                <option value="4">Medico 4</option>
                                 {% for medico in medicos %}
                                 <option value="{{ medico.id }}">{{ medico.nombre }}</option>
                                 {% endfor %}
@@ -55,10 +51,6 @@
                         <div class="select">
                             <select name="horario" id="horarioSelect">
                                 <option value="" disabled selected>00:00</option>
-                                <option value="1">08:00</option>
-                                <option value="2">09:00</option>
-                                <option value="3">10:00</option>
-                                <option value="4">12:00</option>
                                 {% for horario in horarios %}
                                 <option value="{{ horario.id }}">{{ horario.hora }}</option>
                                 {% endfor %}
@@ -72,7 +64,7 @@
                 <div>
                     <label for="comprobanteButton">Comprobante:</label>
                     <div class="control">
-                        <button type="button" id="comprobanteButton" class="button is-info">
+                        <button type="button" id="comprobanteButton" class="button is-info is-static">
                             <span>Descargar</span>
                             <span class="icon">
                                 <i class="fa-solid fa-download"></i>

@@ -56,14 +56,15 @@ class Turnos(models.Model):
         registros_actuales.delete()
     
     @classmethod
-    def create_turnos(cls, medicoID, horarioID, motivo, userID, estado='pendiente'):
+    def create_turnos(cls, medicoID, horarioID, motivo, userID, fecha, estado='pendiente'):
         try:
             instancia:cls = cls(
                 medicoID=medicoID,
                 horarioID=horarioID,
                 motivo=motivo,
                 userID=userID,
-                estado=estado
+                estado=estado,
+                fecha=fecha
             )
             instancia.save()
 

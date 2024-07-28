@@ -4,6 +4,23 @@ $(document).ready(()=>{
         return document.getElementsByName('csrfmiddlewaretoken')[0].value
     }
 
+    var successMessage = (message)=>{
+        return `
+        <div id="responceMsg" class="notification is-success">
+            <button class="delete"></button>
+            ${message}
+        </div>
+        `
+    }
+    var errorMessage = (messgae)=>{
+        return `
+        <div id="responceMsg" class="notification is-danger">
+            <button class="delete"></button>
+            ${messgae}
+        </div>
+        `
+    }
+
     var dataFalsa = [{
         id: 1,
         medico: {
@@ -23,7 +40,8 @@ $(document).ready(()=>{
         nombre: 'Jonn',
         apellido: 'Doe',
         email: 'jonn@gmail.com',
-        contraseña: '1234'
+        contraseña: '1234',
+        imagen:'jonn-user.png'
     }
 
     var testimonioDataFalsa = {
@@ -80,7 +98,7 @@ $(document).ready(()=>{
                                 <div class="control">
                                     <div class="file is-normal is-boxed has-name">
                                         <label class="file-label">
-                                            <input class="file-input" type="file" name="resume">
+                                            <input id="fileInput" class="file-input" type="file" name="resume">
                                             <span class="file-cta">
                                                 <span class="file-icon">
                                                     <i class="fas fa-upload"></i>
@@ -89,8 +107,8 @@ $(document).ready(()=>{
                                                     Seleccionar archivo
                                                 </span>
                                             </span>
-                                            <span class="file-name">
-                                                imagen.jpg
+                                            <span id="fileName" class="file-name">
+                                                ${userData.imagen}
                                             </span>
                                         </label>
                                     </div>
@@ -159,7 +177,7 @@ $(document).ready(()=>{
     }
 
     $('#contentPanel').append(turnosLink(dataFalsa))
-    $('#contentPanel').append(userPerfilFomr(userDataFalsa))
+    $('#contentPanel').append(userPerfilForm(userDataFalsa))
     $('#contentPanel').append(testimonioFomr(testimonioDataFalsa))
 
     $('#perfilForm').hide()
@@ -195,34 +213,22 @@ $(document).ready(()=>{
         window.location.href = `/turnero/turnos/${id}/`
     })
     $('#actualizarButton').click((Event)=>{
-        var successMessage = (message)=>{
-            return `
-            <div id="responceMsg" class="notification is-success">
-                    <button class="delete"></button>
-                    ${message}
-            </div>
-            `
+        let formdata = new FormData();
+        formdata.append('dni', $('#dniInput').val());
+        formdata.append('nombre', $('#nombreInput').val());
+        formdata.append('apellido', $('#apellidoInput').val());
+        formdata.append('email', $('#emailInput').val());
+        formdata.append('contraseña', $('#contraseñaInput').val());
+
+        let fileInput = $('#fileInput')[0].files[0];
+        if (fileInput) {
+            formdata.append('imagen', fileInput);
         }
-        var errorMessage = (messgae)=>{
-            return `
-            <div id="responceMsg" class="notification is-danger">
-                    <button class="delete"></button>
-                    ${messgae}
-            </div>
-            `
-        }
-        var formdata = {
-            dni: $('#dniInput').val(),
-            nombre: $('#nombreInput').val(),
-            apellido: $('#apellidoInput').val(),
-            email: $('#emailInput').val(),
-            contraseña: $('#contraseñaInput').val()
-        }
-        fetch('/user/perfil/',{
+        
+        fetch('/user/register/update/',{
             method: 'POST',
-            body: JSON.stringify(formdata),
+            body: formdata,
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': getToken()
             }
         }).then(
@@ -231,13 +237,30 @@ $(document).ready(()=>{
                     throw Error(response.statusText)
                 }else{
                     $('#responce').append(successMessage('Usuario actualizado'))
+                    return response.json()
                 }
             }
+        ).then(
+            data =>{
+                console.log(data)
+            }
         ).catch(error => {
+            console.error(error)
             $('#responce').append(errorMessage(error))
         })
     })
     $('#responce').on('click','.delete',()=>{
         $('#responceMsg').remove()
     })
+    $('#fileInput').on('change', function() {
+        var fileInput = $(this)[0];
+        var fileNameSpan = $('#fileName');
+
+        if (fileInput.files.length > 0) {
+            var fileName = fileInput.files[0].name;
+            fileNameSpan.text(fileName);
+        } else {
+            fileNameSpan.text('No file chosen');
+        }
+    });
 })

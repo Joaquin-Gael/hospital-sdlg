@@ -1,6 +1,8 @@
 from django.shortcuts import (render, redirect)
+from django.http import response
 from django import views
 from . import models
+import json
 
 # Create your views here.
 class TurneroForm(views.View):
@@ -12,16 +14,34 @@ class TurneroForm(views.View):
 
             return render(request, 'turnero/form.html',{'medicos':medicos,'horarios':horarios})
         
-        return redirect('Home')
+        return redirect('LoginUser')
     
     def post(self, request):
-        turnoData = models.Turnos.create_turnos(
-            medicoID=request.POST['medico'],
-            horarioID=request.POST['horario'],
-            motivo=request.POST['motivo'],
-            userID=request.user
-        )
-        return render(request, 'turnero/form.html')
+        try:
+            _json = json.loads(request.body)
+            medico = _json.get('medico')
+            motivo = _json.get('motivo')
+            horario = _json.get('horario')
+            fecha = _json.get('fecha')
+
+            print(f"Medico: {medico}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
+
+            _turno = models.Turnos.create_turnos(
+                medicoID=medico,
+                horarioID=horario,
+                motivo=motivo,
+                fecha=fecha,
+                userID=request.user.id
+            )
+
+            return response.JsonResponse({
+                'msg':f'Medico: {medico}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}'
+            },status=200)
+
+        except Exception as err:
+            return response.JsonResponse({
+                'error':'invalid JSON'
+            },status=400)
 
 class TurnoData(views.View):
     def get(self, request, id):
@@ -36,3 +56,10 @@ class TurnoData(views.View):
         turno = models.Turnos.objects.get(id=id)
         turno.delete()
         return redirect('Home')
+    
+    def post(self, request, id):
+        try:
+            pass
+
+        except Exception as err:
+            pass

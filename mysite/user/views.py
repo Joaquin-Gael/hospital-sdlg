@@ -1,6 +1,9 @@
 from django.shortcuts import (render, redirect)
-from django import views
+from django.http import response
+from django.core import serializers
+from django import (views)
 from . import models
+import json
 
 # Create your views here.
 
@@ -9,18 +12,63 @@ class RegisterUser(views.View):
         return render(request, 'user/register.html')
     
     def post(self, request):
-        print(request.POST)
-        return redirect('Home')
-    
-    
+        #_json = json.loads(request.body)
+        #print(_json)
+        return response.JsonResponse({
+            'msg':f'{request.POST}'
+        })
+
+class UpdateUser(views.View):
+    def get(self, request):
+        return response.JsonResponse({
+            'params':[
+                'DNI',
+                'Nombre',
+                'Apellido',
+                'Contraseña',
+                'Email',
+                'Imagen'
+            ]
+        })
+
+    def post(self, request):
+        try:
+            if not request.user.is_authenticated:
+                redirect('NotFound')
+
+            print(request.POST)
+            print(request.FILES)
+
+            user = models.Usuarios.objects.get(userID=request.user.id)
+
+            user.update_data(
+                nombre=request.POST.get('nombre'),
+                apellido=request.POST.get('apellido'),
+                contraseña=request.POST.get('contraseña')
+            )
+
+            return response.JsonResponse({
+                'msg':f'{request.POST}'
+            })
+
+        except Exception as err:
+            print(err)
+            return response.JsonResponse({
+                'error':f'{err}'
+            },status=404)
+
 class LoginUser(views.View):
     def get(self, request):
         return render(request, 'user/login.html')
     
     def post(self, request):
-        print(request.POST)
-        return redirect('Home')
+        _json = json.loads(request.body)
+        print(_json)
+        return response.JsonResponse({
+            'msg':f'{_json}'
+        })
     
+
 class PanelUser(views.View):
     def get(self, request):
         try:
@@ -29,8 +77,42 @@ class PanelUser(views.View):
             return render(request, 'user/panel.html', {'turnos':turnos})
     
         except Exception as err:    
-           return render(request, 'user/panel.html', {'turnos':[]})
+            return render(request, 'user/panel.html', {'turnos':[]})
     
     def post(self, request):
-        print(request.POST)
-        return redirect('Home')
+        _json = json.loads(request.body)
+        print(_json)
+        return response.JsonResponse({
+            'msg':f'{_json}'
+        })
+
+class UserList(views.View):
+    def get(self, request, *args, **kwargs):
+        try:
+            id = kwargs.get('id', None)
+            if id != None:
+                user = models.Usuarios.objects.get(userID=id)
+                return response.JsonResponse(
+                    [
+                        serializers.serialize('json',user)
+                    ],
+                    status=200,
+                    safe=False
+                )
+            
+            
+            userList:list = models.Usuarios.objects.all()
+            
+            serialized = serializers.serialize('json',userList)
+
+            return response.JsonResponse(
+                serialized,
+                status=200,
+                safe=False
+            )
+
+        except Exception as err:
+            print(err)
+            return response.JsonResponse({
+                'error':f'{err}'
+            },status=400)

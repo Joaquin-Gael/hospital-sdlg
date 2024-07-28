@@ -32,7 +32,7 @@ $(document).ready(()=>{
         var valid = true
 
         for(let key in formdata){
-            if(formdata[key] == null || formdata[key] == ''){
+            if(formdata[key] === null || formdata[key] === ''){
                 valid = false
             }
         }
