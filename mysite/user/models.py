@@ -78,4 +78,4 @@ class Usuarios(AbstractUser):
         self.save()
 
     def __str__(self) -> str:
-        return super().__str__()
+        return f'{self.username} {self.userID}'

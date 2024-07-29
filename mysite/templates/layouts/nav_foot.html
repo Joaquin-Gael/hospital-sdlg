@@ -115,6 +115,9 @@
     </footer>
 </body>
 <script type="module" src="{% static 'js/nav.js' %}"></script>
+<script>
+  localStorage.setItem('user_id','{{user.userID}}')
+</script>
 {% block scrips %}
 {% endblock scrips %}
 </html>

@@ -66,7 +66,6 @@ $(document).ready(() => {
         if (!valid) {
             $('#responce').append(errorMessage('Todos los campos son obligatorios'));
         } else {
-            $('#comprobanteButton').toggleClass('is-static is-info');
             fetch('/turnero/', {
                 method: 'POST',
                 body: JSON.stringify(formdata),
@@ -75,7 +74,7 @@ $(document).ready(() => {
                     'X-CSRFToken': getToken()
                 }
             }).then(response => {
-                $('#comprobanteButton').toggleClass('is-static is-info');
+                $('#comprobanteButton').toggleClass('is-static');
                 if (!response.ok) {
                     $('#responce').append(errorMessage(response.statusText));
                     throw Error(response.statusText);

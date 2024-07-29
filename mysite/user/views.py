@@ -63,7 +63,11 @@ class LoginUser(views.View):
     
     def post(self, request):
         _json = json.loads(request.body)
-        print(_json)
+        user = models.Usuarios.authenticate(request, _json['DNI'], _json['contraseña'])
+        if user is None:
+            return response.JsonResponse({
+                'error':'credential not match'
+            },status=401)
         return response.JsonResponse({
             'msg':f'{_json}'
         })
@@ -71,11 +75,11 @@ class LoginUser(views.View):
 
 class PanelUser(views.View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('Home')
         try:
             user:models.Usuarios = models.Usuarios.objects.get(userID=request.user.id)
             turnos:list | None = user.get_turnos()
-            if not request.user.is_authenticated:
-                return redirect('Home')
             return render(request, 'user/panel.html', {'turnos':turnos})
     
         except Exception as err:    
@@ -90,14 +94,17 @@ class PanelUser(views.View):
 
 class UserList(views.View):
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return response.JsonResponse({
+                'error':'not authenticate'
+            },status=401)
         try:
             id = kwargs.get('id', None)
             if id != None:
                 user = models.Usuarios.objects.get(userID=id)
+                serialized = serializers.serialize('json',[user])
                 return response.JsonResponse(
-                    [
-                        serializers.serialize('json',user)
-                    ],
+                    serialized,
                     status=200,
                     safe=False
                 )

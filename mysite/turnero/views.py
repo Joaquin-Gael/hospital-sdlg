@@ -26,13 +26,17 @@ class TurneroForm(views.View):
 
             print(f"Medico: {medico}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
 
-            _turno = models.Turnos.create_turnos(
-                medicoID=medico,
-                horarioID=horario,
-                motivo=motivo,
-                fecha=fecha,
-                userID=request.user.id
-            )
+            try:
+                data = models.Turnos.extra_data({'horario':horario})
+                _turno = models.Turnos.create_turnos(
+                    medicoID=data['m'],
+                    horarioID=data['h'],
+                    motivo=motivo,
+                    fecha=fecha,
+                    userID=request.user
+                )
+            except Exception as err:
+                print(f'Error al generar turno: {err}')
 
             return response.JsonResponse({
                 'msg':f'Medico: {medico}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}'

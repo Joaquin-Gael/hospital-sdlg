@@ -1,5 +1,5 @@
 import { successMessage, errorMessage } from './utils/messages.js';
-import { getToken } from './utils/tokens.js';
+import { getToken, getUserID } from './utils/tokens.js';
 
 $(document).ready(()=>{
     var dataFalsa = [{
@@ -15,15 +15,34 @@ $(document).ready(()=>{
         motivo: 'Motivo 1',
         estado: 'pendiente'
     }]
-
-    var userDataFalsa = {
-        dni: '00000000',
-        nombre: 'Jonn',
-        apellido: 'Doe',
-        email: 'jonn@gmail.com',
-        contraseña: '1234',
-        imagen:'jonn-user.png'
-    }
+    fetch(`/user/list/${getUserID()}/`,{
+        method:'GET'
+    }).then(response=>{
+        if(!response.ok){
+            throw Error(response.statusText)
+        }else{
+            $('#responce').append(successMessage('Usuario Auntenticado'))
+            return response.json()
+        } 
+    }).then(
+        data =>{
+            data = JSON.parse(data)
+            let userDataFalsa = {
+                dni: data[0].fields.dni,
+                nombre: data[0].fields.nombre,
+                apellido: data[0].fields.apellido,
+                email: data[0].fields.email,
+                contraseña: data[0].fields.contraseña,
+                imagen:'jonn-user.png'
+            }
+            console.log(userDataFalsa)
+            $('#contentPanel').append(userPerfilForm(userDataFalsa))
+            $('#perfilForm').hide()
+        }
+    ).catch(error => {
+        console.error(error)
+        $('#responce').append(errorMessage(error))
+    })
 
     var testimonioDataFalsa = {
         content:'testimonio de Jonn Doe'
@@ -120,6 +139,7 @@ $(document).ready(()=>{
     var turnosLink = (turnosData)=>{
         let turnos = ''
         if(turnosData){
+            let data = null
             for(let i=0 ; i < turnosData.length; i++){
                 data = turnosData[i]
                 turnos += `
@@ -158,10 +178,8 @@ $(document).ready(()=>{
     }
 
     $('#contentPanel').append(turnosLink(dataFalsa))
-    $('#contentPanel').append(userPerfilForm(userDataFalsa))
     $('#contentPanel').append(testimonioFomr(testimonioDataFalsa))
 
-    $('#perfilForm').hide()
     $('#testimonioFomr').hide()
 
     $('#perfilTab').click(()=>{

@@ -27,7 +27,7 @@
                             <select name="medico" id="medicoSelect">
                                 <option value="" disabled selected>Area medica</option>
                                 {% for medico in medicos %}
-                                <option value="{{ medico.id }}">{{ medico.nombre }}</option>
+                                <option value="{{ medico.medicoID }}">{{ medico.nombre }}-{{medico.especialidadID}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -52,7 +52,7 @@
                             <select name="horario" id="horarioSelect">
                                 <option value="" disabled selected>00:00</option>
                                 {% for horario in horarios %}
-                                <option value="{{ horario.id }}">{{ horario.hora }}</option>
+                                <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }}-{{horario.hora_fin}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -64,7 +64,7 @@
                 <div>
                     <label for="comprobanteButton">Comprobante:</label>
                     <div class="control">
-                        <button type="button" id="comprobanteButton" class="button is-info">
+                        <button type="button" id="comprobanteButton" class="button is-info is-static">
                             <span>Descargar</span>
                             <span class="icon">
                                 <i class="fa-solid fa-download"></i>

@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import Usuarios
-from medicos.models import (Medicos, Horario_medicos, Departamentos)
+from medicos.models import (Medicos, Horario_medicos, Departamentos, Especialidades)
 from django.utils import timezone
 from datetime import timedelta
 
@@ -13,6 +13,9 @@ class Citas(models.Model):
     departamentoID = models.ForeignKey(Departamentos,on_delete=models.CASCADE)
     motivo = models.CharField(max_length=255)
     estado = models.CharField(max_length=25)
+
+    def __str__(self):
+        return f"Motivo {self.motivo} estado {self.estado} medico {self.medicoID}"
 
 class Turnos(models.Model):
     TurnoID = models.AutoField(primary_key=True)
@@ -58,13 +61,23 @@ class Turnos(models.Model):
     @classmethod
     def create_turnos(cls, medicoID, horarioID, motivo, userID, fecha, estado='pendiente'):
         try:
-            instancia:cls = cls(
+            departamento = Departamentos.objects.get(departamentoID=medicoID.especialidadID.departamentoID.departamentoID)
+            print(departamento)
+            cita = Citas(
                 medicoID=medicoID,
                 horarioID=horarioID,
                 motivo=motivo,
+                estado=estado,
+                departamentoID=departamento
+            )
+            cita.save()
+            instancia:cls = cls(
+                medicoID=cita.medicoID,
+                motivo=motivo,
                 userID=userID,
                 estado=estado,
-                fecha=fecha
+                fecha=fecha,
+                citaID=cita
             )
             instancia.save()
 
@@ -74,4 +87,15 @@ class Turnos(models.Model):
             print('Error al crear el turno ',err)
     
     def __str__(self):
-        return f"Turno de {self.pacienteID} el día {self.fecha}"
+        return f"Turno de {self.userID} el día {self.fecha}"
+
+    @classmethod
+    def extra_data(cls,data:dict):
+        try:
+            horario_medico = Horario_medicos.objects.get(horarioID=data['horario'])
+            medico = Medicos.objects.get(medicoID=horario_medico.medicoID.medicoID)
+
+            return {'h':horario_medico,'m':medico}
+        except Exception as err:
+            print(f'Error: {err}')
+            return None
