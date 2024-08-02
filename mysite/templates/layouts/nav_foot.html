@@ -32,6 +32,9 @@
                     <div id="navbarDropdownUser" class="navbar-item has-dropdown is-hoverable">
                         {% if user.is_authenticated %}
                         <a id="navbarDropdownLinkUser" class="navbar-link">
+                            <figure class="image is-32x32 mr-3">
+                                <img class="is-rounded" src="/media/{{user.imagen}}" />
+                            </figure>
                             {{ user.nombre }}
                             {{ user.username }}
                         </a>

@@ -53,7 +53,9 @@ class UpdateUser(views.View):
             user.update_data(
                 nombre=request.POST.get('nombre'),
                 apellido=request.POST.get('apellido'),
-                contraseña=request.POST.get('contraseña')
+                contraseña=request.POST.get('contraseña'),
+                email=request.POST.get('email'),
+                img=request.FILES.get('imagen')
             )
 
             user.set_password(request.POST.get('contraseña'))

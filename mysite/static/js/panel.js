@@ -14,13 +14,14 @@ $(document).ready(()=>{
     }).then(
         data =>{
             data = JSON.parse(data)
+            console.log(data[0])
             let userData = {
                 dni: data[0].fields.dni,
                 nombre: data[0].fields.nombre,
                 apellido: data[0].fields.apellido,
                 email: data[0].fields.email,
                 contraseña: data[0].fields.contraseña,
-                imagen:'jonn-user.png'
+                imagen:data[0].imagen
             }
             console.log(userData)
             $('#contentPanel').append(userPerfilForm(userData))
