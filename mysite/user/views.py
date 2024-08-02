@@ -48,7 +48,7 @@ class UpdateUser(views.View):
             print(request.POST)
             print(request.FILES)
 
-            user = models.Usuarios.objects.get(userID=request.user.id)
+            user = models.Usuarios.objects.get(userID=request.user.userID)
 
             user.update_data(
                 nombre=request.POST.get('nombre'),

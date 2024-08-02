@@ -83,7 +83,36 @@ $(document).ready(() => {
                     return response.json();
                 }
             }).then(data => {
-                console.log(data);
+                console.log(data.msg.turnoID);
+                var turnoID = data.msg.turnoID
+                $('#comprobanteButton').click(() => {
+                    const BUTTON = $('#comprobanteButton');
+                    BUTTON.addClass('is-loading');
+                    
+                    fetch(`/turnero/comprobantes/${turnoID}/`,{
+                        method:'GET'
+                    }).then(response =>{
+                        if (!response.ok) {
+                            $('#responce').append(errorMessage(response.statusText));
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.blob();
+                    }).then(blob =>{
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = 'comprobante.txt';
+                        document.body.appendChild(a)
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+            
+                        BUTTON.removeClass('is-loading')
+                    }).catch(error=>{
+                        console.error('Error al descargar el archivo: ',error);
+                        BUTTON.removeClass('is-loading')
+                    })
+                });
             }).catch(error => {
                 $('#responce').append(errorMessage(error));
                 alert(error);
@@ -94,34 +123,5 @@ $(document).ready(() => {
 
     $('#responce').on('click', '.delete', () => {
         $('#responceMsg').remove();
-    });
-
-    $('#comprobanteButton').click(() => {
-        const BUTTON = $('#comprobanteButton');
-        BUTTON.addClass('is-loading');
-
-        fetch('/turnero/comprobantes/',{
-            method:'GET'
-        }).then(response =>{
-            if (!response.ok) {
-                $('#responce').append(errorMessage(response.statusText));
-                throw new Error('Network response was not ok');
-            }
-            return response.blob();
-        }).then(blob =>{
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'comprobante.txt';
-            document.body.appendChild(a)
-            a.click();
-            window.URL.revokeObjectURL(url);
-
-            BUTTON.removeClass('is-loading')
-        }).catch(error=>{
-            console.error('Error al descargar el archivo: ',error);
-            BUTTON.removeClass('is-loading')
-        })
     });
 });

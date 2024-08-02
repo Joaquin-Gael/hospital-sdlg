@@ -8,7 +8,7 @@
 
 {% block breadcrumb %}
 <li>
-    <a href="/turnero/turnos/{{turno.id}}/">Turno {{turno.id}}</a>
+    <a href="/turnero/turnos/{{turno.TurnoID}}/">Turno {{turno.TurnoID}}</a>
 </li>
 {% endblock breadcrumb %}
 
@@ -35,6 +35,7 @@
                 </article>
             </div>
             <a role="button" class="button is-primary" href="{% url 'PanelUser' %}">Regresar a la Lista de Turnos</a>
+            <a role="button" class="button is-info" href="/turnero/comprobantes/{{turno.TurnoID}}/">Descargar Comprobante</a>
         </div>
     </section>
 </div>

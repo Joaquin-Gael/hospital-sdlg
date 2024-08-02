@@ -8,8 +8,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link id="themeLink" rel="stylesheet" href="/static/css/default-theme.css">
     <link rel="shortcut icon" href="{% static 'img/Logo-SDLG.svg' %}" type="image/x-icon">
+    <link id="themeLink" rel="stylesheet" href={% static 'css/default-theme.css' %}>
     {% block styles %}
     {% endblock styles %}
 </head>
@@ -31,7 +31,7 @@
                     <div id="navbarDropdownUser" class="navbar-item has-dropdown is-hoverable">
                         {% if user.is_authenticated %}
                         <a id="navbarDropdownLinkUser" class="navbar-link">
-                            {{ user.name }}
+                            {{ user.nombre }}
                             {{ user.username }}
                         </a>
                         <div class="navbar-dropdown is-boxed">
@@ -151,7 +151,31 @@
 </body>
 <script type="module" src="{% static 'js/nav.js' %}"></script>
 <script>
-    localStorage.setItem('user_id', '{{user.userID}}')
+    $(document).ready(()=>{
+        localStorage.setItem('user_id', '{{user.userID}}')
+        const theme = localStorage.getItem('theme') || 'default';
+            loadTheme(theme);
+        
+           // Cambiar tema al hacer clic en una opción
+            $('#lightThemeOption').click(function() {
+                localStorage.setItem('theme', 'default');
+                loadTheme('default');
+            });
+
+            $('#darkThemeOption').click(function() {
+                localStorage.setItem('theme', 'dark');
+                loadTheme('dark');
+            });
+
+        function loadTheme(theme) {
+            let themeLink = $('#themeLink');
+            if (theme === 'dark') {
+                themeLink.attr('href', "{% static 'css/dark-theme.css' %}");
+            } else {
+                themeLink.attr('href', "{% static 'css/default-theme.css' %}");
+            }
+        }
+    })
 </script>
 {% block scripts %}
 {% endblock scripts %}

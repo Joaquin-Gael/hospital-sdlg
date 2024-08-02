@@ -1,6 +1,9 @@
-from django.shortcuts import (render, redirect)
-from django.http import response
+from django.shortcuts import (get_object_or_404, render, redirect)
+from django.http import Http404, HttpResponse, response
 from django import views
+from django.contrib.staticfiles import finders
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 from . import models
 import json, io
 
@@ -39,7 +42,9 @@ class TurneroForm(views.View):
                 print(f'Error al generar turno: {err}')
 
             return response.JsonResponse({
-                'msg':f'Medico: {medico}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}'
+                'msg':{
+                    'turnoID':_turno.TurnoID
+                }
             },status=200)
 
         except Exception as err:
@@ -68,22 +73,46 @@ class TurnoData(views.View):
         except Exception as err:
             pass
 
-class ComprobanteDownload(views.View):
-    def get(self,request,*args,**kwargs):
+class ComprobanteDownloadView(views.View):
+
+    def get(self, request, id):
         try:
-            turno = models.Turnos.objects.get(userID=request.user.userID)
+            print(id)
+            turno = get_object_or_404(models.Turnos, TurnoID=id)
+            cita = turno.citaID
+            medico = cita.medicoID
+            horario = cita.horarioID
+            departamento = cita.departamentoID
+            usuario = turno.userID
 
-            content = f'Fecha: {turno.fecha}\nMedico: {turno.medicoID.nombre}\nCita: {turno.citaID.horarioID.hora_inicio}-{turno.citaID.horarioID.hora_fin}'
+            buffer = io.BytesIO()
+            p = canvas.Canvas(buffer, pagesize=letter)
 
-            file_in_memori = io.BytesIO()
+            # Encontrar la ruta a los logos
+            logo_path = finders.find('img/Logo-SDLG-name.png')
 
-            file_in_memori.write(content.encode('utf-8'))
+            p.drawImage(logo_path, 40, 700, width=80, height=80)
 
-            file_in_memori.seek(0)
+            p.setFont("Helvetica-Bold", 16)
+            p.drawString(200, 750, "Comprobante de Turno")
 
-            response_file = response.FileResponse(file_in_memori, as_attachment=True, filename='comprobante.txt', status=200)
+            p.setFont("Helvetica", 12)
+            p.drawString(40, 680, f"Código del Turno: YY-{turno.TurnoID}")
+            p.drawString(40, 660, f"Paciente: {usuario.nombre} {usuario.apellido}")
+            p.drawString(40, 640, f"Médico: {medico.nombre} {medico.apellido}")
+            p.drawString(40, 620, f"Horario: {horario.hora_inicio}")
+            p.drawString(40, 600, f"Departamento: {departamento.nombre}")
+            p.drawString(40, 580, f"Fecha: {turno.fecha}")
+            p.drawString(40, 560, f"Motivo: {cita.motivo}")
+            p.drawString(40, 540, f"Estado: {turno.estado}")
 
-            return response_file
-        except Exception as err:
-            print(err)
-            return response.JsonResponse({'error':f'{err}'},status=404)
+            p.showPage()
+            p.save()
+
+            buffer.seek(0)
+            response = HttpResponse(buffer, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="comprobante_turno_{id}.pdf"'
+            return response
+
+        except Http404:
+            return redirect('NotFound')

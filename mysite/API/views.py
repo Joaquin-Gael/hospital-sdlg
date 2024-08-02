@@ -18,7 +18,6 @@ class UserViewSet(viewsets.ModelViewSet):
             turnos = Turnos.objects.filter(userID=pk)
             list_turn = []
             for x in turnos:
-                print(x)
                 data = {
                     'id': x.TurnoID, 
                     'medico': {
