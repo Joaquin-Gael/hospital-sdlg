@@ -50,7 +50,7 @@ class TurneroForm(views.View):
 class TurnoData(views.View):
     def get(self, request, id):
         try:
-            turno = models.Turnos.objects.get(id=id)
+            turno = models.Turnos.objects.get(TurnoID=id)
             return render(request, 'turnero/turno-data.html',{'turno':turno})
         
         except Exception as err:
@@ -71,7 +71,7 @@ class TurnoData(views.View):
 class ComprobanteDownload(views.View):
     def get(self,request,*args,**kwargs):
         try:
-            turno = models.Turnos.objects.get(userID=request.user.id)
+            turno = models.Turnos.objects.get(userID=request.user.userID)
 
             content = f'Fecha: {turno.fecha}\nMedico: {turno.medicoID.nombre}\nCita: {turno.citaID.horarioID.hora_inicio}-{turno.citaID.horarioID.hora_fin}'
 

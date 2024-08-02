@@ -1,0 +1,65 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}Atención al Paciente - Hospital SDLG{% endblock %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/blog/atencionalpaciente/">Atención al paciente</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container my-6">
+    <div class="box">
+        <h2 class="title is-3 has-text-centered">Atención al Paciente</h2>
+        
+        <section class="mb-6">
+            <h3 class="title is-4">Nuestro Compromiso</h3>
+            <p class="content">
+                En Hospital SDLG, nos comprometemos a brindar una atención médica de calidad, personalizada y humana. Nuestro equipo de profesionales está dedicado a atender las necesidades de nuestros pacientes con el mayor cuidado y respeto.
+            </p>
+            <div class="has-text-centered">
+                <figure class="image is-128x128 is-inline-block">
+                    <img src="{% static 'SVG/undraw_doctors_p6aq.svg' %}" alt="Atención al Paciente" class="is-rounded">
+                </figure>
+            </div>
+        </section>
+        
+        <section class="mb-6">
+            <h3 class="title is-4">Servicios Disponibles</h3>
+            <ul class="content">
+                <li>Consulta Médica General</li>
+                <li>Atención de Urgencias</li>
+                <li>Diagnóstico y Tratamiento</li>
+                <li>Atención Especializada</li>
+                <li>Apoyo Psicológico</li>
+                <li>Rehabilitación y Terapia Física</li>
+            </ul>
+        </section>
+        
+        <section class="mb-6">
+            <h3 class="title is-4">Cómo Solicitar un Turno</h3>
+            <p class="content">
+                Para solicitar un turno, puede dirigirse a nuestra página de turnos y completar el formulario en línea, o puede contactarnos a través de los siguientes medios:
+            </p>
+            <ul class="content mb-4">
+                <li>Teléfono: +351 666 6469</li>
+                <li>Email: contacto@hospitalsdlg.com</li>
+                <li>Visitando nuestra recepción en: Elsa Pato 2385, Córdoba Capital, Argentina</li>
+            </ul>
+            <div class="has-text-centered">
+                <a href="/turnero/form/" class="button is-primary is-medium is-rounded">Solicitar Turno</a>
+            </div>
+        </section>
+        
+        <section>
+            <h3 class="title is-4">Contacto Directo</h3>
+            <p class="content">
+                Si tiene alguna pregunta o necesita asistencia inmediata, no dude en ponerse en contacto con nosotros. Estamos aquí para ayudarlo.
+            </p>
+        </section>
+    </div>
+</div>
+{% endblock %}

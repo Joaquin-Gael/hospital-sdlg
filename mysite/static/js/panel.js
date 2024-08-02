@@ -2,19 +2,6 @@ import { successMessage, errorMessage } from './utils/messages.js';
 import { getToken, getUserID } from './utils/tokens.js';
 
 $(document).ready(()=>{
-    var dataFalsa = [{
-        id: 1,
-        medico: {
-            id: 1,
-            nombre: 'Medico 1'
-        },
-        horario: {
-            id: 1,
-            hora: '08:00'
-        },
-        motivo: 'Motivo 1',
-        estado: 'pendiente'
-    }]
     fetch(`/user/list/${getUserID()}/`,{
         method:'GET'
     }).then(response=>{
@@ -27,7 +14,7 @@ $(document).ready(()=>{
     }).then(
         data =>{
             data = JSON.parse(data)
-            let userDataFalsa = {
+            let userData = {
                 dni: data[0].fields.dni,
                 nombre: data[0].fields.nombre,
                 apellido: data[0].fields.apellido,
@@ -35,11 +22,80 @@ $(document).ready(()=>{
                 contraseña: data[0].fields.contraseña,
                 imagen:'jonn-user.png'
             }
-            console.log(userDataFalsa)
-            $('#contentPanel').append(userPerfilForm(userDataFalsa))
+            console.log(userData)
+            $('#contentPanel').append(userPerfilForm(userData))
             $('#perfilForm').hide()
+            $('#fileInput').on('change', function() {
+                var fileInput = $(this)[0];
+                var fileNameSpan = $('#fileName');
+        
+                if (fileInput.files.length > 0) {
+                    var fileName = fileInput.files[0].name;
+                    fileNameSpan.text(fileName);
+                } else {
+                    fileNameSpan.text('No file chosen');
+                }
+            });
+            $('#actualizarButton').click((Event)=>{
+                let formdata = new FormData();
+                formdata.append('dni', $('#dniInput').val());
+                formdata.append('nombre', $('#nombreInput').val());
+                formdata.append('apellido', $('#apellidoInput').val());
+                formdata.append('email', $('#emailInput').val());
+                formdata.append('contraseña', $('#contraseñaInput').val());
+        
+                let fileInput = $('#fileInput')[0].files[0];
+                if (fileInput) {
+                    formdata.append('imagen', fileInput);
+                }
+                
+                fetch('/user/register/update/',{
+                    method: 'POST',
+                    body: formdata,
+                    headers: {
+                        'X-CSRFToken': getToken()
+                    }
+                }).then(
+                    response => {
+                        if(!response.ok){
+                            throw Error(response.statusText)
+                        }else{
+                            $('#responce').append(successMessage('Usuario actualizado'))
+                            return response.json()
+                        }
+                    }
+                ).then(
+                    data =>{
+                        console.log(data)
+                    }
+                ).catch(error => {
+                    console.error(error)
+                    $('#responce').append(errorMessage(error))
+                })
+            })
         }
     ).catch(error => {
+        console.error(error)
+        $('#responce').append(errorMessage(error))
+    })
+
+    fetch(`/API/users/${getUserID()}/turnos/`,{
+        method:'GET'
+    }).then(response => {
+        if(!response.ok){
+            throw Error(response.statusText)
+        }else{
+            return response.json()
+        } 
+    }).then(data => {
+        let dataTurnos = data
+        $('#contentPanel').append(turnosLink(dataTurnos))
+        $('.panel-block').click((Event)=>{
+            let id = Event.currentTarget.id.split('turnoLink')[1]
+            console.log(id)
+            window.location.href = `/turnero/turnos/${id}/`
+        })
+    }).catch(error => {
         console.error(error)
         $('#responce').append(errorMessage(error))
     })
@@ -177,7 +233,6 @@ $(document).ready(()=>{
         }
     }
 
-    $('#contentPanel').append(turnosLink(dataFalsa))
     $('#contentPanel').append(testimonioFomr(testimonioDataFalsa))
 
     $('#testimonioFomr').hide()
@@ -206,60 +261,7 @@ $(document).ready(()=>{
         $('#perfilForm').hide()
         $('#turnosList').hide()
     })
-    $('.panel-block').click((Event)=>{
-        let id = Event.currentTarget.id.split('turnoLink')[1]
-        console.log(id)
-        window.location.href = `/turnero/turnos/${id}/`
-    })
-    $('#actualizarButton').click((Event)=>{
-        let formdata = new FormData();
-        formdata.append('dni', $('#dniInput').val());
-        formdata.append('nombre', $('#nombreInput').val());
-        formdata.append('apellido', $('#apellidoInput').val());
-        formdata.append('email', $('#emailInput').val());
-        formdata.append('contraseña', $('#contraseñaInput').val());
-
-        let fileInput = $('#fileInput')[0].files[0];
-        if (fileInput) {
-            formdata.append('imagen', fileInput);
-        }
-        
-        fetch('/user/register/update/',{
-            method: 'POST',
-            body: formdata,
-            headers: {
-                'X-CSRFToken': getToken()
-            }
-        }).then(
-            response => {
-                if(!response.ok){
-                    throw Error(response.statusText)
-                }else{
-                    $('#responce').append(successMessage('Usuario actualizado'))
-                    return response.json()
-                }
-            }
-        ).then(
-            data =>{
-                console.log(data)
-            }
-        ).catch(error => {
-            console.error(error)
-            $('#responce').append(errorMessage(error))
-        })
-    })
     $('#responce').on('click','.delete',()=>{
         $('#responceMsg').remove()
     })
-    $('#fileInput').on('change', function() {
-        var fileInput = $(this)[0];
-        var fileNameSpan = $('#fileName');
-
-        if (fileInput.files.length > 0) {
-            var fileName = fileInput.files[0].name;
-            fileNameSpan.text(fileName);
-        } else {
-            fileNameSpan.text('No file chosen');
-        }
-    });
 })

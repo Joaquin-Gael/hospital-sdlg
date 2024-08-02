@@ -3,6 +3,7 @@ import { getToken } from './utils/tokens.js';
 
 $(document).ready(()=>{
     $('#registrarButton').click(()=>{
+        console.log('pasa')
 
         var formdata = {
             dni: $('#dniInput').val(),

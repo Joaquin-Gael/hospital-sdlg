@@ -80,6 +80,8 @@ class Turnos(models.Model):
                 citaID=cita
             )
             instancia.save()
+            print(instancia)
+            print(instancia.medicoID.especialidadID.especialidadID)
 
             return instancia
 
@@ -94,6 +96,8 @@ class Turnos(models.Model):
         try:
             horario_medico = Horario_medicos.objects.get(horarioID=data['horario'])
             medico = Medicos.objects.get(medicoID=horario_medico.medicoID.medicoID)
+            print(medico.medicoID)
+            print(medico.especialidadID.especialidadID)
 
             return {'h':horario_medico,'m':medico}
         except Exception as err:

@@ -23,12 +23,12 @@
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>Nombre del Paciente:</strong> <span id="nombre-paciente">Juan Pérez</span><br>
-                                <strong>Fecha del Turno:</strong> <span id="fecha-turno">20 de Julio de 2024</span><br>
-                                <strong>Hora del Turno:</strong> <span id="hora-turno">10:00 AM</span><br>
-                                <strong>Especialidad:</strong> <span id="especialidad">Cardiología</span><br>
-                                <strong>Médico:</strong> <span id="medico">Dr. Carlos González</span><br>
-                                <strong>Estado:</strong> <span id="estado">Confirmado</span>
+                                <strong>Nombre del Paciente:</strong> <span id="nombre-paciente">{{turno.userID.nombre}} {{turno.userID.apellido}}</span><br>
+                                <strong>Fecha del Turno:</strong> <span id="fecha-turno">{{turno.fecha}}</span><br>
+                                <strong>Hora del Turno:</strong> <span id="hora-turno">{{turno.citaID.horarioID.hora_inicio}} - {{turno.citaID.horarioID.hora_fin}}</span><br>
+                                <strong>Especialidad:</strong> <span id="especialidad">{{turno.citaID.medicoID.especialidadID.nombre}}</span><br>
+                                <strong>Médico:</strong> <span id="medico">{{turno.citaID.medicoID.nombre}} {{turno.citaID.medicoID.especialidadID.apellido}}</span><br>
+                                <strong>Estado:</strong> <span id="estado">{{turno.estado}}</span>
                             </p>
                         </div>
                     </div>

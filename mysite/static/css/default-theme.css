@@ -1,0 +1,9 @@
+/* default-theme.css */
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.navbar, .footer {
+    background-color: #f5f5f5;
+}

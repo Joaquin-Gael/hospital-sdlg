@@ -1,0 +1,56 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}Contacto - Hospital SDLG{% endblock %}
+
+{% block breadcrumb %}
+<li>
+    <a href="/blog/contacto/">Contactos</a>
+</li>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="container my-6">
+    <h2 class="title is-3 has-text-centered mb-6">Contacto</h2>
+    
+    <section class="mb-6">
+        <h3 class="title is-4 mb-4">Póngase en Contacto</h3>
+        <p class="content mb-6">
+            Si tiene alguna pregunta, inquietud o comentario, no dude en comunicarse con nosotros. Estamos aquí para ayudarle.
+        </p>
+    </section>
+    
+    <section>
+        <h3 class="title is-4 mb-4">Formulario de Contacto</h3>
+        <p class="content mb-6">
+            Complete el siguiente formulario y nos pondremos en contacto con usted lo antes posible.
+        </p>
+        <form action="/send_message" method="post" class="field is-horizontal">
+            <div class="field">
+                <label for="nombre" class="label">Nombre Completo</label>
+                <div class="control">
+                    <input type="text" name="nombre" id="nombre" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="email" class="label">Correo Electrónico</label>
+                <div class="control">
+                    <input type="email" name="email" id="email" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="mensaje" class="label">Mensaje</label>
+                <div class="control">
+                    <textarea name="mensaje" id="mensaje" rows="5" class="textarea" required></textarea>
+                </div>
+            </div>
+            <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                    <button type="submit" class="button is-dark is-large">Enviar Mensaje</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

@@ -12,8 +12,17 @@ class RegisterUser(views.View):
         return render(request, 'user/register.html')
     
     def post(self, request):
-        #_json = json.loads(request.body)
-        #print(_json)
+        _json = json.loads(request.body)
+        user = models.Usuarios(
+            dni = _json['dni'],
+            nombre = _json['nombre'],
+            apellido = _json['apellido'],
+            fecha_nacimiento = _json['nacido'],
+            email = _json['email'],
+            contraseña = _json['contraseña']
+        )
+        user.set_password(_json['contraseña'])
+        user.save()
         return response.JsonResponse({
             'msg':f'{request.POST}'
         })
@@ -47,6 +56,8 @@ class UpdateUser(views.View):
                 contraseña=request.POST.get('contraseña')
             )
 
+            user.set_password(request.POST.get('contraseña'))
+
             return response.JsonResponse({
                 'msg':f'{request.POST}'
             })
@@ -63,7 +74,9 @@ class LoginUser(views.View):
     
     def post(self, request):
         _json = json.loads(request.body)
+        print(_json)
         user = models.Usuarios.authenticate(request, _json['DNI'], _json['contraseña'])
+        print(user)
         if user is None:
             return response.JsonResponse({
                 'error':'credential not match'

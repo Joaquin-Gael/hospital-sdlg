@@ -10,3 +10,15 @@ class Home(views.View):
 class Testimonios(views.View):
     def get(self, request):
         return render(request, 'blog/testimonios.html')
+
+class Nosotros(views.View):
+    def get(self, request):
+        return render(request, 'blog/nosotros.html')
+
+class Contactos(views.View):
+    def get(self, request):
+        return render(request, 'blog/contacto.html')
+
+class Atencion(views.View):
+    def get(self, request):
+        return render(request, 'blog/atencionalpaciente.html')

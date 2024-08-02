@@ -1,0 +1,9 @@
+/* dark-theme.css */
+body {
+    background-color: #101010;
+    color: #ffffff;
+}
+
+.navbar, .footer {
+    background-color: #101010;
+}

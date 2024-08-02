@@ -18,7 +18,9 @@ HOSPITAL_APPS = [
     'blog',
     'turnero',
     'user',
-    'medicos'
+    'medicos',
+    'API',
+    'rest_framework'
 ]
 
 DJANGO_APPS = [
@@ -78,6 +80,8 @@ DATABASES = {
         conn_max_age=600
     )
 }
+
+#DATABASES['default'] = dj_database_url.parse("postgresql://hospital_sdlg_db_mpfj_user:F6ZkjS73uHVZVEOQqvxgPAp5kXa2PkFD@dpg-cqg1sudds78s73c7o3ig-a.oregon-postgres.render.com/hospital_sdlg_db_mpfj")
 
 
 AUTH_PASSWORD_VALIDATORS = [
