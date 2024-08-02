@@ -95,7 +95,7 @@ class Turnos(models.Model):
     def extra_data(cls,data:dict):
         try:
             horario_medico = Horario_medicos.objects.get(horarioID=data['horario'])
-            medico = Medicos.objects.get(medicoID=horario_medico.medicoID.medicoID)
+            medico = Medicos.objects.get(medicoID=data['medico'])
             print(medico.medicoID)
             print(medico.especialidadID.especialidadID)
 

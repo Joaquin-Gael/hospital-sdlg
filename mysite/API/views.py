@@ -35,7 +35,6 @@ class UserViewSet(viewsets.ModelViewSet):
                 list_turn.append(data)
                 
             json.dumps(list_turn)
-            print(list_turn)
             return response.Response(list_turn, status=status.HTTP_200_OK)
         except Exception as err:
             print(err)

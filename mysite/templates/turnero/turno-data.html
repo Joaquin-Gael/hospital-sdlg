@@ -36,13 +36,18 @@
             </div>
             <a role="button" class="button is-primary" href="{% url 'PanelUser' %}">Regresar a la Lista de Turnos</a>
             <a role="button" class="button is-info" href="/turnero/comprobantes/{{turno.TurnoID}}/">Descargar Comprobante</a>
+            <a id="deleteTurno" role="button" class="button is-danger">Canselar</a>
         </div>
     </section>
 </div>
 {% endblock main %}
 
-{% block scrips %}
-{% endblock scrips %}
+{% block scripts %}
+<script>
+    localStorage.setItem('turnoID','{{turno.TurnoID}}')
+</script>
+<script type="module" src="{% static "js/deleteTurno.js" %}"></script>
+{% endblock scripts %}
 
 {% block styles %}
 {% endblock styles %}

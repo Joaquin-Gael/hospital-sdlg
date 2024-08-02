@@ -1,5 +1,5 @@
 from django.shortcuts import (get_object_or_404, render, redirect)
-from django.http import Http404, HttpResponse, response
+from django.http import Http404, HttpResponse, HttpResponseNotFound, response
 from django import views
 from django.contrib.staticfiles import finders
 from reportlab.pdfgen import canvas
@@ -30,7 +30,8 @@ class TurneroForm(views.View):
             print(f"Medico: {medico}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
 
             try:
-                data = models.Turnos.extra_data({'horario':horario})
+                data = models.Turnos.extra_data({'horario':horario,'medico':medico})
+                print(data)
                 _turno = models.Turnos.create_turnos(
                     medicoID=data['m'],
                     horarioID=data['h'],
@@ -38,6 +39,7 @@ class TurneroForm(views.View):
                     fecha=fecha,
                     userID=request.user
                 )
+                print(_turno)
             except Exception as err:
                 print(f'Error al generar turno: {err}')
 
@@ -62,9 +64,14 @@ class TurnoData(views.View):
             return redirect('NotFound')
     
     def delete(self, request, id):
-        turno = models.Turnos.objects.get(id=id)
-        turno.delete()
-        return redirect('Home')
+        try:
+            turno = models.Turnos.objects.get(TurnoID=id)
+            turno.delete()
+            return response.JsonResponse({
+                'url':'/user/panel/'
+            },status=200)
+        except models.Turnos.DoesNotExist:
+            return HttpResponseNotFound("Turno no encontrado")
     
     def post(self, request, id):
         try:
