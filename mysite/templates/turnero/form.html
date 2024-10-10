@@ -1,0 +1,186 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+- Turnero
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .btn {
+        border-radius: 0;
+        /* Bordes rectos */
+    }
+
+    .btn-dark {
+        background-color: #000000;
+        border: 2px solid #ffffff;
+        color: #ffffff;
+    }
+
+    /* Estilo para las tarjetas */
+    .card {
+        border: 2px solid black;
+        border-radius: 0;
+        /* Bordes rectos */
+        background-color: #ffffff;
+    }
+
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="container card">
+    <h4 class="mb-4 text-center">Solicitar un turno</h4>
+    <div id="response" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <form id="turneroForm" class="needs-validation">
+        {% csrf_token %}
+
+        <!-- Paso 1 -->
+        <div class="step" id="step-1">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select name="servicio" id="servicioSelect" class="form-select" required>
+                            <option value="" disabled selected>Área médica</option>
+                            {% for servicio in servicios %}
+                                <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - {{ servicio.especialidadID }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="servicioSelect">Servicio</label>
+                        <div class="invalid-feedback">Por favor selecciona un servicio.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <textarea class="form-control" name="motivo" id="motivoTextarea" style="height: 150px" required></textarea>
+                        <label for="motivoTextarea">Motivo</label>
+                        <div class="invalid-feedback">Por favor ingresa el motivo de la consulta.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="step d-none" id="step-2">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select name="horario" id="horarioSelect" class="form-select" required>
+                            <option value="" disabled selected>Selecciona un horario</option>
+                            {% for horario in horarios %}
+                            <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }} - {{ horario.hora_fin }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <label for="horarioSelect">Horarios</label>
+                        <div class="invalid-feedback">Por favor selecciona un horario.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" id="date-picker" class="form-control datepicker"
+                            placeholder="Elige una fecha" required>
+                        <label for="date-picker">Fecha</label>
+                        <div class="invalid-feedback">Por favor selecciona una fecha.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="step d-none" id="step-3">
+            <div class="col-md-6">
+                <label for="comprobanteButton" class="form-label">Comprobante:</label>
+                <div class="d-grid">
+                    <button type="button" id="comprobanteButton" class="btn btn-info">
+                        <i class="fa-solid fa-download me-2"></i>Descargar comprobante
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navegación del formulario -->
+        <div class="d-flex justify-content-between mt-4">
+            <button id="prevButton" type="button" class="btn btn-dark d-none">Anterior</button>
+            <button id="nextButton" type="button" class="btn btn-dark">Siguiente</button>
+            <button id="solicitarButton" type="button" class="btn btn-dark d-none">Solicitar</button>
+        </div>
+    </form>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+<script type="module" src="{% static 'js/_datePiker.js' %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentStep = 1;
+        const totalSteps = 3;
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const submitButton = document.getElementById('solicitarButton');
+
+        const showStep = (step) => {
+            document.querySelectorAll('.step').forEach(function (el, index) {
+                el.classList.toggle('d-none', index + 1 !== step);
+            });
+
+            prevButton.classList.toggle('d-none', step === 1);
+            nextButton.classList.toggle('d-none', step === totalSteps);
+            submitButton.classList.toggle('d-none', step !== totalSteps);
+        };
+
+        const validateStep = (step) => {
+            const form = document.getElementById('turneroForm');
+            const stepElement = document.getElementById(`step-${step}`);
+            const inputs = stepElement.querySelectorAll('input, select, textarea');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            return valid;
+        };
+
+        nextButton.addEventListener('click', function () {
+            if (validateStep(currentStep)) {
+                currentStep = Math.min(currentStep + 1, totalSteps);
+                showStep(currentStep);
+            } else {
+                const form = document.getElementById('turneroForm');
+                form.classList.add('was-validated');
+            }
+        });
+
+        prevButton.addEventListener('click', function () {
+            currentStep = Math.max(currentStep - 1, 1);
+            showStep(currentStep);
+        });
+
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+
+        showStep(currentStep);
+    });
+    
+</script>
+<script type="module" src="{% static 'js/form.js' %}"></script>
+{% endblock scripts %}
