@@ -1,0 +1,103 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    - Register
+{% endblock title %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock styles %}
+
+{% block main %}
+<div class="container my-5">
+    <div id="response" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    <div class="row">
+        <!-- Registro con Google -->
+        <div class="col-md-6 mb-4">
+            <div class="card p-4 shadow-sm">
+                <h5 class="text-center">Registrarse con Google</h5>
+                    <!-- Botón Guardar -->
+                    <div class="mt-4">
+                        <button id="googleRegistrarButton" class="btn btn-dark w-100" type="submit">
+                            <span>Completar Registro</span>
+                            <span class="ms-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Registro normal -->
+        <div class="col-md-6">
+            <form id="registerForm" class="card p-4 shadow-sm" enctype="multipart/form-data">
+                <h5 class="text-center">Registrarse</h5>
+                {% csrf_token %}
+                
+                <!-- DNI -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="dniInput" class="form-control" placeholder="00000000">
+                    <label for="dniInput">DNI</label>
+                </div>
+
+                <!-- Nombre -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="nombreInput" class="form-control" placeholder="John">
+                    <label for="nombreInput">Nombre</label>
+                </div>
+
+                <!-- Apellido -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="apellidoInput" class="form-control" placeholder="Doe">
+                    <label for="apellidoInput">Apellido</label>
+                </div>
+
+                <!-- Fecha de Nacimiento -->
+                <div class="form-floating mb-3">
+                    <input type="date" id="nacidoInput" class="form-control" placeholder="Fecha de nacimiento">
+                    <label for="nacidoInput">Fecha de Nacimiento</label>
+                </div>
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <input type="email" id="emailInput" class="form-control" placeholder="name@example.com">
+                    <label for="emailInput">Email</label>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="contraseñaInput" class="form-control" placeholder="Contraseña">
+                    <label for="contraseñaInput">Contraseña</label>
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3">
+                    <label for="imagenInput" class="form-label">Imagen de perfil</label>
+                    <input class="form-control" type="file" id="imagenInput" accept="image/*">
+                </div>
+
+                <!-- Botón Registrar -->
+                <div class="mt-4">
+                    <button id="registrarButton" class="btn btn-dark w-100" type="button">
+                        <span>Registrar</span>
+                        <span class="ms-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </span>
+                    </button>
+                </div>
+                <p class="text-center mt-4">
+                    ¿Ya tienes cuenta? <a href="/user/login/">Inicia sesión</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+<script type="module" src="{% static 'js/register.js' %}"></script>
+<script type="module" src="{% static 'js/_bornPiker.js' %}"></script>
+{% endblock scripts %}

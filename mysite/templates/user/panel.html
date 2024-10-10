@@ -1,0 +1,212 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+- Panel
+{% endblock title %}
+
+{% block styles %}
+<style>
+    /* Estilo para el contenedor */
+    .container {
+        max-width: 1200px;
+    }
+
+    /* Estilo para las tarjetas */
+    .card {
+        border: 2px solid black;
+        border-radius: 0;
+        background-color: #ffffff;
+    }
+
+    /* Estilo para los botones */
+    .btn {
+        border-radius: 0;
+    }
+
+    .btn-dark {
+        background-color: #000000;
+        border: 2px solid #ffffff;
+        color: #ffffff;
+    }
+
+    .btn-danger {
+        background-color: #ea4335;
+        border: 2px solid #ffffff;
+    }
+
+    /* Estilo para los inputs */
+    .form-floating {
+        position: relative;
+    }
+
+    .form-floating input {
+        border-radius: 0;
+        border: 2px solid #000000;
+        background-color: #ffffff;
+    }
+
+    .form-floating label {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        padding: 0.75rem;
+        pointer-events: none;
+        transition: all 0.2s ease-out;
+        color: #000000;
+        border-radius: 0;
+        transform: translateY(-50%);
+    }
+
+    .form-floating input:focus~label,
+    .form-floating input:not(:placeholder-shown)~label {
+        top: 0;
+        left: 0;
+        font-size: 75%;
+        color: #000000;
+    }
+
+    /* Estilo para los botones de subida de imagen */
+    input[type="file"] {
+        border: 2px solid #000000;
+        border-radius: 0;
+    }
+
+    /* Estilo para la sidebar */
+    #sidebarPlaceholder {
+        background-color: #f8f9fa;
+        border: 2px solid #000000;
+        border-radius: 0;
+        padding: 1rem;
+    }
+
+    /* Estilo para las pestañas del panel */
+    .nav-tabs .nav-link {
+        border-radius: 0;
+        border: 2px solid transparent;
+        color: #000000;
+        background-color: #f8f9fa;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #ffffff;
+        border-color: #000000;
+    }
+
+    /* Estilo para los iconos de FontAwesome */
+    .fab.fa-google {
+        font-size: 1.5rem;
+    }
+
+    /* Estilo general */
+    body {
+        background-color: #f8f9fa;
+        color: #000000;
+    }
+
+    /* Estilo para los mensajes de respuesta */
+    .toast-container {
+        z-index: 1050;
+    }
+
+    /* Estilo para la tarjeta del sidebar */
+    .card {
+        border: 2px solid #000000;
+        border-radius: 0;
+        /* Bordes rectos */
+        background-color: #ffffff;
+        padding: 1rem;
+    }
+
+    /* Estilo para la imagen del usuario */
+    .card-img-top {
+        width: 100%;
+        height: auto;
+        border-bottom: 2px solid #000000;
+    }
+
+    /* Estilo para el contenido del cuerpo de la tarjeta */
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* Estilo para el botón de sucursales cercanas */
+    .btn-danger {
+        background-color: #ea4335;
+        border: 2px solid #ffffff;
+    }
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="container">
+    <h4 class="mb-4 is-size-2 has-text-centered">Panel</h4>
+    <div id="response" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-3" id="sidebar">
+            <div id="sidebarPlaceholder" class="placeholder-glow">
+                <span class="placeholder col-12 mb-3"></span>
+                <span class="placeholder col-12 mb-3"></span>
+                <span class="placeholder col-12"></span>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <article id="panelUser" class="card shadow-sm">
+                <p class="card-header">info</p>
+                <ul class="nav nav-tabs" id="panelTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="turnosTab" data-bs-toggle="tab"
+                            data-bs-target="#turnosContent" type="button" role="tab" aria-controls="turnosContent"
+                            aria-selected="true">Turnos</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="perfilTab" data-bs-toggle="tab" data-bs-target="#perfilContent"
+                            type="button" role="tab" aria-controls="perfilContent" aria-selected="false">Perfil</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="testimoniosTab" data-bs-toggle="tab"
+                            data-bs-target="#testimoniosContent" type="button" role="tab"
+                            aria-controls="testimoniosContent" aria-selected="false">Testimonios</button>
+                    </li>
+                </ul>
+                <div class="tab-content p-3" id="panelTabContent">
+                    <div class="tab-pane fade show active" id="turnosContent" role="tabpanel"
+                        aria-labelledby="turnosTab">
+                        <div id="turnosList" class="list-group placeholder-glow">
+                            <span class="placeholder col-12 mb-2"></span>
+                            <span class="placeholder col-12 mb-2"></span>
+                            <span class="placeholder col-12"></span>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="perfilContent" role="tabpanel" aria-labelledby="perfilTab">
+                        <div id="contentPanel">
+                            <div class="card p-4 shadow-sm placeholder-glow">
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12 mb-3"></span>
+                                <span class="placeholder col-12"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="testimoniosContent" role="tabpanel" aria-labelledby="testimoniosTab">
+                        <div id="testimonioForm" class="card p-4 shadow-sm placeholder-glow">
+                            <span class="placeholder col-12 mb-3"></span>
+                            <span class="placeholder col-12"></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+<script type="module" src="{% static 'js/panel.js' %}"></script>
+{% endblock scripts %}
