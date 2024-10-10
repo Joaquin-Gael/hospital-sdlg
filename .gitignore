@@ -50,9 +50,3 @@ db.sqlite3
 hospital_SDLG_dj/.env
 
 node_modules/
-
-#Cosas que omitire por ahora
-mysite/turnero/
-mysite/static/js/form.js
-mysite/templates/turnero/form.html
-mysite/templates/turnero/pay-turno.html
