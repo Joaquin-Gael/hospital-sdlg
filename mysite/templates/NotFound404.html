@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página No Encontrada</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <!-- Bootstrap CSS CDN -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Iconos de Bootstrap -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        font-family: 'Roboto', sans-serif;
+      }
+
+      .error-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      h1 {
+        font-size: 10rem;
+        color: #007bff;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: #6c757d;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #6c757d;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+
+      .btn-primary i {
+        margin-right: 8px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Notifications -->
+    {% if messages %}
+    <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        {% for message in messages %}
+        <div class="toast fade show toast-custom" role="alert" aria-live="assertive" aria-atomic="true">
+            <div
+                class="toast-header bg-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} text-white">
+                <i class="fa-regular fa-comment me-2"></i>
+                <strong class="me-auto">{{ message.tags|title }}</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ message }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <main class="d-flex justify-content-center align-items-center min-vh-100">
+      <div class="error-container text-center">
+        <!-- 404 Error Section -->
+        <section>
+          <h1>404</h1>
+          <h2>Página No Encontrada</h2>
+          <p>
+            Lo sentimos, la página que estás buscando no existe. 
+            <br /> Puede que haya sido movida o eliminada.
+          </p>
+          <figure class="my-4">
+            <img
+              src="{% static 'img/404.jpg' %}"
+              alt="404 Error"
+              class="img-fluid"
+              style="max-width: 100%"
+            />
+          </figure>
+          <a class="btn btn-primary mt-4" href="{% url 'Home' %}">
+            <i class="fas fa-home"></i> Volver al Inicio
+          </a>
+        </section>
+      </div>
+    </main>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(document).ready(function () {
+          $('.toast').each(function () {
+              setTimeout(() => {
+                  $(this).toast('hide');
+              }, 5000); // Desaparece después de 5 segundos
+          });
+      });
+  </script>   
+  </body>
+</html>
