@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Hospital SDLG ofrece atención médica de calidad con un equipo de profesionales comprometidos con tu salud y bienestar.">
+
+    <title>Hospital SDLG {% block title %}{% endblock title %}</title>
+
+    <!-- Fonts and Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'img/Logo-SDLG.svg' %}" type="image/x-icon">
+
+    <!-- Flatpickr Styles -->
+    <link rel="stylesheet" href="{% static 'dist/flatpickr.min.css' %}">
+
+    <!-- Handelbars Helpers -->
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <style>
+        .hero-section {
+            background-image: url("{% static 'img/fondo1.png'%}");
+        }
+
+        .navbar.scrolled .navbar-brand .logo-text {
+            content: url("{% static 'img/textologoblanco.png' %}");
+        }
+
+        .navbar.scrolled .navbar-brand img {
+            content: url("{% static 'img/logoblanco.png' %}");
+        }
+
+        /* Estilos para las notificaciones */
+        .alert-custom {
+            position: fixed;
+            top: 1rem;
+            /* Ajusta según tus necesidades */
+            right: 1rem;
+            /* Ajusta según tus necesidades */
+            z-index: 1050;
+            /* Asegura que las notificaciones aparezcan encima de otros elementos */
+            max-width: 300px;
+            /* Ajusta el ancho máximo de la notificación */
+            border-radius: 0.375rem;
+            /* Borde redondeado */
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            /* Sombra sutil */
+        }
+
+        /* Estilo para el ícono de la notificación */
+        .alert-custom .fa-comment {
+            font-size: 1.25rem;
+            /* Ajusta el tamaño del ícono */
+        }
+
+        /* Ajuste de color y margen del ícono */
+        .alert-custom i {
+            color: #000;
+            /* Cambia el color del ícono según el tema */
+            margin-right: 0.5rem;
+            /* Espaciado a la derecha del ícono */
+        }
+
+        /* Asegura que el botón de cerrar se alinee a la derecha */
+        .alert-custom .btn-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        /* Mejorar la visibilidad del texto */
+        .alert-custom span {
+            font-size: 1rem;
+            /* Ajusta el tamaño del texto */
+        }
+    </style>
+
+    <script type="module" crossorigin src="{% static 'js/speedDialR.js' %}"></script>
+    <link rel="stylesheet" crossorigin href="{% static 'css/speedDial.css' %}">
+
+    {% block styles %}
+    {% endblock styles %}
+    {% block head %}
+    {% endblock head %}
+</head>
+
+<body>
+    {% csrf_token %}
+
+    <!-- Hero Section -->
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <a class="navbar-brand mx-auto" href="/blog/">
+                    <img src="{% static 'img/logonegro.png' %}" alt="Logo del hospital SDLG">
+                    <img src="{% static 'img/textologonegro.png' %}" alt="Nombre del hospital SDLG" class="logo-text">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i> <!-- Usar Font Awesome para el ícono del menú -->
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item"><a href="/turnero/" class="nav-link">Turnos</a></li>
+                        <li class="nav-item"><a href="/blog/atencionalpaciente/" class="nav-link">Atención al
+                                Paciente</a></li>
+                        <li class="nav-item"><a href="/blog/nosotros/" class="nav-link">Nosotros</a></li>
+                        <li class="nav-item"><a href="/blog/contacto/" class="nav-link">Contacto</a></li>
+                        <li class="nav-item"><a href="/user/panel/" class="nav-link">Panel</a></li>
+                        {% else %}
+                        <li class="nav-item"><a href="/blog/atencionalpaciente/" class="nav-link">Atención al
+                                Paciente</a></li>
+                        <li class="nav-item"><a href="/blog/nosotros/" class="nav-link">Nosotros</a></li>
+                        <li class="nav-item"><a href="/blog/contacto/" class="nav-link">Contacto</a></li>
+                        <li class="nav-item"><a href="/user/register/" class="nav-link">Registrarme</a></li>
+                        {% endif %}
+                    </ul>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/HospitalSDLG" aria-label="Facebook"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/hospitalsdlg" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/hospital_s.d.l.g/" aria-label="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="body-page">
+
+        <!-- Notifications -->
+        {% if messages %}
+        <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+            {% for message in messages %}
+            <div class="toast fade show toast-custom" role="alert" aria-live="assertive" aria-atomic="true">
+                <div
+                    class="toast-header bg-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} text-white">
+                    <i class="fa-regular fa-comment me-2"></i>
+                    <strong class="me-auto">{{ message.tags|title }}</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Body Content -->
+        {% block main %}
+        {% endblock main %}
+
+        <!--Speed Dial Menu-->
+        <div id="SpeedDial-Menu"></div>
+    </main>
+
+    <footer class="bg-dark-custom text-dark-custom py-4">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Información de contacto -->
+                <div class="me-5">
+                    <p class="mb-1">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        Padre Luis Monti 2385, Córdoba, Córdoba
+                    </p>
+                    <p class="mb-1">
+                        <i class="fas fa-phone me-2"></i>
+                        (351) 456-7890
+                    </p>
+                    <p class="mb-1">
+                        <i class="fas fa-envelope me-2"></i>
+                        contacto@hospitalsdlg.com
+                    </p>
+                </div>
+                <!-- Redes sociales -->
+                <div>
+                    <a href="https://www.facebook.com/hospitalsdlg" class="text-dark-custom me-3" target="_blank"
+                        aria-label="Facebook">
+                        <i class="fab fa-facebook fa-2x"></i>
+                    </a>
+                    <a href="https://www.instagram.com/hospitalsdlg" class="text-dark-custom me-3" target="_blank"
+                        aria-label="Instagram">
+                        <i class="fab fa-instagram fa-2x"></i>
+                    </a>
+                    <a href="https://wa.me/numerorandom" class="text-dark-custom" target="_blank" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp fa-2x"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- Derechos de autor -->
+            <div class="text-center mt-3">
+                <p class="mb-0">© 2024 Hospital SDLG. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="{% static 'dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'dist/jquery.min.js' %}"></script>
+    <script src="{% static 'dist/flatpickr.min.js' %}"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <script>
+        // Cambiar el fondo de la navbar al hacer scroll
+        window.addEventListener('scroll', function () {
+            var navbar = document.querySelector('.navbar');
+            var logoImg = document.querySelector('.navbar-brand img');
+            var logoText = document.querySelector('.navbar-brand .logo-text');
+            var links = document.querySelectorAll('.navbar-nav .nav-link');
+            var socialIcons = document.querySelectorAll('.social-icons a');
+            var navbarTogglerIcon = document.querySelector('.navbar-toggler i');
+
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                logoImg.src = "{% static 'img/logoblanco.png' %}";
+                logoText.src = "{% static 'img/textologoblanco.png' %}";
+                links.forEach(link => link.style.color = '#ffffff');
+                socialIcons.forEach(icon => icon.style.color = '#ffffff');
+                navbarTogglerIcon.style.color = '#ffffff';
+            } else {
+                navbar.classList.remove('scrolled');
+                logoImg.src = "{% static 'img/logonegro.png' %}";
+                logoText.src = "{% static 'img/textologonegro.png' %}";
+                links.forEach(link => link.style.color = '#000000');
+                socialIcons.forEach(icon => icon.style.color = '#000000');
+                navbarTogglerIcon.style.color = '#000000';
+            }
+        });
+
+        // Ocultar sección de bienvenida al abrir el menú desplegable
+        var navbarToggler = document.querySelector('.navbar-toggler');
+        var heroSection = document.querySelector('#heroSection');
+
+        navbarToggler.addEventListener('click', function () {
+            heroSection.classList.toggle('hidden');
+        });
+
+        // Animar las secciones al hacer scroll
+        function handleScroll() {
+            var aboutSection = document.querySelector('#aboutSection');
+            var sectionPosition = aboutSection.getBoundingClientRect().top;
+            var screenPosition = window.innerHeight;
+
+            if (sectionPosition < screenPosition) {
+                aboutSection.classList.add('visible');
+                aboutSection.classList.remove('hidden');
+            } else {
+                aboutSection.classList.remove('visible');
+                aboutSection.classList.add('hidden');
+            }
+
+            var personalImage = document.querySelector('#personalImage');
+            var personalSection = personalImage.closest('.service-item');
+            var personalSectionPosition = personalSection.getBoundingClientRect().top;
+
+            if (personalSectionPosition < screenPosition) {
+                personalImage.classList.add('visible');
+            } else {
+                personalImage.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Ejecutar al cargar la página
+    </script>
+    <script>
+        localStorage.setItem('user_id', '{{user.userID}}')
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.toast').each(function () {
+                setTimeout(() => {
+                    $(this).toast('hide');
+                }, 5000); // Desaparece después de 5 segundos
+            });
+        });
+    </script>    
+
+    {% block scripts %}
+    {% endblock scripts %}
+</body>
+
+</html>
