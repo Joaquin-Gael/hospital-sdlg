@@ -1,0 +1,58 @@
+# Front
+frontend/
+frontend/login/
+
+# Entorno virtual
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Archivos de Python
+*.py[cod]
+*.pyo
+__pycache__/
+*.so
+
+# Archivos de configuración del editor
+.vscode/
+.idea/
+*.swp
+
+# Archivos de log y bases de datos locales
+*.log
+*.sqlite3
+
+# Archivos temporales
+*.tmp
+*.bak
+*.orig
+*.cover
+.coverage
+.cache
+
+# Archivos de configuración de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de módulos de Python
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de configuración de Django
+local_settings.py
+db.sqlite3
+
+# Archivos .env
+.env
+hospital_SDLG_dj/.env
+
+node_modules/
+
+#Cosas que omitire por ahora
+mysite/turnero/
+mysite/static/js/form.js
+mysite/templates/turnero/form.html
+mysite/templates/turnero/pay-turno.html
