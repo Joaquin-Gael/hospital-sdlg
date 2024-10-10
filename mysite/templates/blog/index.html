@@ -1,0 +1,109 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+- Home
+{% endblock title %}
+
+{% block styles %}
+<style>
+    /* Estilos para la sección del video */
+    .video-section {
+        padding: 60px 0;
+        background-color: #f8f9fa;
+        /* Color de fondo suave */
+    }
+
+    .video-wrapper {
+        position: relative;
+        padding-top: 56.25%;
+        /* Relación de aspecto 16:9 */
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        border-radius: .375rem;
+        /* Bordes redondeados */
+    }
+
+    .video-player {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width: 70%;
+        height: 70%;
+        object-fit: cover;
+        /* Ajusta el video para cubrir el contenedor */
+    }
+
+    /* Ajustes de texto */
+    .video-section h2,
+    .video-section h3 {
+        color: #333;
+        /* Color del texto */
+    }
+
+    @media (max-width: 768px) {
+        .video-section {
+            padding: 30px 0;
+        }
+    }
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="hero-section" id="heroSection">
+    <div>
+        <h1 class="display-4">Bienvenido a Hospital SDLG</h1>
+        <p class="lead">Atención médica de calidad para vos y tu familia</p>
+        <a href="/turnero/" class="btn btn-lg">Solicitar Turno</a>
+    </div>
+</div>
+
+<div class="video-section" id="videoSection">
+    <div class="container">
+        <h2 class="text-center mb-4">Nuestro Fundador</h2>
+        <h3 class="text-center mb-4">San Dario Lazaro Gorosito</h3>
+        <div class="video-wrapper">
+            <video class="video-player" controls>
+                <source src="{% static 'videos/fundador.mp4' %}" type="video/mp4">
+                Tu navegador no soporta la etiqueta de video.
+            </video>
+        </div>
+    </div>
+</div>
+
+<div class="about-section" id="aboutSection">
+    <div class="container">
+        <h2>¿Quiénes somos?</h2>
+        <p>Somos un hospital con un compromiso firme con la atención médica de alta calidad con un enfoque en el
+            bienestar integral de nuestros pacientes. Nuestro equipo está formado por profesionales experimentados y
+            dedicados a brindar el mejor cuidado posible. Estamos aquí para ofrecer apoyo en cada etapa del proceso de
+            atención médica, desde la prevención hasta el tratamiento y la rehabilitación.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="service-item">
+        <img src="{% static 'img/servicio1.jpg' %}" alt="Personal del hospital" id="personalImage">
+        <div class="service-text">
+            <h3>Conoce a Nuestro Personal</h3>
+            <p>En el Hospital SDLG, nuestro equipo de profesionales está comprometido con brindar una atención médica
+                excepcional. Contamos con médicos, enfermeras y personal de apoyo altamente capacitados que trabajan
+                juntos para ofrecer un cuidado integral y personalizado. Valoramos la dedicación y el profesionalismo de
+                cada miembro de nuestro equipo, quienes son la base de nuestra misión de proporcionar una atención de
+                calidad.</p>
+            <p>Si estás interesado en formar parte de nuestro equipo y contribuir a nuestra misión de cuidado de la
+                salud, te invitamos a enviar tu solicitud o currículum. ¡Únete a nosotros y sé parte de esta gran
+                familia!</p>
+            <a href="solicitud.html" class="btn btn-lg">Enviar Solicitud</a>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+{% endblock scripts %}

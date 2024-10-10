@@ -1,0 +1,159 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}Nosotros - Hospital SDLG{% endblock %}
+
+{% block styles %}
+<style>
+
+    /* Title Highlight */
+    .title-highlight {
+        color: #000;
+        font-weight: bold;
+        border-bottom: 2px solid #000;
+        /* Adds a bottom border to titles */
+        padding-bottom: 0.5rem;
+        /* Adds some spacing below the title */
+        transition: color 0.3s ease;
+    }
+
+    .title-highlight:hover {
+        color: #007bff;
+        /* Color azul para el hover */
+    }
+
+    /* Sections */
+    .border-section {
+        border: 2px solid #000;
+        /* Thicker border for sections */
+        border-radius: 0;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .border-section:hover {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        /* Sombra al hacer hover */
+        transform: scale(1.02);
+        /* Aumenta el tamaño al hacer hover */
+    }
+
+    .border-section p {
+        margin: 0;
+        /* Elimina margen por defecto de los párrafos */
+    }
+
+    /* Style for hover effect on paragraphs */
+    .border-section p:hover {
+        background-color: #f8f9fa;
+        /* Color de fondo al hacer hover */
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="container">
+    <h2 class="text-center mb-6 title-highlight">Nosotros</h2>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Nuestra Misión</h3>
+        <p>
+            En <strong>Hospital SDLG</strong>, nuestra misión es proporcionar <strong>atención médica de alta
+                calidad</strong> a todos nuestros pacientes. Estamos comprometidos con la <strong>excelencia</strong> en
+            el cuidado de la salud y en la mejora continua de nuestros servicios.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Nuestro Equipo</h3>
+        <p>
+            Contamos con un equipo de <strong>profesionales altamente capacitados</strong> y dedicados a brindar un
+            servicio <strong>excepcional</strong>. Cada miembro de nuestro equipo comparte el compromiso de mejorar la
+            <strong>salud y el bienestar</strong> de nuestros pacientes.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Nuestros Valores</h3>
+        <p>
+            Valoramos la <strong>integridad</strong>, el <strong>respeto</strong> y la <strong>compasión</strong>. Estos
+            valores guían nuestro trabajo diario y nos ayudan a construir relaciones de confianza con nuestros pacientes
+            y la comunidad.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Nuestra Visión</h3>
+        <p>
+            En <strong>Hospital SDLG</strong>, aspiramos a ser <strong>líderes</strong> en la <strong>innovación
+                médica</strong> y en la adopción de <strong>tecnologías avanzadas</strong>. Creemos en la importancia de
+            adaptarnos constantemente a las nuevas tendencias y descubrimientos en el campo de la salud para ofrecer
+            tratamientos que realmente hagan la diferencia en la vida de nuestros pacientes.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Nuestro Enfoque en el Paciente</h3>
+        <p>
+            Entendemos que cada paciente es <strong>único</strong> y, por lo tanto, ofrecemos <strong>atención
+                personalizada</strong> que se adapta a las necesidades específicas de cada individuo. Desde el primer
+            contacto hasta el seguimiento posterior al tratamiento, nos aseguramos de que cada paciente reciba la
+            atención y el <strong>respeto</strong> que merece.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Compromiso con la Transparencia</h3>
+        <p>
+            En <strong>Hospital SDLG</strong>, nos tomamos muy en serio la <strong>transparencia</strong> con nuestros
+            pacientes. Creemos que la comunicación clara y honesta sobre <strong>diagnósticos</strong>,
+            <strong>tratamientos</strong> y <strong>costos</strong> es fundamental para generar confianza y para que
+            nuestros pacientes tomen decisiones informadas sobre su salud.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Innovación Continua</h3>
+        <p>
+            Sabemos que el campo de la medicina está en <strong>constante evolución</strong>. Por ello, invertimos en
+            <strong>formación continua</strong> para nuestro equipo y en la última <strong>tecnología médica</strong>.
+            Esto nos permite no solo mantenernos al día con los avances, sino también anticiparnos a las necesidades de
+            nuestros pacientes con tratamientos de <strong>vanguardia</strong>.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Responsabilidad Social</h3>
+        <p>
+            Nos sentimos responsables no solo ante nuestros pacientes, sino también ante la comunidad en general. Por
+            eso, participamos activamente en programas de <strong>salud pública</strong>, <strong>educación
+                sanitaria</strong> y <strong>apoyo a poblaciones vulnerables</strong>. Sabemos que nuestra labor va más
+            allá de las paredes del hospital y que nuestra verdadera misión es mejorar la salud de toda la comunidad.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Reconocimiento y Aprendizaje de los Errores</h3>
+        <p>
+            En <strong>Hospital SDLG</strong>, entendemos que la perfección es un objetivo inalcanzable, pero eso no nos
+            impide aspirar a ella. Cuando las cosas no salen como se esperaba, no solo reconocemos nuestros
+            <strong>errores</strong>, sino que los analizamos minuciosamente para aprender de ellos y mejorar
+            continuamente nuestros servicios.
+        </p>
+    </section>
+
+    <section class="border-section">
+        <h3 class="h4 mb-4 title-highlight">Ética Profesional</h3>
+        <p>
+            Nos comprometemos a seguir los más altos <strong>estándares éticos</strong> en todas nuestras interacciones.
+            No solo buscamos resultados médicos positivos, sino que lo hacemos asegurándonos de que nuestras prácticas
+            sean <strong>justas</strong>, <strong>transparentes</strong> y en el mejor interés de nuestros pacientes.
+        </p>
+    </section>
+</div>
+{% endblock %}

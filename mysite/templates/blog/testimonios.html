@@ -1,0 +1,81 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+    Testimonios
+{% endblock title %}
+
+
+{% block main %}
+<div class="container">
+    <!-- Testimonials Section -->
+    <section class="my-5">
+        <div class="text-center">
+            <h1 class="display-4">Testimonios de Pacientes</h1>
+            <p class="lead">Conozca las experiencias de nuestros pacientes</p>
+            
+            <div class="row">
+                <!-- Example Testimonial 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="ruta-a-la-imagen-paciente1.jpg" alt="Paciente 1" class="rounded-circle me-3" style="width: 64px; height: 64px;">
+                                <div>
+                                    <h5 class="card-title mb-0">María López</h5>
+                                    <p class="card-text">
+                                        "El Hospital SDLG me brindó una atención excepcional durante mi tratamiento. Estoy muy agradecida con todo el equipo médico."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Testimonial 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="ruta-a-la-imagen-paciente2.jpg" alt="Paciente 2" class="rounded-circle me-3" style="width: 64px; height: 64px;">
+                                <div>
+                                    <h5 class="card-title mb-0">Carlos Martínez</h5>
+                                    <p class="card-text">
+                                        "La dedicación y el profesionalismo del personal del hospital hicieron toda la diferencia en mi recuperación. ¡Recomiendo este hospital a todos!"
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Testimonial 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="ruta-a-la-imagen-paciente3.jpg" alt="Paciente 3" class="rounded-circle me-3" style="width: 64px; height: 64px;">
+                                <div>
+                                    <h5 class="card-title mb-0">Ana González</h5>
+                                    <p class="card-text">
+                                        "Gracias al Hospital SDLG, hoy puedo decir que estoy completamente sana. La atención personalizada y el cariño del personal son incomparables."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a role="button" class="btn btn-link" href="{% url 'Home' %}">Volver al Inicio</a>
+        </div>
+    </section>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block styles %}
+{% endblock styles %}

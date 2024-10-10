@@ -1,0 +1,147 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}Contacto - Hospital SDLG{% endblock %}
+
+{% block styles %}
+<style>
+
+    h2,
+    h3 {
+        color: #000;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+    }
+
+    /* Estilos del formulario */
+    .custom-form {
+        background-color: #f8f9fa;
+        border: 1px solid #000;
+        border-radius: 0;
+        /* Bordes rectos */
+    }
+
+    /* Estilo de los inputs con float labels */
+    .form-floating .form-control {
+        border-radius: 0;
+        border: 1px solid #000;
+        padding-top: 1.25rem;
+        padding-bottom: .25rem;
+    }
+
+    .form-floating label {
+        color: #6c757d;
+        padding: .5rem;
+    }
+
+    textarea.form-control {
+        height: auto;
+        /* Ajuste automático del textarea */
+    }
+
+    /* Botón personalizado */
+    .btn-custom {
+        background-color: #000;
+        color: #fff;
+        border-radius: 0;
+        border: 1px solid #000;
+        padding: .75rem 1.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #444;
+        color: #fff;
+    }
+
+    /* Estilos de inputs de subida de imágenes tipo Material UI */
+    .custom-file-input {
+        position: relative;
+        z-index: 2;
+        border: 1px solid #000;
+        background-color: #fff;
+        color: #000;
+        border-radius: 0;
+    }
+
+    .custom-file-input::before {
+        content: 'Subir Imagen';
+        display: block;
+        background-color: #000;
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        text-align: center;
+        border-radius: 0;
+    }
+
+    .custom-file-input:hover::before {
+        background-color: #444;
+    }
+
+    /* Placeholder de imagen */
+    .custom-file-input::placeholder {
+        color: #6c757d;
+    }
+
+    /* Bordes rectos en los campos de entrada */
+    .form-control {
+        border-radius: 0;
+    }
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="container my-6">
+    <h2 class="text-center mb-6 display-4">Contacto</h2>
+
+    <section class="mb-6">
+        <h3 class="h4 mb-4">Póngase en Contacto</h3>
+        <p class="mb-6 lead">
+            Si tiene alguna pregunta, inquietud o comentario, no dude en comunicarse con nosotros. Estamos aquí para
+            ayudarle.
+        </p>
+    </section>
+
+    <section>
+        <h3 class="h4 mb-4">Formulario de Contacto</h3>
+        <p class="mb-6 lead">
+            Complete el siguiente formulario y nos pondremos en contacto con usted lo antes posible.
+        </p>
+        <form id="contact-form" method="post" class="p-4 custom-form">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+                <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre Completo"
+                    required>
+                <label for="nombre">Nombre Completo</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" name="email" id="email" class="form-control" placeholder="Correo Electrónico"
+                    required>
+                <label for="email">Correo Electrónico</label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea name="mensaje" id="mensaje" rows="5" class="form-control" placeholder="Mensaje"
+                    required></textarea>
+                <label for="mensaje">Mensaje</label>
+            </div>
+            <div class="mb-3">
+                {{ form.captcha }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom">Enviar Mensaje</button>
+            </div>
+        </form>
+        <div id="response-message" class="mt-3"></div>
+    </section>
+</div>
+
+{% block scripts %}
+<script src="{% static 'js/contacto.js' %}"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+
+{% endblock %}

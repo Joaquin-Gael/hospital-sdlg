@@ -1,0 +1,123 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}Atención al Paciente - Hospital SDLG{% endblock %}
+
+{% block styles %}
+<style>
+
+    h2,
+    h3 {
+        color: #000;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+    }
+
+    /* Estilos de la tarjeta */
+    .custom-card {
+        background-color: #f8f9fa;
+        border: 1px solid #000;
+        border-radius: 0;
+        /* Bordes rectos */
+    }
+
+    /* Imagen redonda y centrada */
+    .custom-img {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        /* Imagen circular */
+        border: 2px solid #000;
+    }
+
+    /* Lista personalizada */
+    .custom-list {
+        padding-left: 20px;
+        list-style-type: none;
+    }
+
+    .custom-list li::before {
+        content: "\f00c";
+        /* Icono check de Font Awesome */
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        padding-right: 10px;
+    }
+
+    /* Botón personalizado */
+    .btn-custom {
+        background-color: #000;
+        color: #fff;
+        border-radius: 0;
+        border: 1px solid #000;
+        padding: .75rem 1.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #444;
+        color: #fff;
+    }
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="container my-6">
+    <div class="card p-4 custom-card">
+        <h2 class="text-center mb-4 display-4">Atención al Paciente</h2>
+
+        <section class="mb-5">
+            <h3 class="h4">Nuestro Compromiso</h3>
+            <p class="lead">
+                En Hospital SDLG, nos comprometemos a brindar una atención médica de calidad, personalizada y humana.
+                Nuestro equipo de profesionales está dedicado a atender las necesidades de nuestros pacientes con el
+                mayor cuidado y respeto.
+            </p>
+            <div class="text-center mb-4">
+                <img src="{% static 'svg/undraw_doctors_p6aq.svg' %}" alt="Atención al Paciente"
+                    class="img-fluid custom-img">
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h3 class="h4">Servicios Disponibles</h3>
+            <ul class="custom-list">
+                <li>Consulta Médica General</li>
+                <li>Atención de Urgencias</li>
+                <li>Diagnóstico y Tratamiento</li>
+                <li>Atención Especializada</li>
+                <li>Apoyo Psicológico</li>
+                <li>Rehabilitación y Terapia Física</li>
+            </ul>
+        </section>
+
+        <section class="mb-5">
+            <h3 class="h4">Cómo Solicitar un Turno</h3>
+            <p class="lead">
+                Para solicitar un turno, puede dirigirse a nuestra página de turnos y completar el formulario en línea,
+                o puede contactarnos a través de los siguientes medios:
+            </p>
+            <ul class="custom-list mb-4">
+                <li>Teléfono: (351) 456-7890</li>
+                <li>Email: hospitalsdlg@gmail.com</li>
+                <li>Visitando nuestra recepción en: Padre Luis Monti 2385, Córdoba, Córdoba</li>
+            </ul>
+            <div class="text-center">
+                <a href="/turnero/" class="btn btn-custom btn-lg">Solicitar Turno</a>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="h4">Contacto Directo</h3>
+            <p class="lead">
+                Si tiene alguna pregunta o necesita asistencia inmediata, no dude en ponerse en <a
+                    href="/blog/contacto/">contacto</a> con nosotros. Estamos aquí para ayudarlo.
+            </p>
+        </section>
+    </div>
+</div>
+{% endblock %}
