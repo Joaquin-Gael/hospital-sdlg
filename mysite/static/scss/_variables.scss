@@ -1,0 +1,56 @@
+// _variables.scss
+
+// Importa las funciones y variables de Bootstrap
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+
+// Colores principales
+$background-color-light: #f8f9fa;
+$text-color-light: #212529;
+$background-color-dark: #000A12;
+$text-color-dark: #e9ecef;
+$primary-color: #0d6efd;
+$selected-date-color: $primary-color;
+$range-date-color: lighten($primary-color, 20%);
+
+// Variables para colores y fuentes para dropdown
+$dropdown-bg: #fff;
+$dropdown-border: #ddd;
+$dropdown-hover-bg: #f8f9fa;
+$dropdown-text-color: #333;
+$dropdown-hover-text-color: #007bff;
+
+// Sobrescribe las variables de fuente
+$font-family-sans-serif: 'Roboto', sans-serif;
+
+// Define tus colores personalizados
+$primary: #ADF5FF;
+$secondary: #6320EE;
+$danger: #FF6978;
+$info: #B79CED;
+$success: #28a745;
+$warning: #ffc107;
+$light: #f8f9fa;
+$dark: #011627;
+
+// Define colores adicionales
+$encabezado: #123456;
+$argentin: #35A7FF;
+$limon: #FDF5BF;
+$youtube: #c4302b;
+
+// Si quieres que el color sea parte de la paleta de Bootstrap
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "success": $success,
+    "info": $info,
+    "warning": $warning,
+    "danger": $danger,
+    "light": $light,
+    "dark": $dark,
+    "encabezado": $encabezado,
+    "argentin": $argentin,
+    "limon": $limon,
+    "youtube": $youtube
+);

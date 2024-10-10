@@ -1,0 +1,87 @@
+/* Estilos para el botón del SpeedDial */
+.p-speeddial-button.p-button.p-button-icon-only {
+    width: 4rem;
+    height: 4rem;
+}
+
+.p-speeddial-button.p-button.p-button-icon-only .p-button-icon {
+    font-size: 1.3rem;
+}
+
+.p-speeddial-button.p-button.p-button-icon-only .p-button-icon.p-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+/* Estilos para la lista de acciones del SpeedDial */
+.p-speeddial-list {
+    outline: 0 none;
+}
+
+/* Estilos para las acciones del SpeedDial */
+.p-speeddial-action {
+    width: 3rem;
+    height: 3rem;
+    background: #495057; /* Color de fondo por defecto */
+    color: #fff; /* Color del texto */
+}
+
+.p-speeddial-action:hover {
+    background: #343a40; /* Color de fondo al pasar el cursor */
+    color: #fff; /* Color del texto al pasar el cursor */
+}
+
+/* Estilos para la dirección de las acciones del SpeedDial */
+.p-speeddial-direction-up .p-speeddial-item {
+    margin: .25rem;
+}
+
+.p-speeddial-direction-up .p-speeddial-item:first-child {
+    margin-bottom: .5rem;
+}
+
+.p-speeddial-direction-down .p-speeddial-item {
+    margin: .25rem;
+}
+
+.p-speeddial-direction-down .p-speeddial-item:first-child {
+    margin-top: .5rem;
+}
+
+.p-speeddial-direction-left .p-speeddial-item {
+    margin: 0 .25rem;
+}
+
+.p-speeddial-direction-left .p-speeddial-item:first-child {
+    margin-right: .5rem;
+}
+
+.p-speeddial-direction-right .p-speeddial-item {
+    margin: 0 .25rem;
+}
+
+.p-speeddial-direction-right .p-speeddial-item:first-child {
+    margin-left: .5rem;
+}
+
+/* Estilos para los diferentes tipos de SpeedDial */
+.p-speeddial-circle .p-speeddial-item,
+.p-speeddial-semi-circle .p-speeddial-item,
+.p-speeddial-quarter-circle .p-speeddial-item {
+    margin: 0;
+}
+
+.p-speeddial-circle .p-speeddial-item:first-child,
+.p-speeddial-circle .p-speeddial-item:last-child,
+.p-speeddial-semi-circle .p-speeddial-item:first-child,
+.p-speeddial-semi-circle .p-speeddial-item:last-child,
+.p-speeddial-quarter-circle .p-speeddial-item:first-child,
+.p-speeddial-quarter-circle .p-speeddial-item:last-child {
+    margin: 0;
+}
+
+/* Estilos para la máscara del SpeedDial */
+.p-speeddial-mask {
+    background-color: #0006; /* Color de la máscara con transparencia */
+    border-radius: 3px;
+}

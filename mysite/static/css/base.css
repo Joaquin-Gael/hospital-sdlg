@@ -1,0 +1,324 @@
+html{
+    height: 100%;
+}
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+    height: 100%;
+    margin: 100px 0px 0px 0px;
+    padding: 0;
+}
+
+#body-page {
+    min-height: calc(100vh - 160px); /* Ajusta este valor según la altura del header o navbar */
+    display: flex;
+    flex-direction: column;
+}
+
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #f1f1f1;
+    padding: 10px;
+    text-align: center;
+    margin-top: auto;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #ffffff;
+    transition: background-color 0.4s;
+    justify-content: space-between;
+}
+
+.navbar.scrolled {
+    background-color: #000000;
+}
+
+.navbar-brand img {
+    height: 60px;
+}
+
+
+.navbar-brand .logo-text {
+    height: 70px;
+    margin-left: 10px;
+}
+
+
+.navbar-nav .nav-link {
+    color: #000000;
+    margin: 0 10px;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.navbar.scrolled .navbar-nav .nav-link {
+    color: #ffffff;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #000000;
+    transition: width 0.3s;
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar-toggler {
+    background: none;
+    /* Elimina el fondo del botón */
+    border: none;
+    /* Elimina el borde */
+}
+
+.navbar-toggler-icon {
+    background-color: #000000;
+    /* Color del ícono cuando el navbar no está desplazado */
+}
+
+.navbar.scrolled .navbar-toggler-icon {
+    background-color: #ffffff;
+    /* Color del ícono cuando el navbar está desplazado */
+}
+
+.social-icons a {
+    color: #000000;
+    margin-left: 15px;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: #ffffff;
+}
+
+.navbar.scrolled .social-icons a {
+    color: #ffffff;
+}
+
+.video-section {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.video-wrapper {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.video-wrapper iframe {
+    width: 100%;
+    height: auto;
+}
+
+.hero-section {
+    background-image: url("{% static 'img/fondo1.png'%}");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #000000;
+    position: relative;
+}
+
+.hero-section.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hero-section .btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    padding: 10px 20px;
+    transition: all 0.3s;
+    border-radius: 0;
+}
+
+.hero-section .btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+.about-section {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 60px 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.about-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-section.hidden {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.video-section h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.about-section h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.about-section p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.alert-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.body-page {
+    margin-top: 160px;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-bottom: 1px solid #333333;
+}
+
+.service-item img {
+    flex: 1;
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    max-height: 800px;
+    object-fit: cover;
+    border-radius: 5px;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.service-item img.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.service-text {
+    flex: 1;
+    padding: 20px;
+}
+
+.service-text h3 {
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.service-text p {
+    font-size: 1.25rem;
+}
+
+.service-text .btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    padding: 10px 30px;
+    margin-top: 20px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    border-radius: 0;
+}
+
+.service-text .btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+@media (max-width: 767px) {
+    .service-item {
+        flex-direction: column;
+    }
+
+    .service-item img {
+        margin-bottom: 20px;
+        max-width: 100%;
+        max-height: 500px;
+    }
+}
+
+.service-text h3 {
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #000;
+    display: inline-block;
+    padding-bottom: 20px;
+}
+
+/* Aplica Playfair Display a títulos específicos */
+h2,
+/* Título "¿Quiénes somos?" */
+.service-text h3 {
+    /* Título "Conoce a Nuestro Personal Profesional" */
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    /* Asegura un grosor adecuado */
+    margin-bottom: 20px;
+    /* Añade algo de espacio debajo del título */
+}
+
+.toast-custom {
+    opacity: 0.95;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.toast-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.toast-body {
+    padding: 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-close {
+    margin-left: auto;
+}
+
+.position-fixed {
+    position: fixed;
+}

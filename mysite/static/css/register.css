@@ -1,0 +1,58 @@
+/* Estilo para el contenedor */
+.container {
+    max-width: 1200px;
+}
+
+/* Estilo para las tarjetas */
+.card {
+    border: 2px solid black;
+    border-radius: 0; /* Bordes rectos */
+    background-color: #ffffff;
+}
+
+/* Estilo para los botones */
+.btn {
+    border-radius: 0; /* Bordes rectos */
+}
+
+.btn-dark {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+.btn-danger {
+    background-color: #ea4335;
+    border: 2px solid #ffffff;
+}
+
+/* Estilo para los inputs */
+.form-control {
+    border-radius: 0; /* Bordes rectos */
+    border: 2px solid #000000;
+}
+
+.form-floating label {
+    color: #000000;
+}
+
+/* Estilo para los botones de subida de imagen */
+input[type="file"] {
+    border: 2px solid #000000;
+    border-radius: 0;
+}
+
+/* Espaciado para el ícono de Google */
+.fab.fa-google {
+    font-size: 1.5rem;
+}
+
+.fab.fa-google {
+    font-size: 1.2rem;
+}
+
+/* Estilo general */
+body {
+    background-color: #f8f9fa; /* Fondo claro */
+    color: #000000; /* Texto negro */
+}

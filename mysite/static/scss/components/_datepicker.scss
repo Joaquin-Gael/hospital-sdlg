@@ -1,0 +1,114 @@
+// _datepicker.scss
+
+@import '../_variables';
+
+.datepicker {
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    position: relative;
+
+    &.light-mode {
+        background-color: $background-color-light;
+        color: $text-color-light;
+    }
+
+    &.dark-mode {
+        background-color: $background-color-dark;
+        color: $text-color-dark;
+    }
+
+    .selected-date {
+        background-color: $selected-date-color;
+        color: #fff;
+        @include border-radius(0.25rem);
+    }
+
+    .range-dates {
+        background-color: $range-date-color;
+        color: $text-color-light;
+        @include border-radius(0.25rem);
+    }
+
+    // Estilo para el efecto de estela
+    .range-dates {
+        position: relative;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: $selected-date-color;
+            z-index: -1;
+        }
+    }
+}
+.flatpickr-calendar {
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+}
+.flatpickr-months .flatpickr-month {
+    background-color: $secondary;
+    color: white;
+    border-radius: 8px 8px 0 0;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+}
+.flatpickr-weekdays {
+    background-color: #eee;
+    font-weight: 500;
+    color: #333;
+}
+.flatpickr-day {
+    font-size: 14px;
+    font-weight: 400;
+    color: $dark;
+    position: relative;
+}
+.flatpickr-day.inRange::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-color: #e1bee7;
+    z-index: -1;
+    transform: translateY(-50%);
+}
+.flatpickr-day.startRange::before, .flatpickr-day.endRange::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    height: 100%;
+    background-color: $secondary;
+    z-index: -1;
+    transform: translateY(-50%);
+}
+.flatpickr-day.startRange::before {
+    left: 50%;
+    right: 0;
+}
+.flatpickr-day.endRange::before {
+    left: 0;
+    right: 50%;
+}
+.flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.inRange {
+    background-color: #6200ea;
+    color: white;
+    border-radius: 50%;
+}
+.flatpickr-day.today {
+    border-color: #6200ea;
+    font-weight: 700;
+    color: #6200ea;
+}
+.flatpickr-day.marked {
+    background-color: #ff4081;
+    color: white;
+    border-radius: 50%;
+}

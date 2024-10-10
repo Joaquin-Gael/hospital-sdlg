@@ -1,0 +1,175 @@
+/* Estilo para el contenedor */
+.container {
+    max-width: 1200px;
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+}
+
+/* Estilo para las tarjetas */
+.card {
+    border: 2px solid black;
+    border-radius: 0; /* Bordes rectos */
+    background-color: #ffffff;
+}
+
+/* Estilo para los botones */
+.btn {
+    border-radius: 0; /* Bordes rectos */
+}
+
+.btn-dark {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+.btn-danger {
+    background-color: #ea4335;
+    border: 2px solid #ffffff;
+}
+
+/* Estilo para los inputs */
+.form-control {
+    border-radius: 0; /* Bordes rectos */
+    border: 2px solid #000000;
+}
+
+.form-floating label {
+    color: #000000;
+}
+
+/* Estilo para los botones de subida de imagen */
+input[type="file"] {
+    border: 2px solid #000000;
+    border-radius: 0;
+}
+
+/* Espaciado para el ícono de Google */
+.fab.fa-google {
+    font-size: 1.5rem;
+}
+
+/* Estilo general */
+body {
+    background-color: #f8f9fa; /* Fondo claro */
+    color: #000000; /* Texto negro */
+}
+
+/* Estilos personalizados para el Switch */
+.custom-switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.custom-switch-label {
+    margin-left: 0.5rem; /* Espacio entre el switch y la etiqueta */
+    font-size: 1rem;
+    line-height: 1.5; /* Alineación vertical */
+}
+
+/* Ajustes para el Switch de PrimeReact */
+.p-inputswitch {
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 1.75rem;
+}
+
+.p-inputswitch-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    z-index: 1;
+    outline: 0 none;
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.p-inputswitch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ced4da;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+
+.p-inputswitch-slider:before {
+    content: "";
+    position: absolute;
+    background: #fff;
+    width: 1.25rem;
+    height: 1.25rem;
+    left: .25rem;
+    margin-top: -.625rem;
+    border-radius: 50%;
+    transition-duration: .2s;
+    top: 50%;
+}
+
+.p-inputswitch.p-highlight .p-inputswitch-slider {
+    background: #2196f3;
+}
+
+.p-inputswitch.p-highlight .p-inputswitch-slider:before {
+    background: #fff;
+    transform: translate(1.25rem);
+}
+
+.p-inputswitch:not(.p-disabled):has(.p-inputswitch-input:hover) .p-inputswitch-slider {
+    background: #b6bfc8;
+}
+
+.p-inputswitch:not(.p-disabled):has(.p-inputswitch-input:hover).p-highlight .p-inputswitch-slider {
+    background: #0d89ec;
+}
+
+.p-inputswitch:not(.p-disabled):has(.p-inputswitch-input:focus-visible) .p-inputswitch-slider {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 .2rem #a6d5fa;
+}
+
+.p-inputswitch.p-invalid>.p-inputswitch-slider {
+    border-color: #f44336;
+}
+
+/* Estilos para el Divider de PrimeReact */
+.p-divider.p-divider-horizontal {
+    margin: 1rem 0;
+    padding: 0 1rem;
+}
+
+.p-divider.p-divider-horizontal:before {
+    border-top: 1px #dee2e6;
+}
+
+.p-divider.p-divider-horizontal .p-divider-content {
+    padding: 0 .5rem;
+    background-color: #fff;
+}
+
+.p-divider.p-divider-vertical {
+    margin: 0 1rem;
+    padding: 1rem 0;
+}
+
+.p-divider.p-divider-vertical:before {
+    border-left: 1px #dee2e6;
+}
+
+.p-divider.p-divider-vertical .p-divider-content {
+    padding: .5rem 0;
+    background-color: #fff;
+}

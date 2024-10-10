@@ -1,0 +1,79 @@
+<form id="perfilForm" class="card p-4 shadow-sm" method="post">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{CSRF}}">
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          id="apellidoInput"
+          class="form-control"
+          placeholder="Apellido"
+          name="username"
+          value="{{username}}"
+        />
+        <label for="apellidoInput">Nombre De Usuario</label>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          id="emailInput"
+          class="form-control"
+          placeholder="Email"
+          name="email"
+          value="{{email}}"
+        />
+        <label for="emailInput">Email</label>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="form-floating mb-3">
+        <input type="text"
+          id="telefonoInput"
+          class="form-control"
+          placeholder="Telefono"
+          name="telefono"
+          value="{{telefono}}"
+          />
+          <label for="telefonoInput">Telefono</label>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating mb-3">
+        <input
+          type="password"
+          id="contraseñaInput"
+          class="form-control"
+          placeholder="Contraseña"
+          name="contraseña"
+          value="{{contraseña}}"
+        />
+        <label for="contraseñaInput">Contraseña</label>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating mb-3">
+        <input
+          id="fileInput"
+          class="form-control"
+          type="file"
+          name="imagen"
+        />
+        <label for="fileInput">Seleccionar archivo</label>
+        <span
+          id="fileName"
+          class="form-control-plaintext"
+        >{{imagen}}</span>
+      </div>
+    </div>
+    <div class="col-12">
+      <button id="actualizarButton" type="submit" class="btn btn-primary w-100">
+        <span>Actualizar</span>
+        <span class="ms-2">
+          <i class="fa-solid fa-paper-plane"></i>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>

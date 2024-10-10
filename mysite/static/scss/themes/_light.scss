@@ -1,0 +1,50 @@
+// _light.scss
+
+@import '../_variables';
+
+body.light-mode {
+    background-color: $background-color-light;
+    color: $text-color-light;
+}
+
+.footer-light-mode {
+    background-color: $light;
+    color: $dark;
+
+    p{
+        color: $dark;
+    }
+    i{
+        color: $dark;
+    }
+}
+
+// Estilos específicos para la navbar en modo claro
+.navbar-light-mode {
+    background-color: $light;
+    color: $text-color-light;
+
+    // Cambia el color de los items de navegación
+    .nav-link {
+        color: $text-color-light; // Cambia el color del texto de los nav items
+
+        &:hover,
+        &:focus {
+            color: lighten($text-color-light, 20%); // O un color personalizado más claro para hover/focus
+        }
+    }
+}
+
+.nav-link {
+    color: $secondary;
+
+    &:hover,
+    &:focus {
+        color: lighten($secondary, 30%);
+    }
+}
+
+.breadcrumb-light-mode {
+    background-color: lighten($light, 10%);
+    color: $text-color-light;
+}

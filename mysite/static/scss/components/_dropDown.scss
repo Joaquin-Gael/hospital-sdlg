@@ -1,0 +1,85 @@
+// _dorpDown.scss
+
+@import '../_variables';
+
+// Estilos para el contenedor del dropdown
+.btn-group {
+    position: relative;
+  
+    .btn {
+      display: flex;
+      align-items: center;
+      background: $secondary;
+      border: 1px solid $dropdown-border;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      color: $dropdown-text-color;
+      text-decoration: none;
+  
+      &:hover,
+      &:focus {
+        color: $dropdown-hover-text-color;
+        background: $dropdown-hover-bg;
+      }
+  
+      img {
+        border-radius: 50%;
+        margin-right: 0.5rem;
+      }
+  
+      .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+    }
+  
+    // Estilos para el menú desplegable
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1000;
+      display: none;
+      float: left;
+      min-width: 160px;
+      padding: 0.5rem 0;
+      margin: 0.125rem 0 0;
+      font-size: 1rem;
+      color: $dropdown-text-color;
+      text-align: left;
+      background-color: $dropdown-bg;
+      border: 1px solid $dropdown-border;
+      border-radius: 0.25rem;
+  
+      &.show {
+        display: block;
+      }
+  
+      .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        clear: both;
+        font-weight: 400;
+        color: $dropdown-text-color;
+        text-align: inherit;
+        background-color: transparent;
+        border: 0;
+        border-radius: 0.25rem;
+        white-space: nowrap;
+  
+        &:hover,
+        &:focus {
+          color: $dropdown-hover-text-color;
+          background-color: $dropdown-hover-bg;
+        }
+  
+        &.active {
+          color: $dropdown-hover-text-color;
+          background-color: $dropdown-hover-bg;
+        }
+      }
+    }
+  }

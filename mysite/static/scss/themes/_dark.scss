@@ -1,0 +1,55 @@
+// _dark.scss
+
+@import '../_variables';
+
+body.dark-mode {
+    background-color: $background-color-dark;
+    color: $text-color-dark; // Cambia el color del texto principal a uno claro
+}
+
+// Estilos específicos para la navbar en modo oscuro
+.navbar-dark-mode {
+    background-color: $dark;
+    color: $text-color-dark;
+
+    // Cambia el color de los items de navegación
+    .nav-link {
+        color: $text-color-dark; // Cambia el color del texto de los nav items
+
+        &:hover,
+        &:focus {
+            color: lighten($text-color-dark, 20%); // O un color personalizado más claro para hover/focus
+        }
+    }
+
+    .navbar-toggler{
+        background-color: $dark;
+        color: $text-color-dark;
+
+        .navbar-toggler-icon{
+            color: $secondary;
+        }
+    }
+}
+
+// Estilos para el footer en modo oscuro
+.footer-dark-mode {
+    background-color: $dark;
+    color: $text-color-dark;
+}
+
+// Estilos para el breadcrumb en modo oscuro
+.breadcrumb-dark-mode {
+    background-color: $background-color-dark;
+    color: $text-color-dark;
+}
+
+// Aplica estilos a los enlaces
+.nav-link {
+    color: lighten($primary, 20%);
+
+    &:hover,
+    &:focus {
+        color: lighten($primary, 40%);
+    }
+}

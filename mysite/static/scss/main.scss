@@ -1,0 +1,10 @@
+// main.scss
+
+// Importa Bootstrap SCSS
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+// Importa tus archivos SCSS personalizados
+@import 'variables';
+@import 'components/datepicker';
+@import 'themes/light';
+@import 'themes/dark';
