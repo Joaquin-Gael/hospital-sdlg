@@ -12,8 +12,7 @@ from asgiref.sync import sync_to_async
 from django import views
 from django.urls import reverse_lazy
 from . import models
-from .middlewares.saveUserData import CachOauthGoogle,LoginUnRequired
-from .forms import UsuarioForm
+from .middlewares.saveUserData import LoginUnRequired
 import json
 
 # Create your views here.
@@ -21,10 +20,8 @@ import json
 class RegisterUser(views.View):
 
     def get(self, request):
-        form = UsuarioForm
-        return render(request, 'user/register.html', {'form':form})
+        return render(request, 'user/register.html')
     
-    @method_decorator(CachOauthGoogle)
     def post(self, request):
         try:
             user = models.Usuarios(

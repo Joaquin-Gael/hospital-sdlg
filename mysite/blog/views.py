@@ -47,7 +47,7 @@ class Contactos(views.View):
             try:
                 send_mail(subject, message, from_email, recipient_list)
                 messages.success(request, message='¡Mensaje enviado con éxito! Nos pondremos en contacto con usted.')
-                return render(request, 'blog/contacto.html')
+                return redirect('Contactos')
             except Exception as e:
                 messages.error(request, message=f'Hubo un error al enviar su mensaje: {str(e)}')
                 return redirect('Contactos')
