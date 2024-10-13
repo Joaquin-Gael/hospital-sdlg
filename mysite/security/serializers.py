@@ -1,8 +1,7 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.utils import timezone
-from user.models import Usuarios
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenBlacklistSerializer as BaseTokenBlacklistSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
-from rest_framework.response import Response
+from .models import BlackListTokens
 
 class SecurityTokenSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField(required=False)
@@ -20,3 +19,11 @@ class SecurityTokenSerializer(TokenObtainPairSerializer):
         token['ulli'] = user.last_login.isoformat() if user.last_login else None
         token['ullo'] = user.last_logout.isoformat() if user.last_logout else None
         return token
+
+class TokenBlacklistRedisSerializer(BaseTokenBlacklistSerializer):
+    def validate(self, attrs):
+        print(attrs)
+        refresh_token = attrs['refresh']
+        token = RefreshToken(refresh_token)
+        token_db = BlackListTokens().set_blacklisted(token)
+        return attrs

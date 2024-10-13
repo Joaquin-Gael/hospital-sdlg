@@ -1,5 +1,4 @@
 from django.urls import path, re_path
-from django.conf import settings
 from django.views.generic.base import RedirectView
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -36,6 +35,16 @@ urlpatterns = [
         'token/refresh/', 
         SecurityTokenRefresh.as_view(), 
         name='token_refresh'
+    ),
+    path(
+        'oauth/singup/google/',
+        GoogleSingUp.as_view(),
+        name='google_singup'
+    ),
+    path(
+        'oauth/callback/google/',
+        OauthCallback.as_view(),
+        name='oauth_callback'
     ),
 
     # Swagger UI

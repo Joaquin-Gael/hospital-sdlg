@@ -3,14 +3,9 @@ import os, dj_database_url
 from django.urls import reverse_lazy
 from datetime import timedelta
 
-GOOGLE_CLIENT_ID = ""
-GOOGLE_SECRET_ID = ""
-CALLBACK_URL = ""
-
-REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
-REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
-REDIS_DB = os.environ.get('REDIS_DB', '0')
-REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', '1234')
+GOOGLE_CLIENT_ID = '82678305256-58rv9un7jfe17etgp69f7d8lucqetukh.apps.googleusercontent.com'
+GOOGLE_SECRET_ID = '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'
+CALLBACK_URL = reverse_lazy('oauth_callback')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -299,7 +294,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,  # Tamaño por defecto de la paginación
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',  # Navegador API
     ],
 }
 

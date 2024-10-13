@@ -15,7 +15,7 @@ router.register(r'shifts',views.ShiftsViewSet)
 
 urlpatterns = [
     path(
-        '', 
+        '',
         include(
             router.urls
         )
