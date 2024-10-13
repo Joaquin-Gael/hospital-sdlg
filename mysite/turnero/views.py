@@ -36,7 +36,7 @@ class PagarTurno(views.View):
 class TurneroForm(views.View):
      
     @staticmethod
-    def generar_intervalos(hora_inicio, hora_fin, intervalo_minutos):
+    def generar_intervalos(hora_inicio, hora_fin, intervalo_minutos): # para que si se puponia que el datepiker ya se encargaba de eso
         hora_actual = datetime.strptime(hora_inicio, "%H:%M:%S")
         fin = datetime.strptime(hora_fin, "%H:%M:%S")
         intervalos = []
@@ -48,7 +48,7 @@ class TurneroForm(views.View):
 
         return intervalos
 
-    async def obtener_horarios_disponibles(self, request):
+    async def obtener_horarios_disponibles(self, request): # esta funcion asincrona no se utiliza nunca
         if request.method == 'POST':
             servicio_id = json.loads(request.body).get('servicio')
             try:

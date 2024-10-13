@@ -109,13 +109,14 @@ $(() => {
     });
 
     // Aquí se maneja la lógica al seleccionar el servicio y el horario.
+    // para que usar ajax si ya existe fech?
     $('#servicioSelect').on('change', function() {
         const servicioId = $(this).val();
 
         if (!servicioId) return;
 
         $.ajax({
-            url: '/obtener-horarios-disponibles/',
+            url: '/obtener-horarios-disponibles/', // url no existente
             type: 'POST',
             data: {
                 'servicio': servicioId,
