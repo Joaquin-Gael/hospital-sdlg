@@ -110,27 +110,27 @@ $(() => {
 
     // Aquí se maneja la lógica al seleccionar el servicio y el horario.
     // para que usar ajax si ya existe fech?
-    $('#servicioSelect').on('change', function() {
-        const servicioId = $(this).val();
-
-        if (!servicioId) return;
-
-        $.ajax({
-            url: '/obtener-horarios-disponibles/', // url no existente
-            type: 'POST',
-            data: {
-                'servicio': servicioId,
-                'csrfmiddlewaretoken': getToken()
-            },
-            success: function(response) {
-                const horarios = response.horarios;
-                actualizarHorarios(horarios);
-            },
-            error: function() {
-                showToast(errorMessage('Error al obtener los horarios disponibles.'));
-            }
-        });
-    });
+    //$('#servicioSelect').on('change', function() {
+    //    const servicioId = $(this).val();
+    //
+    //    if (!servicioId) return;
+    //
+    //    $.ajax({
+    //        url: '/obtener-horarios-disponibles/', // url no existente
+    //        type: 'POST',
+    //        data: {
+    //            'servicio': servicioId,
+    //            'csrfmiddlewaretoken': getToken()
+    //        },
+    //        success: function(response) {
+    //            const horarios = response.horarios;
+    //            actualizarHorarios(horarios);
+    //        },
+    //        error: function() {
+    //            showToast(errorMessage('Error al obtener los horarios disponibles.'));
+    //        }
+    //    });
+    //});
 
     const actualizarHorarios = (horarios) => {
         const horarioSelect = $(formFields.horario);
@@ -153,11 +153,12 @@ $(() => {
         }
     };
 
+    // ya tenias en _dataPiker.js para el date-piker
     // Inicia el selector de fecha
-    flatpickr('#date-picker', {
-        dateFormat: 'Y-m-d',
-        onChange: function() {
-            $('#servicioSelect').trigger('change');
-        }
-    });
+    //flatpickr('#date-picker', {
+    //    dateFormat: 'Y-m-d',
+    //    onChange: function() {
+    //        $('#servicioSelect').trigger('change');
+    //    }
+    //});
 });

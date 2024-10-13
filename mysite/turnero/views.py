@@ -49,7 +49,7 @@ class TurneroForm(views.View):
         return intervalos
 
     async def obtener_horarios_disponibles(self, request): # esta funcion asincrona no se utiliza nunca
-        if request.method == 'POST':
+        if request.method == 'POST': # que es esto. no tinen sentido
             servicio_id = json.loads(request.body).get('servicio')
             try:
                 especialidad_id = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio_id).especialidadID_id)()
@@ -78,8 +78,8 @@ class TurneroForm(views.View):
 
         try:
             #medicos:list[models.Medicos] = await sync_to_async(lambda:models.Medicos.objects.all())()
-            horarios:list[models.Horario_medicos] = await sync_to_async(lambda:models.Horario_medicos.objects.all())()
-            servicios:list[models.Servicios] = await sync_to_async(lambda:models.Servicios.objects.all())()
+            horarios:list[models.Horario_medicos] = await sync_to_async(models.Horario_medicos.objects.all)()
+            servicios:list[models.Servicios] = await sync_to_async(models.Servicios.objects.all)()
             
             return TemplateResponse(request, 'turnero/form.html',{'horarios':horarios, 'servicios':servicios})
         except Exception as e:
@@ -97,27 +97,21 @@ class TurneroForm(views.View):
             print(f"Servicio: {servicio}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
 
             try:
-                servicio_obj = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()
+                servicio_obj = await sync_to_async(models.Servicios.objects.get)(servicioID=servicio)
                 especialidad = servicio_obj.especialidadID
-                medicos = await sync_to_async(lambda: models.Medicos.objects.filter(especialidadID=especialidad))()
+                medicos:list[models.Medicos] = await sync_to_async(models.Medicos.objects.filter)(especialidadID=especialidad)
 
                 if not medicos:
                     return response.JsonResponse({'error': 'No hay médicos disponibles para esta especialidad'}, status=404)
 
                 medico = random.choice(medicos)
 
-                horarios = await sync_to_async(
-                    lambda: models.Horario_medicos.objects.filter(medicoID=medico)
-                )()
-                turnos_ocupados = await sync_to_async(
-                    lambda: models.Turnos.objects.filter(horarioID__in=horarios)
-                )()
+                horarios = await sync_to_async(models.Horario_medicos.objects.filter)(medicoID=medico)
+                turnos_ocupados_ids = await sync_to_async(models.Turnos.objects.filter(horarioID__in=horarios).values_list)('horarioID', flat=True)
 
-                horarios_disponibles = [
-                    horario for horario in horarios if not any(
-                        turno.horarioID == horario for turno in turnos_ocupados
-                    )
-                ]
+                horarios_disponibles = await sync_to_async(models.Horario_medicos.objects.filter)(
+                    medicoID = medico
+                ).exclude(id__in=turnos_ocupados_ids)
 
                 if not horarios_disponibles:
                     return response.JsonResponse({'error': 'No hay horarios disponibles'}, status=404)
