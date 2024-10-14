@@ -1,5 +1,5 @@
 from pathlib import Path
-import os, dj_database_url
+import os, dj_database_url, sys
 from django.urls import reverse_lazy
 from datetime import timedelta
 
@@ -95,6 +95,8 @@ TINYMCE_DEFAULT_CONFIG = {
 #}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+sys.path.append(os.path.join(BASE_DIR, 'tests'))
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-^=6-_k)oh!n9-fpcd1qd0rf(!8y2!!8cc*so1if(!*ydv@*_dc')
 

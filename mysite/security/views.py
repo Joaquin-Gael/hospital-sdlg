@@ -4,17 +4,21 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import UntypedToken, RefreshToken
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.utils import timezone
 from .serializers import SecurityTokenSerializer, TokenBlacklistRedisSerializer
 from user.models import Usuarios
 from datetime import timedelta
 from .models import SessionTokens, BlackListTokens
 from urllib.parse import urlencode
 from asgiref.sync import sync_to_async
-import uuid, requests
+from faker import Faker
+import requests, uuid
+
+faker = Faker()
 
 # Create your views here.
 
@@ -87,7 +91,7 @@ class OauthCallback(APIView):
             user.nombre = nombre
             user.apellido = apellido
             user.imagen_url = img_url
-            user.set_password(str(uuid.uuid4()))
+            user.set_password(faker.password(length=16, special_chars=True, digits=True, upper_case=True))
             user.save()
             user.set_login(request)
             return user
@@ -177,36 +181,43 @@ class SecurityTokenRefresh(TokenRefreshView):
         
         if refresh_token:
             try:
-                refresh = RefreshToken(refresh_token)
-                token_db = BlackListTokens(refresh[''])
-                print(refresh)
-                
+                payload = UntypedToken(refresh_token)
+                print(payload.payload)
+
                 # Verifica si el token está en la blacklist
-                if token_db.is_blacklisted():
+                if BlackListTokens.is_blacklisted(payload.payload):
+                    print('Invalido')
                     return Response(
                         {'Error': 'Token is blacklisted'},
                         status=status.HTTP_401_UNAUTHORIZED
                     )
                 
                 # Agrega el token a la blacklist
-                TokenDBORM.set_blacklist(refresh)
-                print('Listado')
+                listed = BlackListTokens.set_blacklisted(payload.payload)
+                print('Listado') if listed else print('Error')
                 
                 # Genera un UUID para la sesión
                 uuid_token = str(uuid.uuid4())
                 response.data['token_uuid'] = uuid_token
+
+                user = Usuarios.objects.get(userID=payload.payload.get('uui'))
+
+                token = SecurityTokenSerializer.get_token(user)
+
+                response.data['access'] = str(token.access_token)
+                response.data['refresh'] = str(token)
                 
                 # Guarda el UUID y la fecha de expiración en la base de datos
-                SessionTokens.objects.create(
-                    tokenUUID=uuid_token,
-                    expires_at=timezone.now() + timedelta(seconds=refresh.access_token['exp'] - timezone.now().timestamp())
-                )
-                
+                #SessionTokens.objects.create(
+                #    tokenUUID=uuid_token,
+                #    expires_at=timezone.now() + timedelta(seconds=payload.access_token['exp'] - timezone.now().timestamp()),
+                #    userID=user
+                #)
+
+                return response
             except Exception as e:
-                print('Error: {}\nData: {}'.format(Exception.__class__, Exception.args))
+                print('Error: {}\nData: {}'.format(e.__class__, e.args))
                 return Response(
                     {'Error': 'Invalid token'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-        
-        return response

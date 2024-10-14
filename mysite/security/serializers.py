@@ -2,6 +2,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, Toke
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
 from .models import BlackListTokens
+import uuid
 
 class SecurityTokenSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField(required=False)
@@ -18,6 +19,7 @@ class SecurityTokenSerializer(TokenObtainPairSerializer):
         token['uui'] = user.userID
         token['ulli'] = user.last_login.isoformat() if user.last_login else None
         token['ullo'] = user.last_logout.isoformat() if user.last_logout else None
+        token['uuid'] = str(uuid.uuid4())
         return token
 
 class TokenBlacklistRedisSerializer(BaseTokenBlacklistSerializer):

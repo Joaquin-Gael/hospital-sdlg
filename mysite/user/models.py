@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import (login, logout, authenticate)
+from django.contrib.auth import (login, logout)
 from django.core.files.base import ContentFile
 from django.conf import settings
 from PIL import Image, ImageDraw,ImageFont

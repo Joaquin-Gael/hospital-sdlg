@@ -9,27 +9,30 @@ import uuid
 
 class BlackListTokens(models.Model):
     tokenID = models.AutoField(primary_key=True)
+    tokenUUID = models.UUIDField(verbose_name='Token_UUID')
     tokenJTID = models.CharField(max_length=55, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
 
     def __str__(self):
-        return ' '.join(f'{k}: {v}' for k, v in vars(self).items() if not k.startswith('_'))
+        return ''.join(f'{k}: {v}' for k, v in vars(self).items() if not k.startswith('_'))
 
     @classmethod
     def set_blacklisted(cls, token):
         try:
-            JTID:str = token['jti']
-            EXP:str = token['exp'] - token['orig_iat']
+            JTID:str = token.get('jti')
+            EXP:str = token.get('exp') - token.get('iat')
             user = Usuarios.objects.get(
-                userID=token['user_id']
+                userID=token.get('user_id')
             )
-            cls(
+            instance = cls(
                 tokenJTID = JTID,
                 expires_at = timezone.now() + timedelta(seconds=EXP),
-                userID = user
+                userID = user,
+                tokenUUID = token.get('uuid')
             )
+            instance.save()
             return True
         except Usuarios.DoesNotExist as e:
             print(f'User does not exist: {e.__class__}\nData: {e.args}')
@@ -40,8 +43,10 @@ class BlackListTokens(models.Model):
 
     @classmethod
     def is_blacklisted(cls, token) -> bool:
-        JTID:str = token['jti']
-        token = cls.objects.filter(tokenID=JTID).exists()
+        UUID:str = token.get('uuid', None)
+        if not UUID:
+            return False
+        token = cls.objects.filter(tokenUUID=UUID).exists()
         return token
 
 
@@ -53,4 +58,4 @@ class SessionTokens(models.Model):
     userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
 
     def __str__(self):
-        return ' '.join(f'{k}: {v}' for k, v in vars(self).items() if not k.startswith('_'))
+        return ''.join(f'{k}: {v}' for k, v in vars(self).items() if not k.startswith('_'))

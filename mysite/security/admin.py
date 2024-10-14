@@ -4,7 +4,7 @@ from .models import BlackListTokens, SessionTokens
 # Register your models here.
 @admin.register(BlackListTokens)
 class BlackListTokensAdmin(admin.ModelAdmin):
-    list_display = ('tokenJTID', 'created_at', 'expires_at')
+    list_display = ('tokenID', 'tokenJTID', 'created_at', 'expires_at', 'userID', 'tokenUUID')
     search_fields = ('tokenJTID',)
     ordering = ('-created_at',)
 
