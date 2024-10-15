@@ -35,64 +35,16 @@ class PagarTurno(views.View):
             
 # Create your views here.
 class TurneroForm(views.View):
-<<<<<<< Updated upstream
-     
-    @staticmethod
-    def generar_intervalos(hora_inicio, hora_fin, intervalo_minutos): # para que si se puponia que el datepiker ya se encargaba de eso
-        hora_actual = datetime.strptime(hora_inicio, "%H:%M:%S")
-        fin = datetime.strptime(hora_fin, "%H:%M:%S")
-        intervalos = []
-
-        while hora_actual + timedelta(minutes=intervalo_minutos) <= fin:
-            siguiente_hora = hora_actual + timedelta(minutes=intervalo_minutos)
-            intervalos.append(hora_actual.strftime("%H:%M"))
-            hora_actual = siguiente_hora
-
-        return intervalos
-
-    async def obtener_horarios_disponibles(self, request): # esta funcion asincrona no se utiliza nunca
-        if request.method == 'POST': # que es esto. no tinen sentido
-            servicio_id = json.loads(request.body).get('servicio')
-            try:
-                especialidad_id = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio_id).especialidadID_id)()
-                medicos = await sync_to_async(lambda: models.Medicos.objects.filter(especialidadID=especialidad_id))()
-
-                horarios_disponibles = []
-
-                for medico in medicos:
-                    horarios = await sync_to_async(lambda: models.Horario_medicos.objects.filter(medicoID=medico))()
-                    for horario in horarios:
-                        intervalos = self.generar_intervalos(horario.hora_inicio, horario.hora_fin, 25)
-                        horarios_disponibles.extend(intervalos)
-
-                return response.JsonResponse({'horarios': horarios_disponibles})
-            except models.Servicios.DoesNotExist:
-                return response.JsonResponse({'error': 'Servicio no encontrado'}, status=404)
-            except Exception as e:
-                print(f"Error al obtener horarios disponibles: {e}")
-                return response.JsonResponse({'error': 'Error interno del servidor'}, status=500)
-
-     
-=======
->>>>>>> Stashed changes
     async def get(self, request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
             return redirect('LoginUser')
 
         try:
-<<<<<<< Updated upstream
-            #medicos:list[models.Medicos] = await sync_to_async(lambda:models.Medicos.objects.all())()
-            horarios:list[models.Horario_medicos] = await sync_to_async(models.Horario_medicos.objects.all)()
-            servicios:list[models.Servicios] = await sync_to_async(models.Servicios.objects.all)()
-            
-            return TemplateResponse(request, 'turnero/form.html',{'horarios':horarios, 'servicios':servicios})
-=======
             servicios = await sync_to_async(lambda: models.Servicios.objects.all())()
             return TemplateResponse(request, 'turnero/form.html', {
                 'servicios': servicios
             })
->>>>>>> Stashed changes
         except Exception as e:
             print('Error: {}\nData: {}'.format(e.__class__, e.args))
             return redirect('Home')
@@ -108,39 +60,14 @@ class TurneroForm(views.View):
             print(f"Servicio: {servicio}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
 
             try:
-<<<<<<< Updated upstream
-                servicio_obj = await sync_to_async(models.Servicios.objects.get)(servicioID=servicio)
-                especialidad = servicio_obj.especialidadID
-                medicos:list[models.Medicos] = await sync_to_async(models.Medicos.objects.filter)(especialidadID=especialidad)
-
-                if not medicos:
-                    return response.JsonResponse({'error': 'No hay médicos disponibles para esta especialidad'}, status=404)
-
-                medico = random.choice(medicos)
-
-                horarios = await sync_to_async(models.Horario_medicos.objects.filter)(medicoID=medico)
-                turnos_ocupados_ids = await sync_to_async(models.Turnos.objects.filter(horarioID__in=horarios).values_list)('horarioID', flat=True)
-
-                horarios_disponibles = await sync_to_async(models.Horario_medicos.objects.filter)(
-                    medicoID = medico
-                ).exclude(id__in=turnos_ocupados_ids)
-
-                if not horarios_disponibles:
-                    return response.JsonResponse({'error': 'No hay horarios disponibles'}, status=404)
-=======
                 servicio = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()
                 especialidad = servicio.especialidadID
                 medicos = await sync_to_async(lambda: list(models.Medicos.objects.filter(especialidadID=especialidad)))()
-                
-                if not medicos:
-                    return response.JsonResponse({'error': 'No hay médicos disponibles para la especialidad seleccionada'}, status=404)
-                
-                # Selección aleatoria de un médico
+
                 medico = choice(medicos)
-                
-                # Obtener el departamento asociado al médico seleccionado
+
                 departamento = await sync_to_async(lambda: models.Departamentos.objects.get(departamentoID=medico.especialidadID.departamentoID.departamentoID))()
-                # Crear la cita
+
                 _cita = {
                     'medicoID': medico,
                     'horarioID': horario,
@@ -148,7 +75,6 @@ class TurneroForm(views.View):
                     'estado': 'Pendiente',
                     'departamentoID': departamento,
                 }
->>>>>>> Stashed changes
 
                 # Crear el turno
                 _turno = {
