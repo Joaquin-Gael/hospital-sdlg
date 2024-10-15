@@ -8,31 +8,72 @@
 
 {% block styles %}
 <style>
+    /* Estilos globales */
+    body {
+        background-color: #f4f7f9; /* Fondo suave para toda la página */
+        font-family: Arial, sans-serif; /* Fuente más moderna */
+        color: #333; /* Color del texto */
+    }
+
     .btn {
         border-radius: 0;
-        /* Bordes rectos */
+        transition: background-color 0.3s ease; /* Transición suave en botones */
     }
 
     .btn-dark {
-        background-color: #000000;
+        background-color: #333; /* Cambiado a un gris más oscuro */
         border: 2px solid #ffffff;
         color: #ffffff;
     }
 
-    /* Estilo para las tarjetas */
-    .card {
-        border: 2px solid black;
-        border-radius: 0;
-        /* Bordes rectos */
-        background-color: #ffffff;
+    .btn-dark:hover {
+        background-color: #555; /* Color al pasar el mouse */
     }
 
+    /* Estilo para las tarjetas */
+    .card {
+        border: 2px solid #cccccc;
+        border-radius: 8px; /* Bordes redondeados */
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        margin-bottom: 20px; /* Espacio entre tarjetas */
+    }
+
+    h4 {
+        font-weight: 600; /* Hacer el título más prominente */
+        color: #007bff; /* Color azul */
+    }
+
+    .form-floating label {
+        color: #555; /* Color de las etiquetas */
+    }
+
+    .form-floating .form-control {
+        border-radius: 5px; /* Bordes redondeados en controles de formulario */
+        box-shadow: none; /* Eliminar la sombra de los controles */
+    }
+
+    .form-control:focus {
+        border-color: #007bff; /* Color de borde al enfocarse */
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25); /* Sombra en el enfoque */
+    }
+
+    .step {
+        margin-top: 20px; /* Espaciado entre pasos */
+    }
+
+    .invalid-feedback {
+        font-size: 0.9rem; /* Tamaño de fuente más pequeño para mensajes de error */
+    }
+
+    .card-title {
+        font-size: 1.5rem; /* Tamaño de fuente del título de la tarjeta */
+    }
 </style>
 {% endblock styles %}
 
 {% block main %}
-<div class="container card">
-    <h4 class="mb-4 text-center">Solicitar un turno</h4>
+<div class="container card p-4">
     <div id="response" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 
     <form id="turneroForm" class="needs-validation">
@@ -40,13 +81,14 @@
 
         <!-- Paso 1 -->
         <div class="step" id="step-1">
+            <h4 class="mb-4 text-center">Solicitud de Turno - Selecciona el Servicio y Motivo de Atención</h4>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="form-floating">
                         <select name="servicio" id="servicioSelect" class="form-select" required>
                             <option value="" disabled selected>Área médica</option>
                             {% for servicio in servicios %}
-                                <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - {{ servicio.especialidadID }}</option>
+                                <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - Precio: ${{ servicio.precio }}</option>
                             {% endfor %}
                         </select>
                         <label for="servicioSelect">Servicio</label>
@@ -66,14 +108,14 @@
 
         <!-- Paso 2 -->
         <div class="step d-none" id="step-2">
+            <h4 class="mb-4 text-center">Elige tu Horario y Fecha de Atención</h4>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="form-floating">
                         <select name="horario" id="horarioSelect" class="form-select" required>
                             <option value="" disabled selected>Selecciona un horario</option>
                             {% for horario in horarios %}
-                            <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }} - {{ horario.hora_fin }}
-                            </option>
+                            <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }} - {{ horario.hora_fin }}</option>
                             {% endfor %}
                         </select>
                         <label for="horarioSelect">Horarios</label>
@@ -85,6 +127,7 @@
                     <div class="form-floating">
                         <input type="date" id="date-picker" class="form-control datepicker"
                             placeholder="Elige una fecha" required>
+                        <input type="text" id="date-picker" class="form-control datepicker" placeholder="Elige una fecha" required>
                         <label for="date-picker">Fecha</label>
                         <div class="invalid-feedback">Por favor selecciona una fecha.</div>
                     </div>
@@ -104,6 +147,27 @@
             </div>
         </div>
 
+        <!-- Paso 4: Confirmación del Turno -->
+        <div class="step d-none" id="step-4">
+            <h4 class="mb-4 text-center">Detalles del turno</h4>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h4 class="card-title text-info mb-3">
+                        <span id="medico-nombre"></span> <small class="text-muted"></span></small>
+                    </h4>
+                    <p class="card-text fs-5">
+                        <strong class="text-secondary">Motivo:</strong> <span id="motivo-confirmacion" class="fw-bold"></span><br>
+                        <strong class="text-secondary">Horario:</strong> <span id="horario-confirmacion" class="fw-bold"></span><br>
+                        <strong class="text-secondary">Fecha:</strong> <span id="fecha-confirmacion" class="fw-bold"></span>
+                    </p>
+                    <div class="d-grid mt-4">
+                        <button id="checkout-btn" class="btn btn-dark btn-lg">Pagar</button>
+                        <div id="wallet_container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Navegación del formulario -->
         <div class="d-flex justify-content-between mt-4">
             <button id="prevButton" type="button" class="btn btn-dark d-none">Anterior</button>
@@ -117,70 +181,128 @@
 {% block scripts %}
 <script type="module" src="{% static 'js/_datePiker.js' %}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let currentStep = 1;
-        const totalSteps = 3;
-        const prevButton = document.getElementById('prevButton');
-        const nextButton = document.getElementById('nextButton');
-        const submitButton = document.getElementById('solicitarButton');
+document.addEventListener("DOMContentLoaded", function () {
+    let currentStep = 1;
+    const totalSteps = 4; 
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const submitButton = document.getElementById('solicitarButton');
 
-        const showStep = (step) => {
-            document.querySelectorAll('.step').forEach(function (el, index) {
-                el.classList.toggle('d-none', index + 1 !== step);
-            });
+    const showStep = (step) => {
+        document.querySelectorAll('.step').forEach(function (el, index) {
+            el.classList.toggle('d-none', index + 1 !== step);
+        });
 
-            prevButton.classList.toggle('d-none', step === 1);
-            nextButton.classList.toggle('d-none', step === totalSteps);
-            submitButton.classList.toggle('d-none', step !== totalSteps);
-        };
+        prevButton.classList.toggle('d-none', step === 1);
+        nextButton.classList.toggle('d-none', step === totalSteps);
+        submitButton.classList.toggle('d-none', step !== totalSteps);
+    };
 
-        const validateStep = (step) => {
-            const form = document.getElementById('turneroForm');
-            const stepElement = document.getElementById(`step-${step}`);
-            const inputs = stepElement.querySelectorAll('input, select, textarea');
-            let valid = true;
+    const validateStep = (step) => {
+        const form = document.getElementById('turneroForm');
+        const stepElement = document.getElementById(`step-${step}`);
+        const inputs = stepElement.querySelectorAll('input, select, textarea');
+        let valid = true;
 
-            inputs.forEach(input => {
-                if (!input.checkValidity()) {
-                    valid = false;
-                    input.classList.add('is-invalid');
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
-
-            return valid;
-        };
-
-        nextButton.addEventListener('click', function () {
-            if (validateStep(currentStep)) {
-                currentStep = Math.min(currentStep + 1, totalSteps);
-                showStep(currentStep);
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                valid = false;
+                input.classList.add('is-invalid');
             } else {
-                const form = document.getElementById('turneroForm');
-                form.classList.add('was-validated');
+                input.classList.remove('is-invalid');
             }
         });
 
-        prevButton.addEventListener('click', function () {
-            currentStep = Math.max(currentStep - 1, 1);
+        return valid;
+    };
+
+    nextButton.addEventListener('click', function () {
+        if (validateStep(currentStep)) {
+            currentStep = Math.min(currentStep + 1, totalSteps);
+            
+            if (currentStep === 4) {
+                const servicioSelect = document.getElementById('servicioSelect');
+                const medico = servicioSelect.options[servicioSelect.selectedIndex].text;
+                const especialidad = servicioSelect.options[servicioSelect.selectedIndex].dataset.especialidad;
+                const motivo = document.getElementById('motivoTextarea').value;
+                const horarioSelect = document.getElementById('horarioSelect');
+                const horario = horarioSelect.options[horarioSelect.selectedIndex].text;
+                const fecha = document.getElementById('date-picker').value;
+                
+                // Actualizar campos en la confirmación
+                document.getElementById('medico-nombre').innerText = medico;
+                document.getElementById('motivo-confirmacion').innerText = motivo;
+                document.getElementById('horario-confirmacion').innerText = horario;
+                document.getElementById('fecha-confirmacion').innerText = fecha;
+            }
+            
             showStep(currentStep);
-        });
+        } else {
+            const form = document.getElementById('turneroForm');
+            form.classList.add('was-validated');
+        }
+    });
 
-        const forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-
+    prevButton.addEventListener('click', function () {
+        currentStep = Math.max(currentStep - 1, 1);
         showStep(currentStep);
     });
-    
+
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+
+    let horarios = []
+
+    const listarHorarios = async (servicioID) => {
+        try {
+            const response = await fetch(`/API/schedules/${servicioID}/horarios`);
+            const data = await response.json();
+
+            if (Array.isArray(data) && data.length > 0) {
+                horarios = data; 
+                let opciones = '';
+                const horasVistas = new Set(); 
+
+                horarios.forEach((horario) => {
+                    if (!horasVistas.has(horario.hora)) {
+                        horasVistas.add(horario.hora); 
+                        opciones += `<option value='${horario.id}'>${horario.hora}</option>`;
+                    }
+                });
+
+                horarioSelect.innerHTML = opciones; 
+            } else {
+                console.log('Horarios no encontrados para el servicio seleccionado.');
+                horarioSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles</option>'; // Mensaje de no disponibilidad
+            }
+        } catch (error) {
+            console.log('Error al listar horarios:', error);
+        }
+    };
+
+
+    servicioSelect.addEventListener('change', function () {
+        const servicioID = servicioSelect.value; 
+        listarHorarios(servicioID); 
+    });
+
+
+
+
+    showStep(currentStep);
+
+
+
+
+});
 </script>
 <script type="module" src="{% static 'js/form.js' %}"></script>
 {% endblock scripts %}

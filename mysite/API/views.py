@@ -25,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     },
                     'horario': {
                         'id': x.citaID.horarioID.horarioID,
-                        'hora': str(x.citaID.horarioID.hora_inicio)
+                        'hora': str(x.citaID.horarioID.hora)
                     },
                     'motivo': x.motivo, 
                     'estado': x.estado  
@@ -87,6 +87,37 @@ class SchedulesViewSet(viewsets.ModelViewSet):
     queryset = Horario_medicos.objects.all()
     serializer_class = SchedulesSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @decorators.action(['GET'], url_path='horarios', detail=True)
+    def get_by_service(self, request, pk=None):
+        try:
+            servicio_id = pk
+            servicio = Servicios.objects.get(servicioID=servicio_id)
+            especialidad_id = servicio.especialidadID
+            medicos = Medicos.objects.filter(especialidadID=especialidad_id)
+            horarios = Horario_medicos.objects.filter(medicoID__in=medicos)
+
+            list_horarios = []
+            for horario in horarios:
+                data = {
+                    'id': horario.horarioID,
+                    'medico': {
+                        'id': horario.medicoID.medicoID,
+                        'nombre': horario.medicoID.nombre
+                    },
+                    'hora': str(horario.hora)
+                }
+                json.dumps(data)
+                list_horarios.append(data)
+            
+            json.dumps(list_horarios)
+            return response.Response(list_horarios, status=status.HTTP_200_OK)
+        
+        except Exception as err:    
+            print(err)
+            return response.Response({
+                'err':err.__class__
+            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class AppointmentsViewSet(viewsets.ModelViewSet):

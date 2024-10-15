@@ -10,12 +10,13 @@ from django.utils.decorators import method_decorator
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from . import models
+from medicos.models import (Servicios, Medicos,Horario_medicos,Departamentos)
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
 from rest_framework import status
 from datetime import timedelta,datetime
-import json, io,random
-
+from random import choice
+import json, io
 
 class PagarTurno(views.View):
     async def get(self,request):
@@ -34,6 +35,7 @@ class PagarTurno(views.View):
             
 # Create your views here.
 class TurneroForm(views.View):
+<<<<<<< Updated upstream
      
     @staticmethod
     def generar_intervalos(hora_inicio, hora_fin, intervalo_minutos): # para que si se puponia que el datepiker ya se encargaba de eso
@@ -71,17 +73,26 @@ class TurneroForm(views.View):
                 return response.JsonResponse({'error': 'Error interno del servidor'}, status=500)
 
      
+=======
+>>>>>>> Stashed changes
     async def get(self, request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
             return redirect('LoginUser')
 
         try:
+<<<<<<< Updated upstream
             #medicos:list[models.Medicos] = await sync_to_async(lambda:models.Medicos.objects.all())()
             horarios:list[models.Horario_medicos] = await sync_to_async(models.Horario_medicos.objects.all)()
             servicios:list[models.Servicios] = await sync_to_async(models.Servicios.objects.all)()
             
             return TemplateResponse(request, 'turnero/form.html',{'horarios':horarios, 'servicios':servicios})
+=======
+            servicios = await sync_to_async(lambda: models.Servicios.objects.all())()
+            return TemplateResponse(request, 'turnero/form.html', {
+                'servicios': servicios
+            })
+>>>>>>> Stashed changes
         except Exception as e:
             print('Error: {}\nData: {}'.format(e.__class__, e.args))
             return redirect('Home')
@@ -97,6 +108,7 @@ class TurneroForm(views.View):
             print(f"Servicio: {servicio}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
 
             try:
+<<<<<<< Updated upstream
                 servicio_obj = await sync_to_async(models.Servicios.objects.get)(servicioID=servicio)
                 especialidad = servicio_obj.especialidadID
                 medicos:list[models.Medicos] = await sync_to_async(models.Medicos.objects.filter)(especialidadID=especialidad)
@@ -115,7 +127,30 @@ class TurneroForm(views.View):
 
                 if not horarios_disponibles:
                     return response.JsonResponse({'error': 'No hay horarios disponibles'}, status=404)
+=======
+                servicio = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()
+                especialidad = servicio.especialidadID
+                medicos = await sync_to_async(lambda: list(models.Medicos.objects.filter(especialidadID=especialidad)))()
+                
+                if not medicos:
+                    return response.JsonResponse({'error': 'No hay médicos disponibles para la especialidad seleccionada'}, status=404)
+                
+                # Selección aleatoria de un médico
+                medico = choice(medicos)
+                
+                # Obtener el departamento asociado al médico seleccionado
+                departamento = await sync_to_async(lambda: models.Departamentos.objects.get(departamentoID=medico.especialidadID.departamentoID.departamentoID))()
+                # Crear la cita
+                _cita = {
+                    'medicoID': medico,
+                    'horarioID': horario,
+                    'motivo': motivo,
+                    'estado': 'Pendiente',
+                    'departamentoID': departamento,
+                }
+>>>>>>> Stashed changes
 
+                # Crear el turno
                 _turno = {
                     'medicoID': medico,
                     'motivo': motivo,
@@ -125,10 +160,13 @@ class TurneroForm(views.View):
 
                 print(_turno)
 
-                return TemplateResponse(request, 'turnero/pay-turno.html', {'turno_data': _turno})
+                # Renderizar la página de éxito
+                return TemplateResponse(request, 'user/panel', {'turno_data': _turno})
 
             except models.Servicios.DoesNotExist:
                 return response.JsonResponse({'error': 'Servicio no encontrado'}, status=404)
+            except models.Medicos.DoesNotExist:
+                return response.JsonResponse({'error': 'Médico no encontrado'}, status=404)
             except Exception as e:
                 print(f'Error al generar turno: {e}')
                 return response.JsonResponse({'error': 'Error al generar turno'}, status=500)

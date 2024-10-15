@@ -67,13 +67,13 @@ class Horario_medicos(models.Model):
     horarioID = models.AutoField(primary_key=True)
     medicoID = models.ForeignKey(Medicos,on_delete=models.CASCADE)
     dia = models.CharField(max_length=100)
-    hora_inicio = models.TimeField()
-    hora_fin = models.TimeField()
+    hora = models.TimeField()
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
+    servicioID = models.ForeignKey(Servicios,on_delete=models.CASCADE)
     departamentoID = models.ForeignKey(Departamentos,on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f"{self.medicoID} {self.hora_inicio} {self.hora_fin}"
+        return f"{self.medicoID} {self.hora}"
     
     @classmethod
     def get_horarios(cls):

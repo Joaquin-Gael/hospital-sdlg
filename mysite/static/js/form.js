@@ -108,51 +108,6 @@ $(() => {
         }
     });
 
-    // Aquí se maneja la lógica al seleccionar el servicio y el horario.
-    // para que usar ajax si ya existe fech?
-    //$('#servicioSelect').on('change', function() {
-    //    const servicioId = $(this).val();
-    //
-    //    if (!servicioId) return;
-    //
-    //    $.ajax({
-    //        url: '/obtener-horarios-disponibles/', // url no existente
-    //        type: 'POST',
-    //        data: {
-    //            'servicio': servicioId,
-    //            'csrfmiddlewaretoken': getToken()
-    //        },
-    //        success: function(response) {
-    //            const horarios = response.horarios;
-    //            actualizarHorarios(horarios);
-    //        },
-    //        error: function() {
-    //            showToast(errorMessage('Error al obtener los horarios disponibles.'));
-    //        }
-    //    });
-    //});
-
-    const actualizarHorarios = (horarios) => {
-        const horarioSelect = $(formFields.horario);
-        horarioSelect.empty(); 
-
-        if (horarios.length === 0) {
-            const option = $('<option></option>')
-                .attr('value', '')
-                .attr('disabled', true)
-                .attr('selected', true)
-                .text('No hay horarios disponibles');
-            horarioSelect.append(option);
-        } else {
-            $.each(horarios, function(index, horario) {
-                const option = $('<option></option>')
-                    .attr('value', horario.id)
-                    .text(horario.intervalo);
-                horarioSelect.append(option);
-            });
-        }
-    };
-
     // ya tenias en _dataPiker.js para el date-piker
     // Inicia el selector de fecha
     //flatpickr('#date-picker', {

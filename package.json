@@ -3,7 +3,8 @@
     "bootstrap": "^5.3.3",
     "flatpickr": "^4.6.13",
     "i": "^0.3.7",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "mercadopago": "^2.0.15"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
@@ -11,5 +12,5 @@
   "scripts": {
     "build:ts": "tsc",
     "watch:ts": "tsc --watch"
-  }  
+  }
 }

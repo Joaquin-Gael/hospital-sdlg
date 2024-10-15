@@ -22,5 +22,5 @@ urlpatterns = [
         'turnoPago',
         views.PagarTurno.as_view(),
         name="turnoPago"
-    )
+    ),
 ]
