@@ -2,11 +2,19 @@ from rest_framework import serializers
 from turnero.models import * 
 from medicos.models import (Ubicaciones,Medicos,Departamentos,Especialidades,Horario_medicos)
 from user.models import Usuarios
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuarios
         fields = '__all__'
-        
+
+    def to_representation(self, instance):
+        json_ = super().to_representation(instance)
+
+        json_['contraseña'] = instance.get_contraseña()
+
+        return json_
+
 class UbicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ubicaciones

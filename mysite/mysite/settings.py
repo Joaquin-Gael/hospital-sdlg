@@ -2,9 +2,10 @@ from pathlib import Path
 import os, dj_database_url, sys
 from django.urls import reverse_lazy
 from datetime import timedelta
+from cryptography.fernet import Fernet
 
 GOOGLE_CLIENT_ID = '82678305256-58rv9un7jfe17etgp69f7d8lucqetukh.apps.googleusercontent.com'
-GOOGLE_SECRET_ID = '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'
+GOOGLE_CLIENT_SECRET = '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'
 CALLBACK_URL = reverse_lazy('oauth_callback')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -27,19 +28,19 @@ ACCOUNT_USERNAME_REQUIRED = False
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 JWT_HASH = "HS256"
+FERNET_KEY:str = 'bp3-2Zt5nUsRlXq82F-_m0apVBvkyJpwWNP3UIOIl8c='
 
-DB_PROD = True
+DB_PROD = False
 
 JAZZMIN_SETTINGS = {
     "site_title":"Hospital SDLG Admin Panel",
     "site_header":"Hospital SDLG Admin Panel",
     "show_sidebar":True,
     "icons": {
-        "auth": "fas fa-users-cog",  # Ícono para la app de auth
-        "auth.User": "fas fa-user",  # Ícono para el modelo User
-        "auth.Group": "fas fa-users",  # Ícono para el modelo Group
-        # Agrega más apps y modelos aquí
-        "user.Usuarios": "fas fa-user",  # Ejemplo de ícono personalizado para un modelo
+        "auth": "fas fa-users-cog",
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "user.Usuarios": "fas fa-user",
         "security.BlackListTokens": "fas fa-lock",
         "blog.Testimonios": "fas fa-newspaper",
         "turnero.Turnos": "fas fa-calendar-alt",
@@ -65,8 +66,10 @@ JAZZMIN_SETTINGS = {
             },
         ],
     },
-    "show_sidebar": True,
     "welcome_sign": "Bienvenido al panel de administración de Hospital SDLG",
+    "changeform_format": "carousel",
+    "related_modal_active": True,
+
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -81,18 +84,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'toolbar': 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
 }
 
-#CKEDITOR_CONFIGS = {
-#    'default': {
-#        'toolbar': 'Custom',
-#        'toolbar_Custom': [
-#            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline']},
-#            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-#            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList']},
-#        ],
-#        'height': 200,
-#        'width': '100%',
-#    },
-#}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -128,8 +119,8 @@ TIRDSHPARTY_APPS = [
     'crispy_forms', 
     'drf_yasg',
     'rest_framework_simplejwt',
-    'tinymce'
-    #'ckeditor'
+    'tinymce',
+    'channels',
 ]
 
 DJANGO_APPS = [
@@ -152,17 +143,11 @@ INTERNAL_IPS = [
 ]
 
 if DEBUG:
-    # Allow specific origins for CSRF in development
     CSRF_TRUSTED_ORIGINS = [
         'http://localhost:8000',
         'http://127.0.0.1:8000',
-        'https://8000-idx-hospital-sdlggit-1726448251460.cluster-uf6urqn4lned4spwk4xorq6bpo.cloudworkstations.dev',
-        'https://8000-idx-hospital-sdlggit-1726448251460.cluster-uf6urqn4lned4spwk4xorq6bpo.cloudworkstations.dev',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',# Add other origins as needed
     ]
 else:
-    # For production, make sure to set specific trusted origins
     CSRF_TRUSTED_ORIGINS = []
 
 MIDDLEWARE = [
@@ -208,7 +193,7 @@ TEMPLATES = [
         'DIRS': [
             f'{BASE_DIR}/templates'
         ],
-        'APP_DIRS': True,
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -220,7 +205,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+ASGI_APPLICATION = 'mysite.asgi.application'
 
 
 DATABASES = {
@@ -287,25 +272,24 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        #'security.redis_blacklist.TokenBlacklistRedisSerializer'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAdminUser',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,  # Tamaño por defecto de la paginación
+    'PAGE_SIZE': 10,
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
 }
 
 
-# settings.py
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,  # Usa la lista negra después de la rotación
+    "BLACKLIST_AFTER_ROTATION": True,
 
     "ALGORITHM": JWT_HASH,
     "SIGNING_KEY": SECRET_KEY,
@@ -335,7 +319,7 @@ SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "security.serializers.SecurityTokenSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
-    "TOKEN_BLACKLIST_SERIALIZER": "security.redis_blacklist.TokenBlacklistRedisSerializer",  # Asegúrate de que el import esté correcto
+    "TOKEN_BLACKLIST_SERIALIZER": "security.serializers.TokenBlacklistRedisSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }

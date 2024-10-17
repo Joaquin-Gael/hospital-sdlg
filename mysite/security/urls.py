@@ -14,8 +14,8 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email=settings.EMAIL_HOST_USER),
         license=openapi.License(name="BSD License"),
     ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
+    public=False,
+    permission_classes=(permissions.IsAdminUser,),
 )
 
 urlpatterns = [

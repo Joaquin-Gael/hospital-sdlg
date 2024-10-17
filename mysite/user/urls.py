@@ -26,11 +26,5 @@ urlpatterns = [
         'register/update/',
         views.UpdateUser.as_view(), 
         name='UpdateUser'
-    ),
-    path(
-        'list/',
-        views.UserList.as_view(), 
-        name='ListUser'
-    ),
-    re_path(r'list/(?P<id>\d+)/',views.UserList.as_view(), name='ListUserWithParams')
+    )
 ]
