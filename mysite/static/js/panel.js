@@ -23,7 +23,7 @@ $(() => {
 
   async function getUserData() {
     try {
-      const response = await fetch(`/user/list/${getUserID()}/`, {
+      const response = await fetch(`/API/users/${getUserID()}/`, {
         method: "GET",
       });
 
@@ -33,23 +33,20 @@ $(() => {
       }
 
       showToast(successMessage("Usuario autenticado"));
-      const data = JSON.parse(await response.json());
-      console.log(data[0])
-      let img = `/media/${data[0].fields.imagen}`;
-      if (data[0].fields.imagen === '' || data[0].fields.imagen === null){
-        img = data[0].fields.imagen_url;
-      } else if ((data[0].fields.imagen_url === '' || data[0].fields.imagen_url === null) && (data[0].fields.imagen === '' || data[0].fields.imagen === null)){
-        img = "/static/img/Logo-SDLG.svg";
+      const data = await response.json();
+      let img = `/media/${data.imagen}`;
+      if (data.imagen_url){
+        img = data.imagen_url;
       }
       const userData = {
-        dni: data[0].fields.dni,
-        nombre: data[0].fields.nombre,
-        apellido: data[0].fields.apellido,
-        username: data[0].fields.username,
-        email: data[0].fields.email,
-        contraseña: data[0].fields.contraseña,
+        dni: data.dni,
+        nombre: data.nombre,
+        apellido: data.apellido,
+        username: data.username,
+        email: data.email,
+        contraseña: data.contraseña,
         imagen: img,
-        telefono: data[0].fields.telefono, 
+        telefono: data.telefono,
       };
       return userData;
     } catch (error) {
@@ -72,7 +69,7 @@ $(() => {
   }
 
   // Fetch user data
-  fetch(`/user/list/${getUserID()}/`, {
+  fetch(`/API/users/${getUserID()}/`, {
     method: "GET",
   })
     .then((response) => {
@@ -84,14 +81,18 @@ $(() => {
       return response.json();
     })
     .then((data) => {
-      data = JSON.parse(data);
+      let img = `/media/${data.imagen}`;
+      if (data.imagen_url){
+        img = ' ';
+      }
+      console.log(data.username);
       const userData = {
-        username: data[0].fields.username,
-        email: data[0].fields.email,
-        contraseña: data[0].fields.contraseña,
-        imagen: data[0].imagen,
+        username: data.username,
+        email: data.email,
+        contraseña: data.contraseña,
+        imagen: img,
         CSRF: getToken(),
-        telefono: data[0].fields.telefono, // Asegúrate de que este campo esté presente en tus datos
+        telefono: data.telefono, // Asegúrate de que este campo esté presente en tus datos
       };
       renderUserProfileForm(userData);
       initializeFileInput();
