@@ -57,7 +57,6 @@ class TurneroForm(views.View):
             horario = _json.get('horario')
             fecha = _json.get('fecha')
 
-            print(f"Servicio: {servicio}, Motivo: {motivo}, Horario: {horario}, Fecha: {fecha}")
 
             try:
                 servicio = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()

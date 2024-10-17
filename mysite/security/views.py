@@ -14,9 +14,8 @@ from user.models import Usuarios
 from datetime import timedelta
 from .models import SessionTokens, BlackListTokens
 from urllib.parse import urlencode
-from asgiref.sync import sync_to_async
 from faker import Faker
-import requests, uuid
+import requests, uuid, json
 
 faker = Faker()
 
@@ -26,10 +25,11 @@ class GoogleSingUp(APIView):
     permission_classes = [AllowAny]
     def post(self, request): # /oauth/login/google/
         try:
+            print(settings.DATABASES['default'])
             url_google:str = 'https://accounts.google.com/o/oauth2/auth'
             params:dict = {
                 'client_id':settings.GOOGLE_CLIENT_ID,
-                'redirect_uri':settings.CALLBACK_URL,
+                'redirect_uri':f'http://127.0.0.1:8000{settings.CALLBACK_URL}',
                 'response_type':'code',
                 'scope':'openid email profile',
                 'access_type':'offline',
@@ -42,23 +42,24 @@ class GoogleSingUp(APIView):
 
 class OauthCallback(APIView):
     permission_classes = [AllowAny]
-    async def post(self, request): # /oauth/callback/google
+    def get(self, request): # /oauth/callback/google
         try:
             code = request.GET.get('code')
             token_url = 'https://oauth2.googleapis.com/token'
             data:dict = {
                 'client_id': settings.GOOGLE_CLIENT_ID,
                 'client_secret': settings.GOOGLE_CLIENT_SECRET,
-                'redirect_uri': settings.CALLBACK_URL,
+                'redirect_uri': f'http://127.0.0.1:8000{settings.CALLBACK_URL}',
                 'grant_type': 'authorization_code',
                 'code': code,
             }
-            response = await sync_to_async(request.post)(token_url, data=data)
-            token_data = response.json()
+            response = requests.post(token_url, data=data)
+            token_data = json.loads(response.content)
             access_token = token_data.get('access_token')
             id_token = token_data.get('id_token')
-            user_data = await sync_to_async(self.get_user_info)(access_token)
-            user = await sync_to_async(self.handler_login_user)(user_data, request)
+            user_data = self.get_user_info(access_token)
+            user = self.handler_login_user(user_data, request)
+            print(user)
             if isinstance(user, Usuarios):
                 messages.success(request,'Login Exitoso.\nRegrese al register para completar')
                 return Response({'detail':'redirect...', 'token_id':f'{id_token}'}, status=302, headers={'Location': f'{reverse_lazy('Home')}'})
@@ -73,11 +74,12 @@ class OauthCallback(APIView):
         user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
         headers = {'Authorization': f'Bearer {access_token}'}
         user_info_response = requests.get(user_info_url, headers=headers)
-        user_data = user_info_response.json()
+        user_data = json.loads(user_info_response.content)
 
-        return user_data.json()
+        return user_data
 
     def handler_login_user(self, user_data, request) -> Usuarios | None:
+        print(user_data)
         email = user_data.get('email')
         nombre = user_data.get('given_name')
         apellido = user_data.get('family_name')
@@ -87,11 +89,14 @@ class OauthCallback(APIView):
         user, created = Usuarios.objects.get_or_create(email=email)
 
         if created and has_email_verificated:
+            user.imagen = None
             user.username = user_data.get('name')
             user.nombre = nombre
             user.apellido = apellido
             user.imagen_url = img_url
-            user.set_password(faker.password(length=16, special_chars=True, digits=True, upper_case=True))
+            user.contraseña = faker.password(length=8, special_chars=True, digits=True, upper_case=True)
+            user.set_password(user.contraseña)
+            user.set_contraseña()
             user.save()
             user.set_login(request)
             return user

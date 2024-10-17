@@ -14,7 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @decorators.action(['GET'], url_path='turnos', detail=True)
     def get_by_user(self, request, pk=1):
         try:
-            turnos = Turnos.objects.filter(userID=pk)
+            turnos:list = Turnos.objects.filter(userID=pk)
             list_turn = []
             for x in turnos:
                 data = {

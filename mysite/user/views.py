@@ -89,6 +89,7 @@ class UpdateUser(views.View):
             )
 
             user.set_password(request.POST.get('contraseña'))
+            user.set_contraseña()
 
             return response.JsonResponse({
                 'msg':f'{request.POST}'
@@ -137,8 +138,7 @@ class PanelUser(views.View):
                 return HttpResponseRedirect(
                     redirect_to=reverse_lazy('NotFound')
                 )
-            user:models.Usuarios = sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
-            print(user)
+            #user:models.Usuarios = sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
             return TemplateResponse(request, 'user/panel.html')
     
         except models.Usuarios.DoesNotExist:
@@ -154,7 +154,6 @@ class PanelUser(views.View):
                 )
 
             user = await sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
-            print(user)
 
             await sync_to_async(user.update_data)(
                 nombre=request.POST.get('nombre'),
@@ -167,6 +166,7 @@ class PanelUser(views.View):
             )
 
             user.set_password(request.POST.get('contraseña'))
+            user.set_contraseña()
 
             messages.success(request, 'Datos actualizados correctamente')
             return HttpResponseRedirect(
@@ -178,40 +178,6 @@ class PanelUser(views.View):
             return response.JsonResponse({
                 'error':f'{err}'
             },status=404)
-
-class UserList(views.View):
-    def get(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return response.JsonResponse({
-                'error':'not authenticate'
-            },status=401)
-        try:
-            id = kwargs.get('id', None)
-            if id != None:
-                user = models.Usuarios.objects.get(userID=id)
-                serialized = serializers.serialize('json',[user])
-                return response.JsonResponse(
-                    serialized,
-                    status=200,
-                    safe=False
-                )
-            
-            
-            userList:list = models.Usuarios.objects.all()
-            
-            serialized = serializers.serialize('json',userList)
-
-            return response.JsonResponse(
-                serialized,
-                status=200,
-                safe=False
-            )
-
-        except Exception as err:
-            print(err)
-            return response.JsonResponse({
-                'error':f'{err}'
-            },status=400)
 
 class LogoutUser(LoginRequiredMixin,views.View):
 
