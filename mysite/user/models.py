@@ -2,15 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import (login, logout)
 from django.core.files.base import ContentFile
-from django.conf import settings
 from PIL import Image, ImageDraw,ImageFont
 from django.utils import timezone
-from datetime import timedelta 
-from slugify import slugify
 from django.conf import settings
 from cryptography.fernet import Fernet
 import io
-import os
 import random
 
 # Create your models here.
@@ -23,7 +19,7 @@ class Usuarios(AbstractUser):
     fecha_nacimiento = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True,null=True,unique=True)
     telefono = models.CharField(blank=True,null=True, max_length=15)
-    contraseña = models.CharField(max_length=100)
+    contraseña = models.CharField(max_length=125)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateField(auto_now_add=True)
     last_login = models.DateField(null=True, blank=True)
@@ -72,15 +68,9 @@ class Usuarios(AbstractUser):
     def get_turnos(self):
         try:
             from turnero.models import Turnos
-            return Turnos.objects.filter(userID=self.id)
+            return Turnos.objects.filter(userID=self.userID)
         except:
             return None
-    
-    def get_imagen_url(self):
-        if self.imagen:
-            return self.imagen.url
-        else:
-            return os.path.join(settings.MEDIA_URL, 'imagenes/default_image.jpg')
     
     def update_data(self,request,nombre = None,apellido = None,email = None,contraseña = None,img = None, telefono:None = None) -> None:
         self.nombre = nombre if self.nombre != nombre and nombre is not None else self.nombre
@@ -131,12 +121,11 @@ class Usuarios(AbstractUser):
         except Exception as e:
             print(f"Error: {e.__class__}\nData: {e.args}")
     
-    def set_contraseña(self):
-        cipher = Fernet(settings.JWT_HASH)
-        self.contraseña = cipher.encrypt(self.contraseña.encode())
-        self.save()
-    
-    def get_contraseña(self):
-        cipher = Fernet(settings.JWT_HASH)
-        contraseña = cipher.decrypt(self.contraseña).decode()
+    def set_contraseña(self) -> None:
+        cipher = Fernet(settings.FERNET_KEY)
+        self.contraseña:str = cipher.encrypt(self.contraseña.encode('utf-8')).decode('utf-8')
+
+    def get_contraseña(self) -> str:
+        cipher = Fernet(settings.FERNET_KEY)
+        contraseña:str = cipher.decrypt(self.contraseña.encode('utf-8')).decode('utf-8')
         return contraseña

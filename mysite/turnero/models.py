@@ -127,14 +127,13 @@ class Turnos(models.Model):
     @classmethod
     def create_turnos(cls, medicoID, horarioID, motivo, userID, fecha, estado='pendiente'):
         try:
-            departamento = Departamentos.objects.get(departamentoID=medicoID.especialidadID.departamentoID.departamentoID)
-            print(departamento)
+            departamentoID = medicoID.especialidadID.departamentoID.departamentoID
             cita = Citas(
                 medicoID=medicoID,
                 horarioID=horarioID,
                 motivo=motivo,
                 estado=estado,
-                departamentoID=departamento
+                departamentoID_id=departamentoID
             )
             cita.save()
             instancia:cls = cls(
@@ -146,13 +145,15 @@ class Turnos(models.Model):
                 citaID=cita
             )
             instancia.save()
-            print(instancia)
-            print(instancia.medicoID.especialidadID.especialidadID)
 
             return instancia
 
+
+        except cls.ObjectDoesNotExist as e:
+            print('Error: objeto no encontrado', e)
+
         except Exception as err:
-            print('Error al crear el turno ',err)
+            print('Error al crear el turno', err)
     
     def __str__(self):
         return f"Turno de {self.userID} el día {self.fecha}"
@@ -169,41 +170,6 @@ class Turnos(models.Model):
     #   except Exception as err:
     #        print(f'Error: {err}')
     #        return None
-    
-    @classmethod
-    def set_status(cls, status:int, id:int):
-        """
-        Método de clase para cambiar el estado de un turno.
-
-        Args:
-            status (int): _description_
-            id (int): _description_
-
-        Returns:
-            _type_: _description_
-        """
-        status_list = [
-            'pendiente',
-            'atendido',
-            'cancelado'
-        ]
-        try:
-            instancia = cls.objects.get(TurnoID=id)
-            instancia.estado = status_list[status]
-            if status == 1:
-                instancia.citaID.estado = status_list[status]
-                instancia.citaID.save()
-                instancia.cita.fecha = timezone.now().date()
-
-            elif status == 2:
-                instancia.citaID.estado = status_list[status]
-                instancia.citaID.save()
-                instancia.cita.fecha = timezone.now().date()
-            instancia.save()
-            return True
-        except Exception as err:
-            print(f'Error: {err}')
-            return False
 
 class CajaTurnero(models.Model):
     cajaID = models.AutoField(primary_key=True)
