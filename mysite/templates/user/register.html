@@ -102,17 +102,36 @@
                     </form>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+            {% if handler_user_data_redirection %}
+            <div class="col-md-12 mt-4">
                 <div class="card p-4 shadow-sm">
-                    <form class="mt-2">
+                    <h5 class="text-center">Completar Datos</h5>
+                    <form id="updateDataUser" class="mt-2" action="">
+                        {% csrf_token %}
+                        <!-- DNI -->
                         <div class="form-floating mb-3">
-                            <input type="text" id="dniInput" class="form-control" placeholder="00000000">
+                            <input type="text" id="dniInput2" class="form-control" placeholder="00000000">
                             <label for="dniInput">DNI</label>
+                        </div>
+                        <!-- Fecha de Nacimiento -->
+                        <div class="form-floating mb-3">
+                            <input type="date" id="id_fecha_nacimiento" class="form-control" placeholder="Fecha de nacimiento">
+                            <label for="nacidoInput">Fecha de Nacimiento</label>
+                        </div>
+                        <!-- Botón Actualizar -->
+                        <div class="mt-4">
+                            <button id="actualizarButton" class="btn btn-dark w-100" type="submit">
+                                <span>Actualizar</span>
+                                <span class="ms-2">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </span>
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
-            </div>
+            {% endif %}
+        </div>
         <!-- Registro normal -->
         <div class="col-md-6">
             <form id="registerForm" class="card p-4 shadow-sm" enctype="multipart/form-data">
@@ -121,14 +140,14 @@
                 
                 <!-- DNI -->
                 <div class="form-floating mb-3">
-                    <input type="text" id="dniInput" class="form-control" placeholder="00000000">
-                    <label for="dniInput">DNI</label>
+                    {{completed_form.dni}}
+                    <label for="user_dni">{{completed_form.dni.label_tag}}</label>
                 </div>
 
                 <!-- Nombre -->
                 <div class="form-floating mb-3">
-                    <input type="text" id="nombreInput" class="form-control" placeholder="John">
-                    <label for="nombreInput">Nombre</label>
+                    {{completed_form.born_date}}
+                    <label for="id_fecha_nacimiento">{{completed_form.born_date.label_tag}}</label>
                 </div>
 
                 <!-- Apellido -->
@@ -182,4 +201,24 @@
 {% block scripts %}
 <script type="module" src="{% static 'js/register.js' %}"></script>
 <script type="module" src="{% static 'js/_bornPiker.js' %}"></script>
+<script>
+    document.getElementById('updateDataUser').addEventListener('submit', function(event) {
+        even.preventDefault();
+        var form = even.target;
+        var formData = new FormData(form);
+        var csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        fetch(form.action, {
+            method: 'PUT',
+            headers:{
+                'X-CSRFToken':csrfToken
+            },
+            body: formData
+        })
+        .them(response => {
+            response.json();
+        })
+        .them(data => console.log('Success: ', data))
+        .catch(error => console.log('Error', error));
+    });
+</script>
 {% endblock scripts %}

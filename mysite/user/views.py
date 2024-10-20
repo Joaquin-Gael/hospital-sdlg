@@ -13,7 +13,7 @@ from asgiref.sync import sync_to_async
 from django import views
 from django.urls import reverse_lazy
 from . import models
-from .forms import LoginUserForm
+from .forms import LoginUserForm, CompleteUserData
 from .middlewares.saveUserData import LoginUnRequired
 import json
 
@@ -22,7 +22,8 @@ import json
 class RegisterUser(views.View):
 
     def get(self, request):
-        return render(request, 'user/register.html')
+        complete_user_data_form = CompleteUserData()
+        return render(request, 'user/register.html', {'completed_form':complete_user_data_form})
     
     def post(self, request):
         try:
@@ -56,6 +57,11 @@ class RegisterUser(views.View):
             return response.JsonResponse({
                 'error':'Error al crear el usuario \nInfo: {}'.format(e.args)
             },status=400)
+
+    def put(self, request): # el envio de la data se manejara con js en el front
+        completed_user_data_form = CompleteUserData(request.POST)
+        if completed_user_data_form.is_valid():
+            pass
 
 class LoginUser(views.View):
     

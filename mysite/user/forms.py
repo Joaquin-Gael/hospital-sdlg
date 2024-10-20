@@ -17,3 +17,24 @@ class LoginUserForm(forms.Form):
             attrs={'class': 'form-check-input p-inputswitch custom-switch-container', 'role': 'switch', 'id': 'flexSwitchCheckDefault'}
         )
     )
+
+class CompleteUserData(forms.Form):
+    dni = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': 'DNI', 'id':'user_dni'}
+        ),
+        label='DNI'
+    )
+
+    born_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={'class': 'form-control', 'placeholder': 'Fecha de Nacimiento', 'id':'id_fecha_nacimiento'}
+        ),
+        label='Fecha de Nacimiento'
+    )
+
+    def put_method(self): #metodo auxiliar
+        try:
+            pass
+        except Exception as e:
+            pass
