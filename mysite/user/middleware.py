@@ -14,7 +14,10 @@ class UserDataMiddleware:
              if view_name == 'RegisterUser':
                  request.handler_redirection_value = False
                  return response
-             if request.user and request.user.dni is not None and request.user.is_superuser:
+             if request.user and request.user.dni is not None:
+                 request.handler_redirection_value = False
+                 return response
+             if request.user.is_superuser:
                  request.handler_redirection_value = False
                  return response
              messages.warning(request, 'porfavor complete el formulario')
