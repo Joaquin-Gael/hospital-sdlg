@@ -21,10 +21,5 @@ urlpatterns = [
         'panel/', 
         views.PanelUser.as_view(), 
         name='PanelUser'
-    ),
-    path(
-        'register/update/',
-        views.UpdateUser.as_view(), 
-        name='UpdateUser'
     )
 ]

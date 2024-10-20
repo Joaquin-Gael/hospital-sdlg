@@ -2,7 +2,6 @@ from pathlib import Path
 import os, dj_database_url, sys
 from django.urls import reverse_lazy
 from datetime import timedelta
-from cryptography.fernet import Fernet
 
 GOOGLE_CLIENT_ID = '82678305256-58rv9un7jfe17etgp69f7d8lucqetukh.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = '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'
@@ -19,18 +18,11 @@ RECAPTCHA_PUBLIC_KEY  = '6LdK6jcqAAAAANLSDYCNgrMlwX8pR6FtHBT9k1Ef'
 RECAPTCHA_PRIVATE_KEY = '6LdK6jcqAAAAAFi6nxjs0wkvpM57q3NNwIhDgs9P'
 RECAPTCHA_USE_SSL = False
 
-SITE_ID = 1 
-LOGIN_REDIRECT_URL = reverse_lazy('LoginUser')
-LOGOUT_REDIRECT_URL = reverse_lazy('LogoutUser')
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_USERNAME_REQUIRED = False
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 JWT_HASH = "HS256"
 FERNET_KEY:str = 'bp3-2Zt5nUsRlXq82F-_m0apVBvkyJpwWNP3UIOIl8c='
 
-DB_PROD = False
+DB_PROD = True
 
 JAZZMIN_SETTINGS = {
     "site_title":"Hospital SDLG Admin Panel",
@@ -158,6 +150,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'user.middleware.UserDataMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -193,7 +186,7 @@ TEMPLATES = [
         'DIRS': [
             f'{BASE_DIR}/templates'
         ],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -211,7 +204,7 @@ ASGI_APPLICATION = 'mysite.asgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600
+        conn_max_age=800
     )
 }
 
@@ -290,7 +283,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-
     "ALGORITHM": JWT_HASH,
     "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": "",

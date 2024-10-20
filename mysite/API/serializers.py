@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         json_ = super().to_representation(instance)
 
-        json_['contraseña'] = instance.get_contraseña()
+        json_['contraseña'] = instance.get_contraseña
 
         return json_
 

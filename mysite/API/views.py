@@ -52,7 +52,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'telefono':user.telefono,
                 'imagen':user.imagen,
                 'dni':user.dni,
-                'contrseña':user.get_contraseña()
+                'contrseña':user.get_contraseña
             }
 
             json.dumps(data)

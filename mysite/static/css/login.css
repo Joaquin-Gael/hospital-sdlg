@@ -4,6 +4,59 @@
     margin: 0 auto; /* Centra el contenedor horizontalmente */
 }
 
+.social-btn {
+        background-color: #ffffff;
+        color: #757575;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        font-size: 16px;
+}
+.google-btn {
+    background-color: #ffffff;
+    color: #757575;
+}
+
+.password-toggle {
+            position: relative;
+        }
+        .password-toggle .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+.form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            background-color: #ccc; /* Color de fondo cuando está desactivado */
+            border-color: #ccc; /* Color del borde cuando está desactivado */
+        }
+        .form-switch .form-check-input:checked {
+            background-color: #0d6efd; /* Color de fondo cuando está activado */
+            border-color: #0d6efd; /* Color del borde cuando está activado */
+        }
+        .form-switch .form-check-input:focus {
+            box-shadow: none;
+        }
+        .form-switch .form-check-input::before {
+            content: '';
+            display: block;
+            width: 1.35em;
+            height: 1.35em;
+            background-color: #fff; /* Color del círculo interno */
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+        .form-switch .form-check-input:checked::before {
+            transform: translateX(1.5em); /* Desplazamiento del círculo interno cuando está activado */
+        }
+
 /* Estilo para las tarjetas */
 .card {
     border: 2px solid black;
@@ -22,11 +75,6 @@
     color: #ffffff;
 }
 
-.btn-danger {
-    background-color: #ea4335;
-    border: 2px solid #ffffff;
-}
-
 /* Estilo para los inputs */
 .form-control {
     border-radius: 0; /* Bordes rectos */
@@ -37,16 +85,6 @@
     color: #000000;
 }
 
-/* Estilo para los botones de subida de imagen */
-input[type="file"] {
-    border: 2px solid #000000;
-    border-radius: 0;
-}
-
-/* Espaciado para el ícono de Google */
-.fab.fa-google {
-    font-size: 1.5rem;
-}
 
 /* Estilo general */
 body {

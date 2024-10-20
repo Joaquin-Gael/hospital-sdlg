@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="form-floating mb-3">
+      <div class="form-floating mb-3 password-toggle">
         <input
           type="password"
           id="contraseñaInput"
@@ -50,6 +50,9 @@
           value="{{contraseña}}"
         />
         <label for="contraseñaInput">Contraseña</label>
+          <span class="toggle-password">
+              <i class="bi bi-eye-slash"></i>
+          </span>
       </div>
     </div>
     <div class="col-12">
@@ -77,3 +80,12 @@
     </div>
   </div>
 </form>
+<script>
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordField = document.getElementById('contraseñaInput');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('bi-eye');
+            this.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+</script>

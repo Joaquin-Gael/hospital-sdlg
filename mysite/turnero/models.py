@@ -2,38 +2,35 @@ from django.db import models
 from user.models import Usuarios
 from medicos.models import (Medicos, Horario_medicos, Departamentos, Servicios)
 from django.core.exceptions import ValidationError
-from asgiref.sync import sync_to_async
 from django.utils import timezone
 from datetime import timedelta
 
 
 # Create your models here.
 
-#servicioID = models.ForeignKey(Servicios, on_delete=models.CASCADE)
-
-class Citas(models.Model):
-    citaID = models.AutoField(primary_key=True)
+class BaseModelTurnos(models.Model):
+    servicioID = models.ForeignKey(Servicios, on_delete=models.CASCADE)
     userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     medicoID = models.ForeignKey(Medicos, on_delete=models.CASCADE)
+    motivo = models.CharField(max_length=100)
+    estado = models.CharField(max_length=100)
+    fecha = models.DateField(default=timezone.now)
+    fecha_created = models.DateField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class Citas(BaseModelTurnos):
+    citaID = models.AutoField(primary_key=True)
     horarioID = models.ForeignKey(Horario_medicos,on_delete=models.CASCADE)
     departamentoID = models.ForeignKey(Departamentos,on_delete=models.CASCADE)
-    motivo = models.CharField(max_length=255)
-    estado = models.CharField(max_length=25)
-    fecha = models.DateField(default=timezone.now)
-    fecha_created = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Motivo {self.motivo} estado {self.estado} medico {self.medicoID}"
 
-class Turnos(models.Model):
+class Turnos(BaseModelTurnos):
     TurnoID = models.AutoField(primary_key=True)
-    userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     citaID = models.ForeignKey(Citas,on_delete=models.CASCADE)
-    medicoID = models.ForeignKey(Medicos,on_delete=models.CASCADE)
-    motivo = models.CharField(max_length=255)
-    estado = models.CharField(max_length=25)
-    fecha_created = models.DateTimeField(auto_now=True)
-    fecha = models.DateField(default=timezone.now)
     fecha_limt = models.DateField(default=timezone.now)
     
     def get_turno_data(self):
@@ -99,12 +96,12 @@ class Turnos(models.Model):
             if status == 1:
                 self.citaID.estado = status_list[status]
                 self.citaID.save()
-                self.cita.fecha = timezone.now().date()
+                self.citaID.fecha = timezone.now().date()
 
             elif status == 2:
                 self.citaID.estado = status_list[status]
                 self.citaID.save()
-                self.cita.fecha = timezone.now().date()
+                self.citaID.fecha = timezone.now().date()
             self.save()
             return True
         except Exception as err:
@@ -157,19 +154,6 @@ class Turnos(models.Model):
     
     def __str__(self):
         return f"Turno de {self.userID} el día {self.fecha}"
-
-    #@classmethod
-    #def extra_data(cls,data:dict):
-    #    try:
-    #        horario_medico = Horario_medicos.objects.get(horarioID=data['horario'])
-    #        medico = Medicos.objects.get(medicoID=data['medico'])
-    #        print(medico.medicoID)
-    #        print(medico.especialidadID.especialidadID)
-    #
-    #        return {'h':horario_medico,'m':medico}
-    #   except Exception as err:
-    #        print(f'Error: {err}')
-    #        return None
 
 class CajaTurnero(models.Model):
     cajaID = models.AutoField(primary_key=True)
@@ -226,33 +210,11 @@ class DetallesCaja(models.Model):
 
     def __str__(self):
         return f"Detalle de {self.cajaID}"
-    
-    def set_monto(self,monto:float):
-        self.monto = monto
-        self.save()
-        return True
-    
-    def set_descripcion(self,descripcion:str):
-        self.descripcion = descripcion
-        self.save()
-        return True
-    
-    def set_fecha(self,fecha:str):
-        self.fecha = fecha
-        self.save()
-        return True
-    
-    def set_servicio(self,servicioID:int):
-        self.servicioID = servicioID
-        self.save()
-        return True
-    
-    def set_caja(self,cajaID:int):
-        self.cajaID = cajaID
-        self.save()
-        return True
-    
-    def set_estado(self,estado:str):
-        self.estado = estado
-        self.save()
-        return True
+
+    @classmethod
+    def set_registro(cls, #pendiente de refactor
+                     fecha = None,
+                     monto = None,
+                     descripcion = None,
+                     caja = None):
+        pass

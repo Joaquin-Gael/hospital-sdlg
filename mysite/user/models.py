@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import (login, logout)
+from django.contrib.auth import login, logout
 from django.core.files.base import ContentFile
 from PIL import Image, ImageDraw,ImageFont
 from django.utils import timezone
@@ -39,12 +39,13 @@ class Usuarios(AbstractUser):
     
     def __str__(self) -> str:
         #return '\n'.join(f"{k}: {v}" for k, v in vars(self).items() if not k.startswith('_'))
-        return self.get_full_name()
+        return f'<{self.__class__.__name__}>({self.get_full_name})'
     
     def __repr__(self) -> str:
         attrs = '\n'.join(f"{k}={v!r}" for k, v in vars(self).items() if not k.startswith('_'))
-        return f"<{self.__class__.__name__}({attrs})>"
-    
+        return f'<{self.__class__.__name__}({attrs})>'
+
+    @property
     def get_full_name(self) -> str:
         return f"{self.nombre} {self.apellido}"
     
@@ -65,25 +66,41 @@ class Usuarios(AbstractUser):
             return True
         return False
     
-    def get_turnos(self):
-        try:
-            from turnero.models import Turnos
-            return Turnos.objects.filter(userID=self.userID)
-        except:
-            return None
-    
-    def update_data(self,request,nombre = None,apellido = None,email = None,contraseña = None,img = None, telefono:None = None) -> None:
-        self.nombre = nombre if self.nombre != nombre and nombre is not None else self.nombre
-        self.apellido = apellido if self.apellido != apellido and apellido is not None else self.apellido
-        self.email = email if self.email != email and email is not None else self.email
-        self.set_password(contraseña if self.contraseña != contraseña and contraseña is not None else self.contraseña)
-        self.imagen = img if self.imagen != img and img is not None else self.imagen
-        self.telefono = telefono if self.telefono != telefono and telefono is not None else self.telefono
+    def update_data(self,
+                    request,
+                    nombre = None,
+                    apellido = None,
+                    email = None,
+                    contraseña = None,
+                    img = None,
+                    telefono = None,
+                    img_url = None,
+                    username = None,
+                    login = False) -> None:
+        if self.nombre != nombre and nombre is not None:
+            self.nombre = nombre
+        if self.apellido != apellido and apellido is not None:
+            self.apellido = apellido
+        if self.email != email and email is not None:
+            self.email = email
+        if self.get_contraseña != contraseña and contraseña is not None:
+            self.set_contraseña(contraseña)
+            self.set_password(contraseña)
+        if self.imagen != img and img is not None:
+            self.imagen = img
+        if self.telefono != telefono and telefono is not None:
+            self.telefono = telefono
+        if self.imagen_url != img_url and img_url is not None:
+            self.imagen_url = img_url
+        if self.username != username and username is not None:
+            self.username = username
 
         self.save()
 
-        self.logout(request)
-        self.authenticate(request, self.dni, self.contraseña)
+        if request.user.is_authenticated:
+            self.logout(request)
+        if login:
+            self.authenticate(request, self.dni, self.get_contraseña)
         
     def gen_default_profile_picture(self,initials: str, size=(32, 32)):
         try:
@@ -120,12 +137,14 @@ class Usuarios(AbstractUser):
             self.imagen.save(file_name, ContentFile(image_buffer.read()), save=True)
         except Exception as e:
             print(f"Error: {e.__class__}\nData: {e.args}")
-    
-    def set_contraseña(self) -> None:
-        cipher = Fernet(settings.FERNET_KEY)
-        self.contraseña:str = cipher.encrypt(self.contraseña.encode('utf-8')).decode('utf-8')
 
-    def get_contraseña(self) -> str:
+    def set_contraseña(self, value) -> None:
         cipher = Fernet(settings.FERNET_KEY)
-        contraseña:str = cipher.decrypt(self.contraseña.encode('utf-8')).decode('utf-8')
-        return contraseña
+        self.contraseña:str = cipher.encrypt(value.encode('utf-8')).decode('utf-8')
+
+    @property
+    def get_contraseña(self) -> str:
+        if self.contraseña:
+            cipher = Fernet(settings.FERNET_KEY)
+            contraseña: str = cipher.decrypt(self.contraseña.encode('utf-8')).decode('utf-8')
+            return contraseña

@@ -25,7 +25,6 @@ class GoogleSingUp(APIView):
     permission_classes = [AllowAny]
     def post(self, request): # /oauth/login/google/
         try:
-            print(settings.DATABASES['default'])
             url_google:str = 'https://accounts.google.com/o/oauth2/auth'
             params:dict = {
                 'client_id':settings.GOOGLE_CLIENT_ID,
@@ -53,20 +52,32 @@ class OauthCallback(APIView):
                 'grant_type': 'authorization_code',
                 'code': code,
             }
+
             response = requests.post(token_url, data=data)
+
             token_data = json.loads(response.content)
+
             access_token = token_data.get('access_token')
+
             id_token = token_data.get('id_token')
+
             user_data = self.get_user_info(access_token)
+
             user = self.handler_login_user(user_data, request)
+
             print(user)
+
             if isinstance(user, Usuarios):
+
                 messages.success(request,'Login Exitoso.\nRegrese al register para completar')
+
                 return Response({'detail':'redirect...', 'token_id':f'{id_token}'}, status=302, headers={'Location': f'{reverse_lazy('Home')}'})
+
             messages.error(request,'No se a podido crear el usuario.\nIntentelo mas tarde o comuniquese con el servicio tecnico')
+
             return Response({'detail':'Error...','Usuario':'None'}, status=302, headers={'Location':f'{reverse_lazy('Home')}'})
         except Exception as e:
-            print('Error: {}\nData: {}'.format(e.__class__.__name__, e.args))
+            print(f'Error: {e.__class__}\nData: {e.args}\nFile: {__file__}')
             messages.error(request,f'Error...\nCpmunicarse con servicio tecnico\nCode: {e.__class__}')
             return Response({'detail':'Error...'}, status=302, headers={'Location':f'{reverse_lazy('Home')}'})
 
@@ -80,6 +91,7 @@ class OauthCallback(APIView):
 
     def handler_login_user(self, user_data, request) -> Usuarios | None:
         print(user_data)
+        username = user_data.get('name')
         email = user_data.get('email')
         nombre = user_data.get('given_name')
         apellido = user_data.get('family_name')
@@ -89,15 +101,18 @@ class OauthCallback(APIView):
         user, created = Usuarios.objects.get_or_create(email=email)
 
         if created and has_email_verificated:
-            user.imagen = None
-            user.username = user_data.get('name')
-            user.nombre = nombre
-            user.apellido = apellido
-            user.imagen_url = img_url
-            user.contraseña = faker.password(length=8, special_chars=True, digits=True, upper_case=True)
-            user.set_password(user.contraseña)
-            user.set_contraseña()
-            user.save()
+            nueva_contraseña = faker.password(length=8, special_chars=True, digits=True, upper_case=True)
+            user.update_data(
+                request=request,
+                nombre=nombre,
+                apellido=apellido,
+                email=user.email,
+                contraseña=nueva_contraseña,
+                img_url=img_url,
+                username=username
+            )
+            return user
+        elif user:
             user.set_login(request)
             return user
         else:

@@ -1,3 +1,4 @@
+from channels.auth import login
 from django.shortcuts import (render, redirect)
 from django.http import response
 from django.template.response import TemplateResponse
@@ -12,6 +13,7 @@ from asgiref.sync import sync_to_async
 from django import views
 from django.urls import reverse_lazy
 from . import models
+from .forms import LoginUserForm
 from .middlewares.saveUserData import LoginUnRequired
 import json
 
@@ -43,7 +45,7 @@ class RegisterUser(views.View):
             except Exception as e:
                 print('Error: {}\nData: {}'.format(e.__class__, e.args))
                 user.set_dpp()
-            user.set_contraseña()
+            user.set_contraseña(request.POST.get('contraseña'))
             user.save()
             user.authenticate(request,user.dni, request.POST.get('contraseña'))
             return response.JsonResponse({
@@ -54,52 +56,6 @@ class RegisterUser(views.View):
             return response.JsonResponse({
                 'error':'Error al crear el usuario \nInfo: {}'.format(e.args)
             },status=400)
-            
-class UpdateUser(views.View):
-    async def get(self, request):
-        return response.JsonResponse({
-            'params':[
-                'DNI',
-                'Nombre',
-                'Apellido',
-                'Contraseña',
-                'Email',
-                'Imagen',
-                'Telefono'
-            ]
-        })
-
-    async def post(self, request):
-        try:
-            is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
-            if not is_authenticated:
-                return HttpResponseRedirect(
-                    redirect_to=reverse_lazy('NotFound')
-                )
-
-            user = await sync_to_async(lambda:models.Usuarios.objects.get(userID=request.user.userID))
-
-            await sync_to_async(user.update_data)(
-                nombre=request.POST.get('nombre'),
-                apellido=request.POST.get('apellido'),
-                contraseña=request.POST.get('contraseña'),
-                email=request.POST.get('email'),
-                img=request.FILES.get('imagen'),
-                telefono=request.POST.get('telefono')
-            )
-
-            user.set_password(request.POST.get('contraseña'))
-            user.set_contraseña()
-
-            return response.JsonResponse({
-                'msg':f'{request.POST}'
-            })
-
-        except Exception as err:
-            print(err)
-            return response.JsonResponse({
-                'error':f'{err}'
-            },status=404)
 
 class LoginUser(views.View):
     
@@ -108,26 +64,34 @@ class LoginUser(views.View):
         return super().dispatch(*args, **kwargs)
 
     def get(self, request):
-        return render(request, 'user/loginR.html')
+        login_form = LoginUserForm()
+        return render(request, 'user/login.html',{'form':login_form})
     
     def post(self, request):
         try:
-            _json = json.loads(request.body)
-            user = models.Usuarios.authenticate(request, _json['DNI'], _json['contraseña'])
+            login_form = LoginUserForm(request.POST)
+            if not login_form.is_valid():
+                messages.error(request,'El Formularion NO es valido')
+                return redirect('LoginUser')
+            #_json = json.loads(request.body)
+            user = models.Usuarios.authenticate(request, login_form.cleaned_data.get('dni'), login_form.cleaned_data.get('password'))
             if user is None:
-                return response.JsonResponse({
-                    'error':'credential not match'
-                },status=401)
-            return response.JsonResponse({
-                'msg':f'{_json}'
-            })
+                messages.error(request,'Credenciales No Validas')
+                return redirect('LoginUser')
+                #return response.JsonResponse({
+                #    'error':'credential not match'
+                #},status=401)
+            return redirect('PanelUser')
+            #return response.JsonResponse({
+            #    'msg':f'{_json}'
+            #})
         except Exception as e:
             print('Error: {}\nData: {}'.format(e.__class__, e.args))
-            #messages.error(request, message='Ocurrió un error al autenticar el usuario. Por favor, intentelo nuevamente.')
-            #return redirect('LoginUser')
-            return response.JsonResponse({
-                'error':'Ocurrió un error al autenticarq el usuario. Por favor, intentelo nuevamente.'
-            },status=401)
+            messages.error(request, message='Ocurrió un error al autenticar el usuario. Por favor, intentelo nuevamente.')
+            return redirect('LoginUser')
+            #return response.JsonResponse({
+            #    'error':'Ocurrió un error al autenticarq el usuario. Por favor, intentelo nuevamente.'
+            #},status=401)
     
 
 class PanelUser(views.View):
@@ -154,7 +118,8 @@ class PanelUser(views.View):
                 )
 
             user = await sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
-
+            print(user)
+            print(request.POST)
             await sync_to_async(user.update_data)(
                 nombre=request.POST.get('nombre'),
                 apellido=request.POST.get('apellido'),
@@ -162,15 +127,13 @@ class PanelUser(views.View):
                 email=request.POST.get('email'),
                 img=request.FILES.get('imagen'),
                 telefono=request.POST.get('telefono'),
-                request=request
+                request=request,
+                login=True
             )
-
-            user.set_password(request.POST.get('contraseña'))
-            user.set_contraseña()
 
             messages.success(request, 'Datos actualizados correctamente')
             return HttpResponseRedirect(
-                redirect_to=reverse_lazy('LoginUser')
+                redirect_to=reverse_lazy('Home')
             )
 
         except Exception as err:

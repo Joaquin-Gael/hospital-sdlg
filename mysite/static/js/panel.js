@@ -34,7 +34,7 @@ $(() => {
 
       showToast(successMessage("Usuario autenticado"));
       const data = await response.json();
-      let img = `/media/${data.imagen}`;
+      let img = data.imagen;
       if (data.imagen_url){
         img = data.imagen_url;
       }
@@ -81,7 +81,7 @@ $(() => {
       return response.json();
     })
     .then((data) => {
-      let img = `/media/${data.imagen}`;
+      let img = data.imagen;
       if (data.imagen_url){
         img = ' ';
       }

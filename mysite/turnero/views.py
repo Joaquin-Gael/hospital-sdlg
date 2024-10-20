@@ -10,7 +10,6 @@ from django.utils.decorators import method_decorator
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from . import models
-from medicos.models import (Servicios, Medicos,Horario_medicos,Departamentos)
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
 from rest_framework import status
