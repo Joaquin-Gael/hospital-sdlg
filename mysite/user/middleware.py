@@ -18,6 +18,9 @@ class UserDataMiddleware:
                  request.handler_redirection_value = False
                  return response
              if request.user.is_superuser:
+                 request.handler_redirection_value = False
+                 return response
+             if request.user.is_superuser:
                 request.handler_redirection_value = False
                 return response
              messages.warning(request, 'Por favor complete el formulario')
