@@ -1,33 +1,40 @@
-from channels.auth import login
-from django.shortcuts import (render, redirect)
+from re import template
+
+from django.shortcuts import render, redirect
 from django.http import response
 from django.template.response import TemplateResponse
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from channels.db import database_sync_to_async
 from asgiref.sync import sync_to_async
 from django.utils.decorators import method_decorator
 from django.contrib import messages
-from django.shortcuts import redirect
-from django.core import serializers
 from asgiref.sync import sync_to_async
 from django import views
 from django.urls import reverse_lazy
 from . import models
 from .forms import LoginUserForm, CompleteUserData
 from .middlewares.saveUserData import LoginUnRequired
-import json
 
 # Create your views here.
 
 class RegisterUser(views.View):
 
-    def get(self, request):
-        complete_user_data_form = CompleteUserData()
-        return render(request, 'user/register.html', {'completed_form':complete_user_data_form})
+    async def get(self, request):
+        if request.GET:
+            completed_user_data_form = await sync_to_async(CompleteUserData)(request.GET)
+            if completed_user_data_form.is_valid():
+                user_data = completed_user_data_form.cleaned_data
+                user = await database_sync_to_async(models.Usuarios.get)(request.user.userID)
+                await sync_to_async(user.set_dni)(
+                    new_dni = user_data.get('')
+                )
+        complete_user_data_form = await sync_to_async(CompleteUserData)()
+        return TemplateResponse(request, 'user/register.html', {'completed_form':complete_user_data_form})
     
-    def post(self, request):
+    async def post(self, request):
         try:
-            user = models.Usuarios(
+            user = await sync_to_async(models.Usuarios)(
                 dni = request.POST.get('dni'),
                 nombre = request.POST.get('nombre'),
                 apellido = request.POST.get('apellido'),
@@ -36,19 +43,19 @@ class RegisterUser(views.View):
                 contraseña = request.POST.get('contraseña'),
                 username = request.POST.get('nombre') +' '+ request.POST.get('apellido')
             )
-            user.set_password(request.POST.get('contraseña'))
+            await sync_to_async(user.set_password)(request.POST.get('contraseña'))
             try:
-                imagen = request.FILES.get('imagen')
+                imagen = await sync_to_async(request.FILES.get)('imagen')
                 if imagen:
                     user.imagen = imagen
                 else:
-                    user.set_dpp()
+                    await sync_to_async(user.set_dpp)()
             except Exception as e:
                 print('Error: {}\nData: {}'.format(e.__class__, e.args))
-                user.set_dpp()
-            user.set_contraseña(request.POST.get('contraseña'))
-            user.save()
-            user.authenticate(request,user.dni, request.POST.get('contraseña'))
+                await sync_to_async(user.set_dpp)()
+            await sync_to_async(user.set_contraseña)(request.POST.get('contraseña'))
+            await database_sync_to_async(user.save)()
+            await sync_to_async(user.authenticate)(request,user.dni, request.POST.get('contraseña'))
             return response.JsonResponse({
                 'msg':'¡Usuario creado con éxito! \nBienvenido {}'.format(user.username)
             })
@@ -57,11 +64,6 @@ class RegisterUser(views.View):
             return response.JsonResponse({
                 'error':'Error al crear el usuario \nInfo: {}'.format(e.args)
             },status=400)
-
-    def put(self, request): # el envio de la data se manejara con js en el front
-        completed_user_data_form = CompleteUserData(request.POST)
-        if completed_user_data_form.is_valid():
-            pass
 
 class LoginUser(views.View):
     
@@ -123,9 +125,7 @@ class PanelUser(views.View):
                     redirect_to=reverse_lazy('NotFound')
                 )
 
-            user = await sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
-            print(user)
-            print(request.POST)
+            user = await database_sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
             await sync_to_async(user.update_data)(
                 nombre=request.POST.get('nombre'),
                 apellido=request.POST.get('apellido'),
@@ -133,13 +133,12 @@ class PanelUser(views.View):
                 email=request.POST.get('email'),
                 img=request.FILES.get('imagen'),
                 telefono=request.POST.get('telefono'),
-                request=request,
-                login=True
             )
 
             messages.success(request, 'Datos actualizados correctamente')
             return HttpResponseRedirect(
-                redirect_to=reverse_lazy('Home')
+                redirect_to=reverse_lazy('Home'),
+                status=302
             )
 
         except Exception as err:

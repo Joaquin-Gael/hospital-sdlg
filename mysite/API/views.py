@@ -1,17 +1,45 @@
 from medicos.models import (Ubicaciones, Medicos, Departamentos, Especialidades, Horario_medicos)
 from rest_framework import (status, response, decorators, permissions)
-from adrf.viewsets import ModelViewSet,ReadOnlyModelViewSet
-from rest_framework import viewsets
+from adrf.viewsets import ModelViewSet
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
 from user.models import Usuarios
 from turnero.models import *
 from .serializers import *
 import json
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(ModelViewSet):
     queryset = Usuarios.objects.all().order_by('userID')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    async def alist(self, request):
+        usuarios = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(usuarios, many=True)
+        return response.Response(serializer.data)
+
+    async def aretrieve(self, request, pk):
+        usuario = await database_sync_to_async(self.get_object)()
+        serializer = self.get_serializer(usuario)
+        return response.Response(serializer.data)
+
+    async def acreate(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        usuario = await database_sync_to_async(serializer.save)()
+        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    async def aupdate(self, request, pk):
+        usuario = await database_sync_to_async(self.get_object)()
+        serializer = self.get_serializer(usuario, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        await database_sync_to_async(serializer.save)()
+        return response.Response(serializer.data)
+
+    async def adestroy(self, request, pk):
+        usuario = await database_sync_to_async(self.get_object)()
+        await database_sync_to_async(usuario.delete)()
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
     @decorators.action(['GET'], url_path='turnos', detail=True)
@@ -33,10 +61,10 @@ class UserViewSet(viewsets.ModelViewSet):
                     'motivo': x.motivo,
                     'estado': x.estado
                 }
-                #json.dumps(data)
+                json.dumps(data)
                 list_turn.append(data)
 
-            #json.dumps(list_turn)
+            json.dumps(list_turn)
 
             return response.Response(list_turn, status=status.HTTP_200_OK)
         except Exception as err:
@@ -145,7 +173,7 @@ class SpecialtyViewSet(ModelViewSet):
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        especialidad = await sync_to_async(self.get_object)()  
+        especialidad = await sync_to_async(self.get_object)()
         serializer = self.get_serializer(especialidad)
         return response.Response(serializer.data)
 
@@ -179,7 +207,7 @@ class DoctorsViewSet(ModelViewSet):
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        medicos = await sync_to_async(self.get_object)()  
+        medicos = await sync_to_async(self.get_object)()
         serializer = self.get_serializer(medico)
         return response.Response(serializer.data)
 

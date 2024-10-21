@@ -2,7 +2,6 @@ from django.urls import path,include
 from adrf.routers import SimpleRouter
 from API import views
 
-
 router = SimpleRouter()
 router.register(r'users',views.UserViewSet)
 router.register(r'locations',views.UbicationViewSet)

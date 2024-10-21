@@ -4,14 +4,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
-from rest_framework_simplejwt.tokens import UntypedToken, RefreshToken
+from rest_framework_simplejwt.tokens import UntypedToken
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.utils import timezone
-from .serializers import SecurityTokenSerializer, TokenBlacklistRedisSerializer
+from .serializers import SecurityTokenSerializer
 from user.models import Usuarios
-from datetime import timedelta
 from .models import SessionTokens, BlackListTokens
 from urllib.parse import urlencode
 from faker import Faker
@@ -103,7 +101,6 @@ class OauthCallback(APIView):
         if created and has_email_verificated:
             nueva_contraseña = faker.password(length=8, special_chars=True, digits=True, upper_case=True)
             user.update_data(
-                request=request,
                 nombre=nombre,
                 apellido=apellido,
                 email=user.email,
@@ -111,6 +108,7 @@ class OauthCallback(APIView):
                 img_url=img_url,
                 username=username
             )
+            user.set_login(request)
             return user
         elif user:
             user.set_login(request)

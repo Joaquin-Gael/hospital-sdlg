@@ -7,6 +7,13 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = Usuarios
         fields = '__all__'
+
+    def to_representation(self, instance):
+        try:
+            representation = super().to_representation()
+            representation['contraseña'] = instance.get_contraseña
+        except Exception as e:
+            pass
         
 class UbicationSerializer(ModelSerializer):
     class Meta:
