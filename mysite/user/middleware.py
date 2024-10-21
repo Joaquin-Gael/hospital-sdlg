@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from django.utils.functional import SimpleLazyObject
 
 class UserDataMiddleware:
      def __init__(self, get_response):
@@ -11,6 +12,9 @@ class UserDataMiddleware:
          response = self.get_response(request)
          try:
              view_name = request.resolver_match.view_name if request.resolver_match else 'Unknown'
+             if isinstance(request.user, SimpleLazyObject):
+                 request.handler_redirection_value = False
+                 return response
              if view_name == 'RegisterUser':
                  request.handler_redirection_value = False
                  return response
@@ -20,10 +24,8 @@ class UserDataMiddleware:
              if request.user.is_superuser:
                  request.handler_redirection_value = False
                  return response
-             if request.user.is_superuser:
-                request.handler_redirection_value = False
-                return response
              messages.warning(request, 'Por favor complete el formulario')
              return HttpResponseRedirect(reverse('RegisterUser'))
          except Exception as e:
+             request.handler_redirection_value = False
              return response
