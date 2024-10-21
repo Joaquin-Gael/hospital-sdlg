@@ -112,7 +112,7 @@ TIRDSHPARTY_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
     'adrf',
-    'channels'
+    'channels',
     'tinymce'
     #'ckeditor'
 ]
@@ -126,6 +126,8 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites'
 ]
+
+SITE_ID = 1
 
 INSTALLED_APPS = DJANGO_APPS + HOSPITAL_APPS + TIRDSHPARTY_APPS
 
