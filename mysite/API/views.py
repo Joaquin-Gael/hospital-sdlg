@@ -1,24 +1,26 @@
-from rest_framework import (viewsets,status,response,decorators,permissions)
-from .serializers import *
-from turnero.models import * 
-from medicos.models import (Ubicaciones,Medicos,Departamentos,Especialidades,Horario_medicos)
+from medicos.models import (Ubicaciones, Medicos, Departamentos, Especialidades, Horario_medicos)
+from rest_framework import (status, response, decorators, permissions)
+from django.http import JsonResponse
+from adrf.viewsets import ViewSet
+from asgiref.sync import sync_to_async
 from user.models import Usuarios
+from turnero.models import *
+from .serializers import *
 import json
 
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = Usuarios.objects.all()
+class UserViewSet(ViewSet):
+    queryset = Usuarios.objects.all().order_by('userID')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @decorators.action(['GET'], url_path='turnos', detail=True)
-    def get_by_user(self, request, pk=1):
+    async def get_by_user(self, request, pk=1):
         try:
-            turnos:list = Turnos.objects.filter(userID=pk)
+            turnos:list = await sync_to_async(Turnos.objects.filter)(userID=pk)
             list_turn = []
             for x in turnos:
                 data = {
-                    'id': x.TurnoID, 
+                    'id': x.TurnoID,
                     'medico': {
                         'id': x.citaID.medicoID.medicoID,
                         'nombre': x.citaID.medicoID.nombre
@@ -27,79 +29,79 @@ class UserViewSet(viewsets.ModelViewSet):
                         'id': x.citaID.horarioID.horarioID,
                         'hora': str(x.citaID.horarioID.hora)
                     },
-                    'motivo': x.motivo, 
-                    'estado': x.estado  
+                    'motivo': x.motivo,
+                    'estado': x.estado
                 }
                 json.dumps(data)
                 list_turn.append(data)
-                
+
             json.dumps(list_turn)
-            return response.Response(list_turn, status=status.HTTP_200_OK)
+
+            return response.Response({'result':list_turn}, status=status.HTTP_200_OK)
         except Exception as err:
             print(err)
             return response.Response({
-                'err':err.__class__
+                'err': err.__class__
             }, status=status.HTTP_404_NOT_FOUND)
-    
+
     @decorators.action(['GET'], url_path='data', detail=True)
-    def get_user_data(self, request, pk=1):
+    async def get_user_data(self, request, pk=1):
         try:
-            user = Usuarios.objects.get(userID=pk)
+            user = await sync_to_async(Usuarios.objects.get)(userID=pk)
             data = {
-                'nombre':user.nombre,
-                'apellido':user.apellido,
-                'email':user.email,
-                'telefono':user.telefono,
-                'imagen':user.imagen,
-                'dni':user.dni,
-                'contrseña':user.get_contraseña
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'email': user.email,
+                'telefono': user.telefono,
+                'imagen': user.imagen,
+                'dni': user.dni,
+                'contraseña': user.get_contraseña()
             }
 
-            json.dumps(data)
-            return response.Response(data, status=status.HTTP_200_OK)
+            return response.Response({'result':data}, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return response.Response({
-                'err':e.__class__
-            },status=404)
-    
-class UbicationViewSet(viewsets.ModelViewSet):
-    queryset = Ubicaciones.objects.all()
+                'err': e.__class__
+            }, status=404)
+
+class UbicationViewSet(ViewSet):
+    queryset = Ubicaciones.objects.all().order_by('ubicacionID')
     serializer_class = UbicationSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class DepartmentViewSet(viewsets.ModelViewSet):
-    queryset = Departamentos.objects.all()
+class DepartmentViewSet(ViewSet):
+    queryset = Departamentos.objects.all().order_by('departamentoID')
     serializer_class = DepartmentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class SpecialtyViewSet(viewsets.ModelViewSet):
-    queryset = Especialidades.objects.all()
+class SpecialtyViewSet(ViewSet):
+    queryset = Especialidades.objects.all().order_by('especialidadID')
     serializer_class = SpecialtySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class DoctorsViewSet(viewsets.ModelViewSet):
-    queryset = Medicos.objects.all()
+class DoctorsViewSet(ViewSet):
+    queryset = Medicos.objects.all().order_by('medicoID')
     serializer_class = DoctorsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class SchedulesViewSet(viewsets.ModelViewSet):
+class SchedulesViewSet(ViewSet):
     queryset = Horario_medicos.objects.all()
     serializer_class = SchedulesSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @decorators.action(['GET'], url_path='horarios', detail=True)
-    def get_by_service(self, request, pk=None):
+    async def get_by_service(self, request, pk=None):
         try:
             servicio_id = pk
-            servicio = Servicios.objects.get(servicioID=servicio_id)
-            especialidad_id = servicio.especialidadID
-            medicos = Medicos.objects.filter(especialidadID=especialidad_id)
-            horarios = Horario_medicos.objects.filter(medicoID__in=medicos)
+            servicio = await sync_to_async(Servicios.objects.get)(servicioID=servicio_id)
+            especialidad_id = await servicio.especialidadID
+            medicos = await sync_to_async(Medicos.objects.filter)(especialidadID=especialidad_id)
+            horarios = await sync_to_async(Horario_medicos.objects.filter)(medicoID__in=medicos)
 
             list_horarios = []
             for horario in horarios:
-                data = {
+                data:dict = {
                     'id': horario.horarioID,
                     'medico': {
                         'id': horario.medicoID.medicoID,
@@ -107,27 +109,22 @@ class SchedulesViewSet(viewsets.ModelViewSet):
                     },
                     'hora': str(horario.hora)
                 }
-                json.dumps(data)
+                print(data)
                 list_horarios.append(data)
-            
-            json.dumps(list_horarios)
-            return response.Response(list_horarios, status=status.HTTP_200_OK)
-        
-        except Exception as err:    
+                print(list_horarios)
+            return response.Response({'result':list_horarios}, status=status.HTTP_200_OK)
+        except Exception as err:
             print(err)
             return response.Response({
-                'err':err.__class__
+                'err': str(err.__class__)
             }, status=status.HTTP_404_NOT_FOUND)
-
-
-class AppointmentsViewSet(viewsets.ModelViewSet):
-    queryset = Citas.objects.all()
+            
+class AppointmentsViewSet(ViewSet):
+    queryset = Citas.objects.all().order_by('citaID')
     serializer_class = AppointmentsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class ShiftsViewSet(viewsets.ModelViewSet):
-    queryset = Turnos.objects.all()
+class ShiftsViewSet(ViewSet):
+    queryset = Turnos.objects.all().order_by('TurnoID')
     serializer_class = ShiftsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-

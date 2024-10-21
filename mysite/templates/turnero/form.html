@@ -10,64 +10,83 @@
 <style>
     /* Estilos globales */
     body {
-        background-color: #f4f7f9; /* Fondo suave para toda la página */
-        font-family: Arial, sans-serif; /* Fuente más moderna */
-        color: #333; /* Color del texto */
+        background-color: #f4f7f9;
+        /* Fondo suave para toda la página */
+        font-family: Arial, sans-serif;
+        /* Fuente más moderna */
+        color: #333;
+        /* Color del texto */
     }
 
     .btn {
         border-radius: 0;
-        transition: background-color 0.3s ease; /* Transición suave en botones */
+        transition: background-color 0.3s ease;
+        /* Transición suave en botones */
     }
 
     .btn-dark {
-        background-color: #333; /* Cambiado a un gris más oscuro */
+        background-color: #333;
+        /* Cambiado a un gris más oscuro */
         border: 2px solid #ffffff;
         color: #ffffff;
     }
 
     .btn-dark:hover {
-        background-color: #555; /* Color al pasar el mouse */
+        background-color: #555;
+        /* Color al pasar el mouse */
     }
 
     /* Estilo para las tarjetas */
     .card {
         border: 2px solid #cccccc;
-        border-radius: 8px; /* Bordes redondeados */
+        border-radius: 8px;
+        /* Bordes redondeados */
         background-color: #ffffff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-        margin-bottom: 20px; /* Espacio entre tarjetas */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Sombra suave */
+        margin-bottom: 20px;
+        /* Espacio entre tarjetas */
     }
 
     h4 {
-        font-weight: 600; /* Hacer el título más prominente */
-        color: #007bff; /* Color azul */
+        font-weight: 600;
+        /* Hacer el título más prominente */
+        color: #007bff;
+        /* Color azul */
     }
 
     .form-floating label {
-        color: #555; /* Color de las etiquetas */
+        color: #555;
+        /* Color de las etiquetas */
     }
 
     .form-floating .form-control {
-        border-radius: 5px; /* Bordes redondeados en controles de formulario */
-        box-shadow: none; /* Eliminar la sombra de los controles */
+        border-radius: 5px;
+        /* Bordes redondeados en controles de formulario */
+        box-shadow: none;
+        /* Eliminar la sombra de los controles */
     }
 
     .form-control:focus {
-        border-color: #007bff; /* Color de borde al enfocarse */
-        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25); /* Sombra en el enfoque */
+        border-color: #007bff;
+        /* Color de borde al enfocarse */
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+        /* Sombra en el enfoque */
     }
 
     .step {
-        margin-top: 20px; /* Espaciado entre pasos */
+        margin-top: 20px;
+        /* Espaciado entre pasos */
     }
 
     .invalid-feedback {
-        font-size: 0.9rem; /* Tamaño de fuente más pequeño para mensajes de error */
+        font-size: 0.9rem;
+        /* Tamaño de fuente más pequeño para mensajes de error */
     }
 
     .card-title {
-        font-size: 1.5rem; /* Tamaño de fuente del título de la tarjeta */
+        font-size: 1.5rem;
+        /* Tamaño de fuente del título de la tarjeta */
     }
 </style>
 {% endblock styles %}
@@ -88,7 +107,7 @@
                         <select name="servicio" id="servicioSelect" class="form-select" required>
                             <option value="" disabled selected>Área médica</option>
                             {% for servicio in servicios %}
-                                <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - Precio: ${{ servicio.precio }}</option>
+                            <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - Precio: ${{ servicio.precio }}</option>
                             {% endfor %}
                         </select>
                         <label for="servicioSelect">Servicio</label>
@@ -98,7 +117,8 @@
 
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <textarea class="form-control" name="motivo" id="motivoTextarea" style="height: 150px" required></textarea>
+                        <textarea class="form-control" name="motivo" id="motivoTextarea" style="height: 150px"
+                            required></textarea>
                         <label for="motivoTextarea">Motivo</label>
                         <div class="invalid-feedback">Por favor ingresa el motivo de la consulta.</div>
                     </div>
@@ -115,7 +135,8 @@
                         <select name="horario" id="horarioSelect" class="form-select" required>
                             <option value="" disabled selected>Selecciona un horario</option>
                             {% for horario in horarios %}
-                            <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }} - {{ horario.hora_fin }}</option>
+                            <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }} - {{ horario.hora_fin }}
+                            </option>
                             {% endfor %}
                         </select>
                         <label for="horarioSelect">Horarios</label>
@@ -125,9 +146,7 @@
 
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="date" id="date-picker" class="form-control datepicker"
-                            placeholder="Elige una fecha" required>
-                        <input type="text" id="date-picker" class="form-control datepicker" placeholder="Elige una fecha" required>
+                        <input type="date" id="date-picker" class="form-control datepicker" placeholder="Elige una fecha" required>
                         <label for="date-picker">Fecha</label>
                         <div class="invalid-feedback">Por favor selecciona una fecha.</div>
                     </div>
@@ -156,9 +175,12 @@
                         <span id="medico-nombre"></span> <small class="text-muted"></span></small>
                     </h4>
                     <p class="card-text fs-5">
-                        <strong class="text-secondary">Motivo:</strong> <span id="motivo-confirmacion" class="fw-bold"></span><br>
-                        <strong class="text-secondary">Horario:</strong> <span id="horario-confirmacion" class="fw-bold"></span><br>
-                        <strong class="text-secondary">Fecha:</strong> <span id="fecha-confirmacion" class="fw-bold"></span>
+                        <strong class="text-secondary">Motivo:</strong> <span id="motivo-confirmacion"
+                            class="fw-bold"></span><br>
+                        <strong class="text-secondary">Horario:</strong> <span id="horario-confirmacion"
+                            class="fw-bold"></span><br>
+                        <strong class="text-secondary">Fecha:</strong> <span id="fecha-confirmacion"
+                            class="fw-bold"></span>
                     </p>
                     <div class="d-grid mt-4">
                         <button id="checkout-btn" class="btn btn-dark btn-lg">Pagar</button>
@@ -179,130 +201,126 @@
 {% endblock main %}
 
 {% block scripts %}
-<script type="module" src="{% static 'js/_datePiker.js' %}"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    let currentStep = 1;
-    const totalSteps = 4; 
-    const prevButton = document.getElementById('prevButton');
-    const nextButton = document.getElementById('nextButton');
-    const submitButton = document.getElementById('solicitarButton');
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentStep = 1;
+        const totalSteps = 4;
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const submitButton = document.getElementById('solicitarButton');
 
-    const showStep = (step) => {
-        document.querySelectorAll('.step').forEach(function (el, index) {
-            el.classList.toggle('d-none', index + 1 !== step);
-        });
+        const showStep = (step) => {
+            document.querySelectorAll('.step').forEach(function (el, index) {
+                el.classList.toggle('d-none', index + 1 !== step);
+            });
 
-        prevButton.classList.toggle('d-none', step === 1);
-        nextButton.classList.toggle('d-none', step === totalSteps);
-        submitButton.classList.toggle('d-none', step !== totalSteps);
-    };
+            prevButton.classList.toggle('d-none', step === 1);
+            nextButton.classList.toggle('d-none', step === totalSteps);
+            submitButton.classList.toggle('d-none', step !== totalSteps);
+        };
 
-    const validateStep = (step) => {
-        const form = document.getElementById('turneroForm');
-        const stepElement = document.getElementById(`step-${step}`);
-        const inputs = stepElement.querySelectorAll('input, select, textarea');
-        let valid = true;
-
-        inputs.forEach(input => {
-            if (!input.checkValidity()) {
-                valid = false;
-                input.classList.add('is-invalid');
-            } else {
-                input.classList.remove('is-invalid');
-            }
-        });
-
-        return valid;
-    };
-
-    nextButton.addEventListener('click', function () {
-        if (validateStep(currentStep)) {
-            currentStep = Math.min(currentStep + 1, totalSteps);
-            
-            if (currentStep === 4) {
-                const servicioSelect = document.getElementById('servicioSelect');
-                const medico = servicioSelect.options[servicioSelect.selectedIndex].text;
-                const especialidad = servicioSelect.options[servicioSelect.selectedIndex].dataset.especialidad;
-                const motivo = document.getElementById('motivoTextarea').value;
-                const horarioSelect = document.getElementById('horarioSelect');
-                const horario = horarioSelect.options[horarioSelect.selectedIndex].text;
-                const fecha = document.getElementById('date-picker').value;
-                
-                // Actualizar campos en la confirmación
-                document.getElementById('medico-nombre').innerText = medico;
-                document.getElementById('motivo-confirmacion').innerText = motivo;
-                document.getElementById('horario-confirmacion').innerText = horario;
-                document.getElementById('fecha-confirmacion').innerText = fecha;
-            }
-            
-            showStep(currentStep);
-        } else {
+        const validateStep = (step) => {
             const form = document.getElementById('turneroForm');
-            form.classList.add('was-validated');
-        }
-    });
+            const stepElement = document.getElementById(`step-${step}`);
+            const inputs = stepElement.querySelectorAll('input, select, textarea');
+            let valid = true;
 
-    prevButton.addEventListener('click', function () {
-        currentStep = Math.max(currentStep - 1, 1);
-        showStep(currentStep);
-    });
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
 
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
-    });
+            return valid;
+        };
 
-    let horarios = []
+        nextButton.addEventListener('click', function () {
+            if (validateStep(currentStep)) {
+                currentStep = Math.min(currentStep + 1, totalSteps);
 
-    const listarHorarios = async (servicioID) => {
-        try {
-            const response = await fetch(`/API/schedules/${servicioID}/horarios`);
-            const data = await response.json();
+                if (currentStep === 4) {
+                    const servicioSelect = document.getElementById('servicioSelect');
+                    const medico = servicioSelect.options[servicioSelect.selectedIndex].text;
+                    const especialidad = servicioSelect.options[servicioSelect.selectedIndex].dataset.especialidad;
+                    const motivo = document.getElementById('motivoTextarea').value;
+                    const horarioSelect = document.getElementById('horarioSelect');
+                    const horario = horarioSelect.options[horarioSelect.selectedIndex].text;
+                    const fecha = document.getElementById('date-picker').value;
 
-            if (Array.isArray(data) && data.length > 0) {
-                horarios = data; 
-                let opciones = '';
-                const horasVistas = new Set(); 
+                    // Actualizar campos en la confirmación
+                    document.getElementById('medico-nombre').innerText = medico;
+                    document.getElementById('motivo-confirmacion').innerText = motivo;
+                    document.getElementById('horario-confirmacion').innerText = horario;
+                    document.getElementById('fecha-confirmacion').innerText = fecha;
+                }
 
-                horarios.forEach((horario) => {
-                    if (!horasVistas.has(horario.hora)) {
-                        horasVistas.add(horario.hora); 
-                        opciones += `<option value='${horario.id}'>${horario.hora}</option>`;
-                    }
-                });
-
-                horarioSelect.innerHTML = opciones; 
+                showStep(currentStep);
             } else {
-                console.log('Horarios no encontrados para el servicio seleccionado.');
-                horarioSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles</option>'; // Mensaje de no disponibilidad
+                const form = document.getElementById('turneroForm');
+                form.classList.add('was-validated');
             }
-        } catch (error) {
-            console.log('Error al listar horarios:', error);
-        }
-    };
+        });
+
+        prevButton.addEventListener('click', function () {
+            currentStep = Math.max(currentStep - 1, 1);
+            showStep(currentStep);
+        });
+
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+
+        let horarios = []
+
+        const listarHorarios = async (servicioID) => {
+            try {
+                const response = await fetch(`/API/schedules/${servicioID}/horarios`);
+                const data = await response.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    horarios = data;
+                    let opciones = '';
+                    const horasVistas = new Set();
+
+                    horarios.forEach((horario) => {
+                        if (!horasVistas.has(horario.hora)) {
+                            horasVistas.add(horario.hora);
+                            opciones += `<option value='${horario.id}'>${horario.hora}</option>`;
+                        }
+                    });
+
+                    horarioSelect.innerHTML = opciones;
+                } else {
+                    console.log('Horarios no encontrados para el servicio seleccionado.');
+                    horarioSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles</option>'; // Mensaje de no disponibilidad
+                }
+            } catch (error) {
+                console.log('Error al listar horarios:', error);
+            }
+        };
+
+        servicioSelect.addEventListener('change', function () {
+            const servicioID = servicioSelect.value;
+            listarHorarios(servicioID);
+        });
+
+        showStep(currentStep);
 
 
-    servicioSelect.addEventListener('change', function () {
-        const servicioID = servicioSelect.value; 
-        listarHorarios(servicioID); 
+
+
     });
-
-
-
-
-    showStep(currentStep);
-
-
-
-
-});
 </script>
 <script type="module" src="{% static 'js/form.js' %}"></script>
+<script type="module" src="{% static 'js/_datePiker.js' %}"></script>
 {% endblock scripts %}

@@ -107,13 +107,4 @@ $(() => {
             console.error(error);
         }
     });
-
-    // ya tenias en _dataPiker.js para el date-piker
-    // Inicia el selector de fecha
-    //flatpickr('#date-picker', {
-    //    dateFormat: 'Y-m-d',
-    //    onChange: function() {
-    //        $('#servicioSelect').trigger('change');
-    //    }
-    //});
 });

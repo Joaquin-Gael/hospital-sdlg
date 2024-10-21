@@ -111,8 +111,10 @@ TIRDSHPARTY_APPS = [
     'crispy_forms', 
     'drf_yasg',
     'rest_framework_simplejwt',
-    'tinymce',
-    'channels',
+    'adrf',
+    'channels'
+    'tinymce'
+    #'ckeditor'
 ]
 
 DJANGO_APPS = [
@@ -275,6 +277,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
     ],
 }
 

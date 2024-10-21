@@ -8,9 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
         "2024-10-10"
     ];
 
+    // Obtener la fecha actual
+    const today = new Date();
+
     flatpickr("#date-picker", {
         dateFormat: "Y-m-d",
         mode: "range",
+        minDate: today, // Desactivar fechas pasadas
         onChange: function(selectedDates, dateStr, instance) {
             // Solo hacer algo cuando el usuario haya seleccionado 2 fechas (rango completo)
             if (selectedDates.length === 2) {
