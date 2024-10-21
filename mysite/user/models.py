@@ -48,7 +48,15 @@ class Usuarios(AbstractUser):
     @property
     def get_full_name(self) -> str:
         return f"{self.nombre} {self.apellido}"
-    
+    @property
+    def DNI(self):
+        return self.dni
+
+    @DNI.setter
+    def set_dni(self, new_dni:str):
+        self.dni = new_dni
+        self.save()
+
     @classmethod
     def authenticate(cls, request, dni=None, password=None):
         user = cls.objects.filter(dni=dni).first()
@@ -67,7 +75,6 @@ class Usuarios(AbstractUser):
         return False
     
     def update_data(self,
-                    request,
                     nombre = None,
                     apellido = None,
                     email = None,
@@ -75,8 +82,7 @@ class Usuarios(AbstractUser):
                     img = None,
                     telefono = None,
                     img_url = None,
-                    username = None,
-                    login = False) -> None:
+                    username = None) -> None:
         if self.nombre != nombre and nombre is not None:
             self.nombre = nombre
         if self.apellido != apellido and apellido is not None:
@@ -96,11 +102,6 @@ class Usuarios(AbstractUser):
             self.username = username
 
         self.save()
-
-        if request.user.is_authenticated:
-            self.logout(request)
-        if login:
-            self.authenticate(request, self.dni, self.get_contraseña)
         
     def gen_default_profile_picture(self,initials: str, size=(32, 32)):
         try:
