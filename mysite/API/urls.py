@@ -1,9 +1,9 @@
 from django.urls import path,include
-from rest_framework import routers
+from adrf.routers import SimpleRouter
 from API import views
 
 
-router = routers.DefaultRouter()
+router = SimpleRouter()
 router.register(r'users',views.UserViewSet)
 router.register(r'locations',views.UbicationViewSet)
 router.register(r'departments',views.DepartmentViewSet)
