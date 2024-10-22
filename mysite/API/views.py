@@ -1,71 +1,44 @@
 from medicos.models import (Ubicaciones, Medicos, Departamentos, Especialidades, Horario_medicos)
 from rest_framework import (status, response, decorators, permissions)
-from adrf.viewsets import ModelViewSet
+from adrf.viewsets import ModelViewSet,ReadOnlyModelViewSet
+from rest_framework import viewsets
 from asgiref.sync import sync_to_async
 from user.models import Usuarios
 from turnero.models import *
 from .serializers import *
 import json
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = Usuarios.objects.all().order_by('userID')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
-    async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
-        return response.Response(serializer.data)
-
-    async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario)
-        return response.Response(serializer.data)
-
-    async def acreate(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
-        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        await sync_to_async(serializer.save)()
-        return response.Response(serializer.data)
-
-    async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
     @decorators.action(['GET'], url_path='turnos', detail=True)
-    async def get_by_user(self, request, pk=1):
+    def get_by_user(self, request, pk=1):
         try:
-            turnos:list = await sync_to_async(Turnos.objects.filter)(userID=pk)
+            turnos:list = Turnos.objects.filter(userID=pk)
             list_turn = []
-            async for x in turnos:
+            for x in turnos:
                 data = {
                     'id': x.TurnoID,
                     'medico': {
-                        'id': await sync_to_async(lambda:x.citaID.medicoID.medicoID)(),
-                        'nombre': await sync_to_async(lambda:x.citaID.medicoID.nombre)()
+                        'id': x.citaID.medicoID.medicoID,
+                        'nombre': x.citaID.medicoID.nombre
                     },
                     'horario': {
-                        'id': await sync_to_async(lambda:x.citaID.horarioID.horarioID)(),
-                        'hora': await sync_to_async(lambda:str(x.citaID.horarioID.hora))()
+                        'id': x.citaID.horarioID.horarioID,
+                        'hora': str(x.citaID.horarioID.hora)
                     },
-                    'motivo': await sync_to_async(lambda:x.motivo)(),
-                    'estado': await sync_to_async(lambda:x.estado)()
+                    'motivo': x.motivo,
+                    'estado': x.estado
                 }
                 #json.dumps(data)
                 list_turn.append(data)
 
             #json.dumps(list_turn)
 
-            return response.Response({'result':list_turn}, status=status.HTTP_200_OK)
+            return response.Response(list_turn, status=status.HTTP_200_OK)
         except Exception as err:
             print(err)
             return response.Response({
@@ -73,20 +46,20 @@ class UserViewSet(ModelViewSet):
             }, status=status.HTTP_404_NOT_FOUND)
 
     @decorators.action(['GET'], url_path='data', detail=True)
-    async def get_user_data(self, request, pk=1):
+    def get_user_data(self, request, pk=1):
         try:
-            user = await sync_to_async(Usuarios.objects.get)(userID=pk)
+            user = Usuarios.objects.get(userID=pk)
             data = {
-                'nombre': await sync_to_async(lambda:user.nombre)(),
-                'apellido': await sync_to_async(lambda:user.apellido)(),
-                'email': await sync_to_async(lambda:user.email)(),
-                'telefono': await sync_to_async(lambda:user.telefono)(),
-                'imagen': await sync_to_async(lambda:user.imagen)(),
-                'dni': await sync_to_async(lambda:user.dni)(),
-                'contraseña': await sync_to_async(lambda:user.get_contraseña())()
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'email': user.email,
+                'telefono': user.telefono,
+                'imagen': user.imagen,
+                'dni': user.dni,
+                'contraseña': user.get_contraseña()
             }
 
-            return response.Response({'result':data}, status=status.HTTP_200_OK)
+            return response.Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return response.Response({
@@ -167,31 +140,31 @@ class SpecialtyViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
+        especialidades = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(especialidades, many=True)
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)()  
-        serializer = self.get_serializer(horario)
+        especialidad = await sync_to_async(self.get_object)()  
+        serializer = self.get_serializer(especialidad)
         return response.Response(serializer.data)
 
     async def acreate(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
+        especialidad = await sync_to_async(serializer.save)()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
+        especialidad = await sync_to_async(self.get_object)()
+        serializer = self.get_serializer(especialidad, data=request.data)
         serializer.is_valid(raise_exception=True)
         await sync_to_async(serializer.save)()
         return response.Response(serializer.data)
 
     async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
+        especialidad = await sync_to_async(self.get_object)()
+        await sync_to_async(especialidad.delete)()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -201,31 +174,31 @@ class DoctorsViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
+        medicos = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(medicos, many=True)
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)()  
-        serializer = self.get_serializer(horario)
+        medicos = await sync_to_async(self.get_object)()  
+        serializer = self.get_serializer(medico)
         return response.Response(serializer.data)
 
     async def acreate(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
+        medico = await sync_to_async(serializer.save)()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
+        medico = await sync_to_async(self.get_object)()
+        serializer = self.get_serializer(medico, data=request.data)
         serializer.is_valid(raise_exception=True)
         await sync_to_async(serializer.save)()
         return response.Response(serializer.data)
 
     async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
+        medico = await sync_to_async(self.get_object)()
+        await sync_to_async(medico.delete)()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 class SchedulesViewSet(ModelViewSet):
@@ -284,7 +257,7 @@ class SchedulesViewSet(ModelViewSet):
                 #print(data)
                 list_horarios.append(data)
                 #print(list_horarios)
-            return response.Response({'result':list_horarios}, status=status.HTTP_200_OK)
+            return response.Response(list_horarios, status=status.HTTP_200_OK)
         except Exception as err:
             print(err)
             return response.Response({
