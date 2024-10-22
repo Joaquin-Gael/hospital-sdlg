@@ -32,7 +32,6 @@ $(() => {
         throw new Error(response.statusText);
       }
 
-      showToast(successMessage("Usuario autenticado"));
       const data = await response.json();
       let img = data.imagen;
       if (data.imagen_url){
