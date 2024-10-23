@@ -1,46 +1,17 @@
 from medicos.models import (Ubicaciones, Medicos, Departamentos, Especialidades, Horario_medicos)
 from rest_framework import (status, response, decorators, permissions)
-from adrf.viewsets import ModelViewSet
+from adrf.viewsets import ModelViewSet,ReadOnlyModelViewSet
+from rest_framework import viewsets
 from asgiref.sync import sync_to_async
-from channels.db import database_sync_to_async
 from user.models import Usuarios
 from turnero.models import *
 from .serializers import *
 import json
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = Usuarios.objects.all().order_by('userID')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
-    async def alist(self, request):
-        usuarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(usuarios, many=True)
-        return response.Response(serializer.data)
-
-    async def aretrieve(self, request, pk):
-        usuario = await database_sync_to_async(self.get_object)()
-        serializer = self.get_serializer(usuario)
-        return response.Response(serializer.data)
-
-    async def acreate(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        usuario = await database_sync_to_async(serializer.save)()
-        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    async def aupdate(self, request, pk):
-        usuario = await database_sync_to_async(self.get_object)()
-        serializer = self.get_serializer(usuario, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        await database_sync_to_async(serializer.save)()
-        return response.Response(serializer.data)
-
-    async def adestroy(self, request, pk):
-        usuario = await database_sync_to_async(self.get_object)()
-        await database_sync_to_async(usuario.delete)()
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
-
 
     @decorators.action(['GET'], url_path='turnos', detail=True)
     def get_by_user(self, request, pk=1):
@@ -61,10 +32,10 @@ class UserViewSet(ModelViewSet):
                     'motivo': x.motivo,
                     'estado': x.estado
                 }
-                json.dumps(data)
+                #json.dumps(data)
                 list_turn.append(data)
 
-            json.dumps(list_turn)
+            #json.dumps(list_turn)
 
             return response.Response(list_turn, status=status.HTTP_200_OK)
         except Exception as err:
@@ -173,7 +144,7 @@ class SpecialtyViewSet(ModelViewSet):
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        especialidad = await sync_to_async(self.get_object)()
+        especialidad = await sync_to_async(self.get_object)()  
         serializer = self.get_serializer(especialidad)
         return response.Response(serializer.data)
 
@@ -207,7 +178,7 @@ class DoctorsViewSet(ModelViewSet):
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        medicos = await sync_to_async(self.get_object)()
+        medicos = await sync_to_async(self.get_object)()  
         serializer = self.get_serializer(medico)
         return response.Response(serializer.data)
 
@@ -291,6 +262,31 @@ class SchedulesViewSet(ModelViewSet):
             return response.Response({
                 'err': str(err.__class__)
             }, status=status.HTTP_404_NOT_FOUND)
+            
+    @decorators.action(['GET'], url_path='dias', detail=True)
+    async def get_available_days(self, request, pk=None):
+      try:
+        servicio = await sync_to_async(Servicios.objects.get)(servicioID=pk)
+        especialidad_id = await sync_to_async(lambda: servicio.especialidadID)()
+        medicos = await sync_to_async(Medicos.objects.filter)(especialidadID=especialidad_id)
+        horarios = await sync_to_async(Horario_medicos.objects.filter)(medicoID__in=await sync_to_async(lambda: medicos)())
+        dias_disponibles = set()
+    
+        async for horario in horarios:
+            dia = await sync_to_async(lambda: horario.dia)() 
+            dias_disponibles.add(str(dia))
+
+
+        dias_disponibles = sorted(dias_disponibles)
+
+        list_dias = [{'dia': dia} for dia in dias_disponibles]
+
+        return response.Response(list_dias, status=status.HTTP_200_OK)
+      except Exception as err:
+        print(err)
+        return response.Response({
+            'err': str(err.__class__)
+        }, status=status.HTTP_404_NOT_FOUND)
             
 class AppointmentsViewSet(ModelViewSet):
     queryset = Citas.objects.all().order_by('citaID')
