@@ -12,7 +12,6 @@ from reportlab.lib.pagesizes import letter
 from . import models
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
-from rest_framework import status
 from datetime import timedelta,datetime
 from random import choice
 import json, io
@@ -98,7 +97,7 @@ class TurneroForm(views.View):
         except Exception as err:
             return response.JsonResponse({
                 'error':'invalid JSON'
-            },status=status.HTTP_400_BAD_REQUEST)
+            },status=404)
 
 class TurnoData(views.View):
 
@@ -120,11 +119,11 @@ class TurnoData(views.View):
             await sync_to_async(turno.delete)()
             return response.JsonResponse({
                 'url':'/user/panel/'
-            },status=status.HTTP_200_OK)
+            },status=200)
         except models.Turnos.DoesNotExist:
-            return HttpResponseNotFound("Turno no encontrado",status=status.HTTP_404_NOT_FOUND)
+            return HttpResponseNotFound("Turno no encontrado",status=404)
         except Exception as err:
-            return HttpResponse("Error al eliminar el turno",status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse("Error al eliminar el turno",status=500)
     
     async def post(self, request, id):
         try:
