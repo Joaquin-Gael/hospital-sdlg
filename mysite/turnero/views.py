@@ -58,34 +58,45 @@ class TurneroForm(views.View):
 
 
             try:
+                print("inicio")
                 servicio = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()
-                especialidad = servicio.especialidadID
+                print("paso 1")
+                especialidad = await sync_to_async(lambda:servicio.especialidadID)()
+                print("paso 2")
                 medicos = await sync_to_async(lambda: list(models.Medicos.objects.filter(especialidadID=especialidad)))()
-
+                print("se selecciona médico")
                 medico = choice(medicos)
 
                 departamento = await sync_to_async(lambda: models.Departamentos.objects.get(departamentoID=medico.especialidadID.departamentoID.departamentoID))()
-
-                _cita = {
-                    'medicoID': medico,
-                    'horarioID': horario,
-                    'motivo': motivo,
-                    'estado': 'Pendiente',
-                    'departamentoID': departamento,
-                }
-
-                # Crear el turno
-                _turno = {
-                    'medicoID': medico,
-                    'motivo': motivo,
-                    'fecha': fecha,
-                    'userID': request.user
-                }
+                
+                print("inicia la creación de la cita")
+                cita = await sync_to_async(models.Citas.objects.create)(
+                    servicioID=servicio,
+                    userID=request.user,
+                    medicoID=medico,
+                    horarioID=await sync_to_async(lambda:models.Horario_medicos.objects.get(horarioID=horario))(),
+                    motivo=motivo,
+                    estado='Pendiente',
+                    departamentoID=departamento,
+                )
+                print("cita creada")
+                
+                print("inicia la creación del turno")
+                _turno = await sync_to_async(models.Turnos.objects.create)(
+                    citaID=cita,
+                    servicioID=servicio,
+                    medicoID=medico,
+                    motivo=motivo,
+                    estado='Pendiente',
+                    fecha=fecha,
+                    userID=request.user,
+                    fecha_limt=fecha
+                )
 
                 print(_turno)
+                print("solicitud realizada con éxito")
 
-                # Renderizar la página de éxito
-                return TemplateResponse(request, 'user/panel', {'turno_data': _turno})
+                return TemplateResponse(request, 'user/panel.html', {'turno_data': _turno})
 
             except models.Servicios.DoesNotExist:
                 return response.JsonResponse({'error': 'Servicio no encontrado'}, status=404)
