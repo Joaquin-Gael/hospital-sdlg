@@ -114,6 +114,7 @@ $(() => {
       return response.json();
     })
     .then((data) => {
+      console.log(data)
       renderTurnosLinks(data);
       initializeTurnosClickEvents();
       removePlaceholders();
@@ -137,25 +138,18 @@ $(() => {
   const renderTurnosLinks = (turnosData) => {
     let turnos = "";
     console.log(turnosData.length)
-    if (turnosData.length === 0){
+    turnosData.forEach((data) => {
       turnos += `
-        <a class="btn btn-dark" href="/turnero/" > Sacar Turno </a>
+        <a id="turnoLink${data.id}" class="list-group-item list-group-item-action panel-link">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">${data.id} ${data.horario.hora}</h5>
+            <small>${data.estado}</small>
+          </div>
+          <p class="mb-1">${data.medico.nombre} - ${data.motivo}</p>
+        </a>
       `;
-      $("#turnosList").html(turnos);
-    }else{
-      turnosData.forEach((data) => {
-        turnos += `
-          <a id="turnoLink${data.id}" class="list-group-item list-group-item-action panel-link">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">${data.id} ${data.horario.hora}</h5>
-              <small>${data.estado}</small>
-            </div>
-            <p class="mb-1">${data.medico.nombre} - ${data.motivo}</p>
-          </a>
-        `;
-      });
-      $("#turnosList").html(turnos);
-    }
+    });
+    document.getElementById('turnosList').innerHTML = turnos;
   };
 
   // Inicializar eventos de clic en los enlaces de turnos
