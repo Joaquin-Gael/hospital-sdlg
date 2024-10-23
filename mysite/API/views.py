@@ -14,7 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @decorators.action(['GET'], url_path='turnos', detail=True)
-    def get_by_user(self, request, pk=1):
+    def get_by_user(self, request, pk=None):
         try:
             turnos:list = Turnos.objects.filter(userID=pk)
             list_turn = []
@@ -32,10 +32,10 @@ class UserViewSet(viewsets.ModelViewSet):
                     'motivo': x.motivo,
                     'estado': x.estado
                 }
-                #json.dumps(data)
+                json.dumps(data)
                 list_turn.append(data)
 
-            #json.dumps(list_turn)
+            json.dumps(list_turn)
 
             return response.Response(list_turn, status=status.HTTP_200_OK)
         except Exception as err:
@@ -45,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_404_NOT_FOUND)
 
     @decorators.action(['GET'], url_path='data', detail=True)
-    def get_user_data(self, request, pk=1):
+    def get_user_data(self, request, pk=None):
         try:
             user = Usuarios.objects.get(userID=pk)
             data = {
