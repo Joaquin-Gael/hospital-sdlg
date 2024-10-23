@@ -10,8 +10,8 @@ from datetime import timedelta
 
 class BaseModelTurnos(models.Model):
     servicioID = models.ForeignKey(Servicios, on_delete=models.CASCADE)
-    userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
-    medicoID = models.ForeignKey(Medicos, on_delete=models.CASCADE)
+    userID = models.ForeignKey(Usuarios, on_delete=models.CASCADE, related_name='%(class)s_user')
+    medicoID = models.ForeignKey(Medicos, on_delete=models.CASCADE, related_name='%(class)s_medic')
     motivo = models.CharField(max_length=100)
     estado = models.CharField(max_length=100)
     fecha = models.DateField(default=timezone.now)

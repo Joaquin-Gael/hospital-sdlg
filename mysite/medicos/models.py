@@ -1,4 +1,7 @@
 from django.db import models
+from user.models import UsuarioBase
+from django.utils import timezone
+from django.contrib.auth.models import Group, Permission
 
 # Create your models here.
 
@@ -47,14 +50,23 @@ class Servicios(models.Model):
     precio = models.FloatField()
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
     
-class Medicos(models.Model):
+class Medicos(UsuarioBase):
     medicoID = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    dni = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, default='medico_sin_nombre')
+    apellido = models.CharField(max_length=100, default='medico_sin_apellido')
+    imagen = models.ImageField(upload_to='medic/',default=f'medic/profile_{nombre}_{apellido}.png',null=True, blank=True)
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
-    telefono = models.CharField(max_length=15)
-    email = models.EmailField()
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name='medicos_groups',
+        blank=True,
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='medicos_permissions',
+        blank=True,
+    )
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} {self.dni} {self.especialidadID.nombre}"

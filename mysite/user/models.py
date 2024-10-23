@@ -5,27 +5,27 @@ from django.core.files.base import ContentFile
 from PIL import Image, ImageDraw,ImageFont
 from django.utils import timezone
 from django.conf import settings
+from django.contrib.auth.models import Group, Permission
 from cryptography.fernet import Fernet
 import io
 import random
 
 # Create your models here.
 
-class Usuarios(AbstractUser):
-    userID = models.AutoField(primary_key=True)
+class UsuarioBase(AbstractUser):
     dni = models.CharField(max_length=100, unique=True,null=True,blank=True)
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True,null=True,unique=True)
     telefono = models.CharField(blank=True,null=True, max_length=15)
-    contraseña = models.CharField(max_length=125)
+    contraseña = models.CharField(max_length=125, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateField(auto_now_add=True)
     last_login = models.DateField(null=True, blank=True)
     last_logout = models.DateField(null=True, blank=True)
-    imagen = models.ImageField(upload_to='user/',default=f'user/profile_{nombre}_{apellido}.png',null=True, blank=True)
     imagen_url = models.URLField(null=True, blank=True)
+
+    class Meta:
+        abstract = True
 
     def set_login(self, request) -> None:
         self.last_login = timezone.now()
@@ -48,6 +48,7 @@ class Usuarios(AbstractUser):
     @property
     def get_full_name(self) -> str:
         return f"{self.nombre} {self.apellido}"
+
     @property
     def DNI(self):
         return self.dni
@@ -83,23 +84,24 @@ class Usuarios(AbstractUser):
                     telefono = None,
                     img_url = None,
                     username = None) -> None:
-        if self.nombre != nombre and nombre is not None:
-            self.nombre = nombre
-        if self.apellido != apellido and apellido is not None:
-            self.apellido = apellido
-        if self.email != email and email is not None:
-            self.email = email
-        if self.get_contraseña != contraseña and contraseña is not None:
+
+        fields_to_update = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'imagen': img,
+            'imagen_url': img_url,
+            'username': username,
+        }
+
+        for field, value in fields_to_update.items():
+            if value is not None and getattr(self, field) != value:
+                setattr(self, field, value)
+
+        if contraseña is not None and self.get_contraseña != contraseña:
             self.set_contraseña(contraseña)
             self.set_password(contraseña)
-        if self.imagen != img and img is not None:
-            self.imagen = img
-        if self.telefono != telefono and telefono is not None:
-            self.telefono = telefono
-        if self.imagen_url != img_url and img_url is not None:
-            self.imagen_url = img_url
-        if self.username != username and username is not None:
-            self.username = username
 
         self.save()
         
@@ -149,3 +151,25 @@ class Usuarios(AbstractUser):
             cipher = Fernet(settings.FERNET_KEY)
             contraseña: str = cipher.decrypt(self.contraseña.encode('utf-8')).decode('utf-8')
             return contraseña
+
+class Usuarios(UsuarioBase):
+    userID = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100, default='usuario_sin_nombre')
+    apellido = models.CharField(max_length=100, default='usuario_sin_apellido')
+    imagen = models.ImageField(upload_to='user/',default=f'user/profile_{nombre}_{apellido}.png',null=True, blank=True)
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name='usuarios_groups',
+        blank=True,
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='usuarios_permissions',
+        blank=True,
+    )
+
+    class Meta:
+        permissions:list[tuple[str,str]] = [
+            ('view_panel_user', 'Can view panel user')
+        ]
