@@ -1,22 +1,20 @@
 from django.shortcuts import (get_object_or_404, render, redirect)
-from django.http import Http404, HttpResponse, HttpResponseNotFound, response
+from django.http import (Http404, HttpResponse, HttpResponseNotFound, response)
 from django.template.response import TemplateResponse
-from django import views
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.staticfiles import finders
-from django.core.mail import EmailMessage
-from django.contrib import messages
+from django.contrib.staticfiles.finders import find
 from django.utils.decorators import method_decorator
-from reportlab.pdfgen import canvas
+from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter
 from . import models
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
-from datetime import timedelta,datetime
+from rest_framework import status
 from random import choice
 import json, io
 
-class PagarTurno(views.View):
+class PagarTurno(View):
     async def get(self,request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
@@ -32,7 +30,7 @@ class PagarTurno(views.View):
             return redirect('Home')
             
 # Create your views here.
-class TurneroForm(views.View):
+class TurneroForm(View):
     async def get(self, request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
@@ -57,39 +55,45 @@ class TurneroForm(views.View):
 
 
             try:
+                print("inicio")
                 servicio = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()
-                especialidad = servicio.especialidadID
+                print("paso 1")
+                especialidad = await sync_to_async(lambda:servicio.especialidadID)()
+                print("paso 2")
                 medicos = await sync_to_async(lambda: list(models.Medicos.objects.filter(especialidadID=especialidad)))()
-
+                print("se selecciona médico")
                 medico = choice(medicos)
 
                 departamento = await sync_to_async(lambda: models.Departamentos.objects.get(departamentoID=medico.especialidadID.departamentoID.departamentoID))()
-
-                _cita = {
-                    'medicoID': medico,
-                    'horarioID': horario,
-                    'motivo': motivo,
-                    'estado': 'Pendiente',
-                    'departamentoID': departamento,
-                }
-
-                # Crear el turno
-                _turno = {
-                    'medicoID': medico,
-                    'motivo': motivo,
-                    'fecha': fecha,
-                    'userID': request.user
-                }
+                
+                print("inicia la creación de la cita")
+                cita = await sync_to_async(models.Citas.objects.create)(
+                    servicioID=servicio,
+                    userID=request.user,
+                    medicoID=medico,
+                    horarioID=await sync_to_async(lambda:models.Horario_medicos.objects.get(horarioID=horario))(),
+                    motivo=motivo,
+                    estado='Pendiente',
+                    departamentoID=departamento,
+                )
+                print("cita creada")
+                
+                print("inicia la creación del turno")
+                _turno = await sync_to_async(models.Turnos.objects.create)(
+                    citaID=cita,
+                    servicioID=servicio,
+                    medicoID=medico,
+                    motivo=motivo,
+                    estado='Pendiente',
+                    fecha=fecha,
+                    userID=request.user,
+                    fecha_limt=fecha
+                )
 
                 print(_turno)
+                print("solicitud realizada con éxito")
 
-                # Renderizar la página de éxito
-                return TemplateResponse(request, 'user/panel', {'turno_data': _turno})
-
-            except models.Servicios.DoesNotExist:
-                return response.JsonResponse({'error': 'Servicio no encontrado'}, status=404)
-            except models.Medicos.DoesNotExist:
-                return response.JsonResponse({'error': 'Médico no encontrado'}, status=404)
+                return TemplateResponse(request, 'user/panel.html')
             except Exception as e:
                 print(f'Error al generar turno: {e}')
                 return response.JsonResponse({'error': 'Error al generar turno'}, status=500)
@@ -97,9 +101,9 @@ class TurneroForm(views.View):
         except Exception as err:
             return response.JsonResponse({
                 'error':'invalid JSON'
-            },status=404)
+            },status=status.HTTP_400_BAD_REQUEST)
 
-class TurnoData(views.View):
+class TurnoData(View):
 
     @method_decorator(UserIDMiddleware)
     def dispatch(self, *args, **kwargs):
@@ -119,11 +123,11 @@ class TurnoData(views.View):
             await sync_to_async(turno.delete)()
             return response.JsonResponse({
                 'url':'/user/panel/'
-            },status=200)
+            },status=status.HTTP_200_OK)
         except models.Turnos.DoesNotExist:
-            return HttpResponseNotFound("Turno no encontrado",status=404)
+            return HttpResponseNotFound("Turno no encontrado",status=status.HTTP_404_NOT_FOUND)
         except Exception as err:
-            return HttpResponse("Error al eliminar el turno",status=500)
+            return HttpResponse("Error al eliminar el turno",status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     async def post(self, request, id):
         try:
@@ -132,7 +136,8 @@ class TurnoData(views.View):
         except Exception as err:
             pass
 
-class ComprobanteDownloadView(LoginRequiredMixin, views.View):
+class ComprobanteDownloadView(LoginRequiredMixin, View):
+
     def get(self, request, id):
         try:
             print(id)
@@ -144,10 +149,10 @@ class ComprobanteDownloadView(LoginRequiredMixin, views.View):
             usuario = turno.userID
 
             buffer = io.BytesIO()
-            p = canvas.Canvas(buffer, pagesize=letter)
+            p = Canvas(buffer, pagesize=letter)
 
             # Encontrar la ruta a los logos
-            logo_path = finders.find('img/Logo-SDLG-name.png')
+            logo_path = find('img/Logo-SDLG-name.png')
 
             p.drawImage(logo_path, 40, 700, width=80, height=80)
 
@@ -158,7 +163,7 @@ class ComprobanteDownloadView(LoginRequiredMixin, views.View):
             p.drawString(40, 680, f"Código del Turno: YY-{turno.TurnoID}")
             p.drawString(40, 660, f"Paciente: {usuario.nombre} {usuario.apellido}")
             p.drawString(40, 640, f"Médico: {medico.nombre} {medico.apellido}")
-            p.drawString(40, 620, f"Horario: {horario.hora_inicio}")
+            p.drawString(40, 620, f"Horario: {horario.hora}")
             p.drawString(40, 600, f"Departamento: {departamento.nombre}")
             p.drawString(40, 580, f"Fecha: {turno.fecha}")
             p.drawString(40, 560, f"Motivo: {cita.motivo}")
