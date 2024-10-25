@@ -5,7 +5,7 @@ from datetime import timedelta
 
 GOOGLE_CLIENT_ID = '82678305256-58rv9un7jfe17etgp69f7d8lucqetukh.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = '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'
-CALLBACK_URL = reverse_lazy('oauth_callback')
+CALLBACK_URL = '/API/security/google/oauth/callback/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
