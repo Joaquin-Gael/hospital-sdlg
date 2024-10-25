@@ -1,4 +1,4 @@
-from ninja import Router, ModelSchema, Schema, File
+from ninja import Router, ModelSchema, Schema, File, Form
 from ninja.files import UploadedFile
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
@@ -17,25 +17,24 @@ class UsuarioSchema(ModelSchema):
 
 
 class UsuarioSchemaPut(Schema):
-    password: Optional[str] = Field(None)
-    is_superuser: Optional[bool] = False
-    username: Optional[str] = Field(None)
-    first_name: Optional[str] = Field(None)
-    last_name: Optional[str] = Field(None)
-    is_staff: Optional[bool] = False
-    dni: Optional[str] = Field(None)
-    fecha_nacimiento: Optional[date] = Field(None)  # Manejo de fechas
-    email: Optional[str] = Field(None)
-    telefono: Optional[str] = Field(None)
-    contraseña: Optional[str] = Field(None)  # Si 'contraseña' es diferente a 'password'
-    is_active: Optional[bool] = True
-    imagen_url: Optional[str] = Field(None)
-    userID: Optional[int] = 0
-    nombre: Optional[str] = Field(None)
-    apellido: Optional[str] = Field(None)
+    password: Optional[str]
+    username: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    dni: Optional[str]
+    fecha_nacimiento: Optional[date]  # Manejo de fechas
+    email: Optional[str]
+    telefono: Optional[str]
+    contraseña: Optional[str]  # Si 'contraseña' es diferente a 'password'
+    imagen_url: Optional[str]
+    nombre: Optional[str]
+    apellido: Optional[str]
 
     # Este campo ahora acepta la carga de un archivo de imagen
-    imagen: Optional[UploadedFile] = File(...)
+    imagen: Optional[UploadedFile] = File(None)
+
+    class Config:
+        arbitrary_types_allowed = True
 
 user_router = Router()
 
@@ -51,11 +50,11 @@ async def list_users(request):
     serialized_data = user_serializer.serialize()
     return JsonResponse({'count': users_count, 'value': serialized_data}, status=200)
 
-@user_router.get('/{user_id}')
+@user_router.get('/{user_id}/')
 async def get_user(request, user_id:int):
     user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
     user_serializer = BaseSerializer(
-        model_class = Usuarios,
+        model_class=Usuarios,
         instance=user,
         deal_for_field_list={'contraseña':'get_contraseña'}
     )
@@ -63,7 +62,7 @@ async def get_user(request, user_id:int):
     return JsonResponse({"user": serialized_user}, status=200)
 
 @user_router.post('/')
-async def create_user(request, payload:UsuarioSchema, imagen: UploadedFile = File(...)):
+async def create_user(request, payload: Form[UsuarioSchema], imagen: UploadedFile = File(None)):
     new_user = Usuarios()
     data = payload.dict()
     del data['contraseña']
@@ -85,8 +84,18 @@ async def create_user(request, payload:UsuarioSchema, imagen: UploadedFile = Fil
     #new_user.save()
     return serialized_data
 
-@user_router.put('/{user_id}')
-async def update_user(request, payload:UsuarioSchemaPut, user_id:int, imagen: UploadedFile = File(None)):
+@user_router.put('/{user_id}/')
+async def update_user(request, user_id:int, payload: Form[UsuarioSchemaPut], imagen: UploadedFile = File(None)):
+    data = {key:value for key, value in payload.dict(exclude_unset=True) if value}
+    data['imagen'] = imagen
     old_user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
-    print(old_user)
-    print(payload.dict(exclude_unset=True))
+    for key, value in data:
+        setattr(old_user, key, value)
+
+    user_serializer = BaseSerializer(
+        model_class=Usuarios,
+        instance=old_user,
+        deal_for_field_list={'contraseña': 'get_contraseña'}
+    )
+    serialized_data = user_serializer.serialize()
+    return JsonResponse({'user':serialized_data},status=200)

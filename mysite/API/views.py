@@ -1,12 +1,13 @@
 from ninja import NinjaAPI, Swagger
 from .routers import *
+from security.views import security_router
 
 # Create your views here.
 api = NinjaAPI(
     docs=Swagger(),
     title='Hospital SDLG Api',
     version='2.0.1',
-    description='Api Del HSDLG para sus aplicaciones y software'
+    description='Api Del HSDLG para sus aplicaciones y software',
 )
 
 api.get('/base_endpoint/')
@@ -25,3 +26,4 @@ api.add_router(prefix='/departments/', router=department_router, tags=['departme
 api.add_router(prefix='/services/', router=service_router, tags=['services'])
 api.add_router(prefix='/appointments/', router=appointment_router, tags=['appointments'])
 api.add_router(prefix='/consultations/', router=consultation_router, tags=['consultations'])
+api.add_router(prefix='/security/', router=security_router, tags=['security'])

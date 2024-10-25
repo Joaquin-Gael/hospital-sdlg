@@ -133,7 +133,6 @@ class TurnoData(views.View):
             pass
 
 class ComprobanteDownloadView(LoginRequiredMixin, views.View):
-
     def get(self, request, id):
         try:
             print(id)
