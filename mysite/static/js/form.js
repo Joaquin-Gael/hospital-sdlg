@@ -96,12 +96,7 @@ $(() => {
             });
 
             if (!response.ok) throw new Error(response.statusText);
-
-            const data = await response.json();
-            const turnoID = data.msg.turnoID;
-
             showToast(successMessage('Solicitud enviada con éxito'));
-            $('#comprobanteButton').off('click').on('click', () => handleComprobanteDownload(turnoID));
         } catch (error) {
             showToast(errorMessage(`Error al enviar la solicitud: ${error.message}`));
             console.error(error);
