@@ -71,31 +71,31 @@ class UbicationViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
+        ubicacion = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(ubicacion, many=True)
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)()  
-        serializer = self.get_serializer(horario)
+        ubicacion = await sync_to_async(self.get_object)()  
+        serializer = self.get_serializer(ubicacion)
         return response.Response(serializer.data)
 
     async def acreate(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
+        ubicacion = await sync_to_async(serializer.save)()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
+        ubicacion = await sync_to_async(self.get_object)()
+        serializer = self.get_serializer(ubicacion, data=request.data)
         serializer.is_valid(raise_exception=True)
         await sync_to_async(serializer.save)()
         return response.Response(serializer.data)
 
     async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
+        ubicacion = await sync_to_async(self.get_object)()
+        await sync_to_async(ubicacion.delete)()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -105,31 +105,31 @@ class DepartmentViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
+        departamentos = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(departamentos, many=True)
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)()  
-        serializer = self.get_serializer(horario)
+        departamento = await sync_to_async(self.get_object)()  
+        serializer = self.get_serializer(departamento)
         return response.Response(serializer.data)
 
     async def acreate(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
+        departamento = await sync_to_async(serializer.save)()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
+        departamento = await sync_to_async(self.get_object)()
+        serializer = self.get_serializer(departamento, data=request.data)
         serializer.is_valid(raise_exception=True)
         await sync_to_async(serializer.save)()
         return response.Response(serializer.data)
 
     async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
+        departamento = await sync_to_async(self.get_object)()
+        await sync_to_async(departamento.delete)()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -294,31 +294,31 @@ class AppointmentsViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
+        citas = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(citas, many=True)
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)() 
-        serializer = self.get_serializer(horario)
+        cita = await sync_to_async(self.get_object)() 
+        serializer = self.get_serializer(cita)
         return response.Response(serializer.data)
 
     async def acreate(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
+        cita = await sync_to_async(serializer.save)()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
+        cita = await sync_to_async(self.get_object)()
+        serializer = self.get_serializer(cita, data=request.data)
         serializer.is_valid(raise_exception=True)
         await sync_to_async(serializer.save)()
         return response.Response(serializer.data)
 
     async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
+        cita = await sync_to_async(self.get_object)()
+        await sync_to_async(cita.delete)()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -328,30 +328,30 @@ class ShiftsViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     async def alist(self, request):
-        horarios = await sync_to_async(list)(self.queryset)
-        serializer = self.get_serializer(horarios, many=True)
+        turnos = await sync_to_async(list)(self.queryset)
+        serializer = self.get_serializer(turnos, many=True)
         return response.Response(serializer.data)
 
     async def aretrieve(self, request, pk):
-        horario = await sync_to_async(self.get_object)()  
-        serializer = self.get_serializer(horario)
+        turno = await sync_to_async(self.get_object)()  
+        serializer = self.get_serializer(turno)
         return response.Response(serializer.data)
 
     async def acreate(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        horario = await sync_to_async(serializer.save)()
+        turno = await sync_to_async(serializer.save)()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     async def aupdate(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        serializer = self.get_serializer(horario, data=request.data)
+        turno = await sync_to_async(self.get_object)()
+        serializer = self.get_serializer(turno, data=request.data)
         serializer.is_valid(raise_exception=True)
         await sync_to_async(serializer.save)()
         return response.Response(serializer.data)
 
     async def adestroy(self, request, pk):
-        horario = await sync_to_async(self.get_object)()
-        await sync_to_async(horario.delete)()
+        turno = await sync_to_async(self.get_object)()
+        await sync_to_async(turno.delete)()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
