@@ -1,0 +1,9 @@
+from enum import Enum
+
+class Status(Enum):
+    HTTP_200_OK = 200
+    HTTP_404_NOT_FOUND = 404
+    HTTP_401_UNAUTHORIZED = 401
+    HTTP_400_BAD_REQUEST = 400
+    HTTP_307_TEMPORARY_REDIRECT = 307
+    HTTP_302_FOUND = 302
