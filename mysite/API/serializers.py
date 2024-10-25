@@ -1,9 +1,10 @@
 from medicos.models import (Ubicaciones,Medicos,Departamentos,Especialidades,Horario_medicos)
 from adrf.serializers import ModelSerializer
+from rest_framework import serializers
 from user.models import Usuarios
 from turnero.models import * 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.Serializer):
     class Meta:
         model = Usuarios
         fields = '__all__'
