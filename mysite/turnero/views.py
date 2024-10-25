@@ -1,23 +1,20 @@
 from django.shortcuts import (get_object_or_404, render, redirect)
-from django.http import Http404, HttpResponse, HttpResponseNotFound, response
+from django.http import (Http404, HttpResponse, HttpResponseNotFound, response)
 from django.template.response import TemplateResponse
-from django import views
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.staticfiles import finders
-from django.core.mail import EmailMessage
-from django.contrib import messages
+from django.contrib.staticfiles.finders import find
 from django.utils.decorators import method_decorator
-from reportlab.pdfgen import canvas
+from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter
 from . import models
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
 from rest_framework import status
-from datetime import timedelta,datetime
 from random import choice
 import json, io
 
-class PagarTurno(views.View):
+class PagarTurno(View):
     async def get(self,request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
@@ -33,7 +30,7 @@ class PagarTurno(views.View):
             return redirect('Home')
             
 # Create your views here.
-class TurneroForm(views.View):
+class TurneroForm(View):
     async def get(self, request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
@@ -96,12 +93,7 @@ class TurneroForm(views.View):
                 print(_turno)
                 print("solicitud realizada con éxito")
 
-                return TemplateResponse(request, 'user/panel.html', {'turno_data': _turno})
-
-            except models.Servicios.DoesNotExist:
-                return response.JsonResponse({'error': 'Servicio no encontrado'}, status=404)
-            except models.Medicos.DoesNotExist:
-                return response.JsonResponse({'error': 'Médico no encontrado'}, status=404)
+                return TemplateResponse(request, 'user/panel.html')
             except Exception as e:
                 print(f'Error al generar turno: {e}')
                 return response.JsonResponse({'error': 'Error al generar turno'}, status=500)
@@ -111,7 +103,7 @@ class TurneroForm(views.View):
                 'error':'invalid JSON'
             },status=status.HTTP_400_BAD_REQUEST)
 
-class TurnoData(views.View):
+class TurnoData(View):
 
     @method_decorator(UserIDMiddleware)
     def dispatch(self, *args, **kwargs):
@@ -144,7 +136,7 @@ class TurnoData(views.View):
         except Exception as err:
             pass
 
-class ComprobanteDownloadView(LoginRequiredMixin, views.View):
+class ComprobanteDownloadView(LoginRequiredMixin, View):
 
     def get(self, request, id):
         try:
@@ -157,10 +149,10 @@ class ComprobanteDownloadView(LoginRequiredMixin, views.View):
             usuario = turno.userID
 
             buffer = io.BytesIO()
-            p = canvas.Canvas(buffer, pagesize=letter)
+            p = Canvas(buffer, pagesize=letter)
 
             # Encontrar la ruta a los logos
-            logo_path = finders.find('img/Logo-SDLG-name.png')
+            logo_path = find('img/Logo-SDLG-name.png')
 
             p.drawImage(logo_path, 40, 700, width=80, height=80)
 
@@ -171,7 +163,7 @@ class ComprobanteDownloadView(LoginRequiredMixin, views.View):
             p.drawString(40, 680, f"Código del Turno: YY-{turno.TurnoID}")
             p.drawString(40, 660, f"Paciente: {usuario.nombre} {usuario.apellido}")
             p.drawString(40, 640, f"Médico: {medico.nombre} {medico.apellido}")
-            p.drawString(40, 620, f"Horario: {horario.hora_inicio}")
+            p.drawString(40, 620, f"Horario: {horario.hora}")
             p.drawString(40, 600, f"Departamento: {departamento.nombre}")
             p.drawString(40, 580, f"Fecha: {turno.fecha}")
             p.drawString(40, 560, f"Motivo: {cita.motivo}")
