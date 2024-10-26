@@ -45,7 +45,7 @@ async def user_login_handler(request, dni:Form[int], password:Form[str]):
         return JsonResponse({'detail':f'{e.__class__}'}, status=Status.HTTP_400_BAD_REQUEST.value)
 
 
-@JWT_router.post('/user/login/2/')
+@JWT_router.post('/user/login/2/', tags=['Json Web Token Test'])
 async def user_login_handler_2(request):
     """
     dni: int 8 characters

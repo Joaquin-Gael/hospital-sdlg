@@ -1,6 +1,5 @@
 from django.db import models
 from user.models import UsuarioBase
-from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
 
 # Create your models here.

@@ -11,32 +11,59 @@ document.addEventListener('DOMContentLoaded', function () {
     // Obtener la fecha actual
     const today = new Date();
 
-    flatpickr("#date-picker", {
-        dateFormat: "Y-m-d",
-        mode: "range",
-        minDate: today, // Desactivar fechas pasadas
-        onChange: function(selectedDates, dateStr, instance) {
-            // Solo hacer algo cuando el usuario haya seleccionado 2 fechas (rango completo)
-            if (selectedDates.length === 2) {
-                const startDate = selectedDates[0];
-                const endDate = selectedDates[1];
+    // Función para obtener el nombre del día en español
+    function getDayName(date) {
+        const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+        return days[date.getDay()];
+    }
 
-                // Calcular un día antes del inicio y un día después del fin
-                const previousDay = new Date(startDate);
-                const nextDay = new Date(endDate);
+    // Función para desactivar los días que no están disponibles
+    function disableUnavailableDays(date, availableDays) {
+        const dayName = getDayName(date);
+        return !availableDays.includes(dayName);
+    }
 
-                previousDay.setDate(startDate.getDate() - 1);
-                nextDay.setDate(endDate.getDate() + 1);
-
-                // Establecer el nuevo rango (un día antes y un día después del rango seleccionado)
-                instance.setDate([previousDay, nextDay], false); // 'false' para no volver a disparar onChange
+    // Función para obtener los días disponibles desde la API
+    async function getAvailableDays(servicioID) {
+        try {
+            const response = await fetch(`/API/schedules/${servicioID}/dias/`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        },
-        onDayCreate: function(dObj, dStr, fp, dayElem) {
-            // Verificar si la fecha es una de las fechas marcadas
-            if (markedDates.includes(dayElem.dateObj.toISOString().split('T')[0])) {
-                dayElem.classList.add('marked');
+            const data = await response.json();
+            return data.map(day => day.dia);
+        } catch (error) {
+            console.error('Error fetching available days:', error);
+            return [];
+        }
+    }
+
+    // Función para inicializar el calendario
+    async function initCalendar(servicioID) {
+        const availableDays = await getAvailableDays(servicioID);
+
+        flatpickr("#date-picker", {
+            dateFormat: "Y-m-d",
+            minDate: today, // Desactivar fechas pasadas
+            disable: [
+                function(date) {
+                    return disableUnavailableDays(date, availableDays);
+                }
+            ],
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                // Verificar si la fecha es una de las fechas marcadas
+                if (markedDates.includes(dayElem.dateObj.toISOString().split('T')[0])) {
+                    dayElem.classList.add('marked');
+                }
             }
+        });
+    }
+
+    // Evento de cambio en el select de servicios
+    servicioSelect.addEventListener('change', function (event) {
+        const servicioID = servicioSelect.value;
+        if (servicioID) {
+            initCalendar(servicioID);
         }
     });
 });

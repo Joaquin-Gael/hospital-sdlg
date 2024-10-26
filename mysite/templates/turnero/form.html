@@ -154,20 +154,8 @@
             </div>
         </div>
 
-        <!-- Paso 3 -->
+        <!-- Paso 3: Confirmación del Turno -->
         <div class="step d-none" id="step-3">
-            <div class="col-md-6">
-                <label for="comprobanteButton" class="form-label">Comprobante:</label>
-                <div class="d-grid">
-                    <button type="button" id="comprobanteButton" class="btn btn-info">
-                        <i class="fa-solid fa-download me-2"></i>Descargar comprobante
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Paso 4: Confirmación del Turno -->
-        <div class="step d-none" id="step-4">
             <h4 class="mb-4 text-center">Detalles del turno</h4>
             <div class="card shadow-lg">
                 <div class="card-body">
@@ -204,7 +192,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let currentStep = 1;
-        const totalSteps = 4;
+        const totalSteps = 3;
         const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
         const submitButton = document.getElementById('solicitarButton');
@@ -241,7 +229,7 @@
             if (validateStep(currentStep)) {
                 currentStep = Math.min(currentStep + 1, totalSteps);
 
-                if (currentStep === 4) {
+                if (currentStep === 3) {
                     const servicioSelect = document.getElementById('servicioSelect');
                     const medico = servicioSelect.options[servicioSelect.selectedIndex].text;
                     const especialidad = servicioSelect.options[servicioSelect.selectedIndex].dataset.especialidad;
@@ -287,7 +275,7 @@
                 const response = await fetch(`/API/schedules/${servicioID}/horarios`);
                 const data = await response.json();
 
-                if (Array.isArray(data) && data.length > 0) {
+                if (Array.isArray(data.schedules) && data.length > 0) {
                     horarios = data;
                     let opciones = '';
                     const horasVistas = new Set();
@@ -315,10 +303,6 @@
         });
 
         showStep(currentStep);
-
-
-
-
     });
 </script>
 <script type="module" src="{% static 'js/form.js' %}"></script>

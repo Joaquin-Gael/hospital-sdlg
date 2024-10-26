@@ -6,6 +6,7 @@ from .locations import location_router
 from .appointments import appointment_router
 from .consultations import consultation_router
 from .departments import department_router
+from .specialties import specialty_router
 
 __all__ = [
     'user_router',
@@ -15,5 +16,6 @@ __all__ = [
     'appointment_router',
     'consultation_router',
     'department_router',
-    'schedule_router'
+    'schedule_router',
+    'specialty_router',
 ]

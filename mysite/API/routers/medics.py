@@ -1,4 +1,4 @@
-from ninja import Router, ModelSchema, Schema, File, Form
+from ninja import Router, ModelSchema, Schema, File, Form, Field
 from ninja.files import UploadedFile
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
@@ -6,7 +6,6 @@ from API.models import Medicos
 from API.serializers import BaseSerializer
 from typing import Optional
 from datetime import date
-from pydantic import Field
 
 
 # Create your views here.
@@ -22,19 +21,13 @@ class MedicosSchemaPut(Schema):
     first_name: Optional[str]
     last_name: Optional[str]
     dni: Optional[str]
-    fecha_nacimiento: Optional[date] # Manejo de fechas
+    fecha_nacimiento: Optional[date]  # Manejo de fechas
     email: Optional[str]
     telefono: Optional[str]
-    contraseña: Optional[str] # Si 'contraseña' es diferente a 'password'
+    contraseña: Optional[str]  # Si 'contraseña' es diferente a 'password'
     imagen_url: Optional[str]
     nombre: Optional[str]
     apellido: Optional[str]
-
-    # Este campo ahora acepta la carga de un archivo de imagen
-    imagen: Optional[UploadedFile] = File(None)
-
-    class Config:
-        arbitrary_types_allowed = True
 
 medic_router = Router()
 
@@ -84,19 +77,38 @@ async def create_medic(request, payload: Form[MedicosSchema], imagen: UploadedFi
     #new_user.save()
     return serialized_data
 
+@medic_router.put('/{medic_id}/imagen/', tags=['Media Medic'])
+async def update_medic_image(request, medic_id:int, imagen: UploadedFile = File()):
+    if imagen:
+        old_medic = await database_sync_to_async(Medicos.objects.get)(medicoID=medic_id)
+        old_medic.imagen = imagen
+
+        user_serializer = BaseSerializer(
+            model_class=Medicos,
+            instance=old_medic,
+            deal_for_field_list={'contraseña': 'get_contraseña'}
+        )
+        serialized_data = user_serializer.serialize()
+
+        return JsonResponse({'medic': serialized_data}, status=200)
+    else:
+        return JsonResponse({'detail':'Almenos un campo tiene que estar cambiado'}, status=400)
+
 @medic_router.put('/{medic_id}/')
-async def update_medic(request, medic_id:int, payload: Form[MedicosSchemaPut], imagen: UploadedFile = File(None)):
-    data = {key:value for key, value in payload.dict(exclude_unset=True) if value}
-    data['imagen'] = imagen
-    old_medic = await database_sync_to_async(Medicos.objects.get)(medicoID=medic_id)
-    for key, value in data:
-        setattr(old_medic, key, value)
+async def update_medic(request, medic_id:int, payload: Form[MedicosSchemaPut]):
+    data = payload.dict()
+    if data:
+        old_medic = await database_sync_to_async(Medicos.objects.get)(medicoID=medic_id)
+        for key, value in data:
+            setattr(old_medic, key, value)
 
-    user_serializer = BaseSerializer(
-        model_class=Medicos,
-        instance=old_medic,
-        deal_for_field_list={'contraseña': 'get_contraseña'}
-    )
-    serialized_data = user_serializer.serialize()
+        user_serializer = BaseSerializer(
+            model_class=Medicos,
+            instance=old_medic,
+            deal_for_field_list={'contraseña': 'get_contraseña'}
+        )
+        serialized_data = user_serializer.serialize()
 
-    return JsonResponse({'medic':serialized_data},status=200)
+        return JsonResponse({'medic': serialized_data}, status=200)
+    else:
+        return JsonResponse({'detail': 'Almenos un campo tiene que estar cambiado'}, status=400)

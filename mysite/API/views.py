@@ -1,3 +1,5 @@
+from sys import prefix
+
 from ninja import NinjaAPI, Swagger
 from .routers import *
 from security.views import security_router
@@ -10,14 +12,6 @@ api = NinjaAPI(
     description='Api Del HSDLG para sus aplicaciones y software',
 )
 
-api.get('/base_endpoint/')
-async def base_endpoint(request):
-    return {
-        'message': 'Base endpoint reached',
-        'method': request.method,
-        'path': request.path
-    }
-
 api.add_router(prefix='/users/', router=user_router, tags=['users'])
 api.add_router(prefix='/schedules/', router=schedule_router, tags=['schedules'])
 api.add_router(prefix='/medics/', router=medic_router, tags=['medics'])
@@ -27,3 +21,4 @@ api.add_router(prefix='/services/', router=service_router, tags=['services'])
 api.add_router(prefix='/appointments/', router=appointment_router, tags=['appointments'])
 api.add_router(prefix='/consultations/', router=consultation_router, tags=['consultations'])
 api.add_router(prefix='/security/', router=security_router, tags=['security'])
+api.add_router(prefix='/specialties/', router=specialty_router, tags=['specialties'])
