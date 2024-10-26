@@ -171,9 +171,6 @@
                             class="fw-bold"></span>
                     </p>
                     <div class="d-grid mt-4">
-                        <button id="checkout-btn" class="btn btn-dark btn-lg">Pagar</button>
-                        <div id="wallet_container"></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -296,14 +293,13 @@
                 console.log('Error al listar horarios:', error);
             }
         };
-
         servicioSelect.addEventListener('change', function () {
             const servicioID = servicioSelect.value;
             listarHorarios(servicioID);
         });
-
         showStep(currentStep);
     });
+
 </script>
 <script type="module" src="{% static 'js/form.js' %}"></script>
 <script type="module" src="{% static 'js/_datePiker.js' %}"></script>

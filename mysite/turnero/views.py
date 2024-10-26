@@ -1,20 +1,22 @@
 from django.shortcuts import (get_object_or_404, render, redirect)
-from django.http import Http404, HttpResponse, HttpResponseNotFound, response
+from django.http import (Http404, HttpResponse, HttpResponseNotFound, response)
 from django.template.response import TemplateResponse
 from django.views import View
 from channels.db import database_sync_to_async
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles.finders import find
 from django.utils.decorators import method_decorator
-from reportlab.pdfgen.canvas import Canvas
+from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from . import models
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
+from datetime import timedelta,datetime
 from random import choice
 import json, io
 
-class PagarTurno(View):
+class PagarTurno(views.View):
     async def get(self,request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
@@ -154,7 +156,7 @@ class ComprobanteDownloadView(LoginRequiredMixin, View):
             p.drawString(40, 680, f"Código del Turno: YY-{turno.TurnoID}")
             p.drawString(40, 660, f"Paciente: {usuario.nombre} {usuario.apellido}")
             p.drawString(40, 640, f"Médico: {medico.nombre} {medico.apellido}")
-            p.drawString(40, 620, f"Horario: {horario.hora_inicio}")
+            p.drawString(40, 620, f"Horario: {horario.hora}")
             p.drawString(40, 600, f"Departamento: {departamento.nombre}")
             p.drawString(40, 580, f"Fecha: {turno.fecha}")
             p.drawString(40, 560, f"Motivo: {cita.motivo}")
