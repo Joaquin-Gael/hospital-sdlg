@@ -22,7 +22,7 @@ __pycache__/
 
 # Archivos de log y bases de datos locales
 *.log
-*.sqlite3
+#*.sqlite3
 
 # Archivos temporales
 *.tmp

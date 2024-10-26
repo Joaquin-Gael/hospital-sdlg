@@ -233,7 +233,7 @@ async def schedules_list_from_service(request, service_id: int):
            ]
        }
     """
-    schedules_list = await database_sync_to_async(list)(Horario_medicos.objects.get(servicioID=service_id))
+    schedules_list = await database_sync_to_async(list)(await database_sync_to_async(Horario_medicos.objects.get)(servicioID=service_id))
     serialized_data = []
     for object in schedules_list:
         serialized_data.append(ScheduleSchema.from_orm(object).dict())

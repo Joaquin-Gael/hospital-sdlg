@@ -16,7 +16,7 @@ from datetime import timedelta,datetime
 from random import choice
 import json, io
 
-class PagarTurno(views.View):
+class PagarTurno(View):
     async def get(self,request):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         if not is_authenticated:
