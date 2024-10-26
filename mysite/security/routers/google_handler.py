@@ -54,6 +54,29 @@ def handler_login_user(request, user_data) -> Usuarios | None:
 
 @google_router.post('/oauth/login/', url_name='google_login')
 async def google_login(request):
+    """
+        Initiate the Google OAuth login process.
+
+        This endpoint redirects the user to the Google OAuth authorization
+        page where they can log in and grant access to their account.
+        The request includes the necessary parameters to initiate the OAuth
+        flow.
+
+        Parameters:
+        - request: The HTTP request object. This is automatically provided
+          by the FastAPI framework.
+
+        Returns:
+        - HttpResponseRedirect: Redirects the user to the Google OAuth
+          authorization URL.
+
+        Raises:
+        - Exception: If an error occurs while trying to initiate the login.
+
+        Example response:
+        Redirects to:
+        https://accounts.google.com/o/oauth2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_CALLBACK_URL&response_type=code&scope=openid email profile&access_type=offline&prompt=select_account
+        """
     try:
         base_url = "https://accounts.google.com/o/oauth2/auth"
         params = {
@@ -71,8 +94,31 @@ async def google_login(request):
         print('Error: {}\nData: {}'.format(e.__class__.__name__, e.args))
 
 
-@google_router.post('/oauth/callback/', url_name='oauth_callback')
+@google_router.post('/oauth/callback/')
 async def oauth_callback(request):
+    """
+        Handle the Google OAuth callback.
+
+        This endpoint is called by Google after the user has authorized
+        access. It receives the authorization code, exchanges it for access
+        and ID tokens, retrieves user information, and logs the user in.
+
+        Parameters:
+        - request: The HTTP request object. This is automatically provided
+          by the FastAPI framework.
+
+        Returns:
+        - HttpResponseRedirect: Redirects the user to the index page after
+          successful login.
+
+        Raises:
+        - Exception: If an error occurs during the token exchange or user
+          information retrieval.
+
+        Example response:
+        Redirects to:
+        /index
+        """
     try:
         code = request.GET.get('code')
         token_url = "https://oauth2.googleapis.com/token"

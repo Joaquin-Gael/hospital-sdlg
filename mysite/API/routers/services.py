@@ -20,6 +20,38 @@ service_router = Router()
 
 @service_router.get('/')
 async def list_services(request):
+    """
+        Retrieve a list of all services.
+
+        This endpoint returns a list of all services available in the system,
+        ordered by their unique identifier.
+
+        Parameters:
+        - request: The HTTP request object. Automatically provided by the
+          Django Ninja framework.
+
+        Returns:
+        - JsonResponse: A JSON response containing the count of services
+          and a list of their details.
+
+        Example response:
+        {
+            "count": 2,
+            "services": [
+                {
+                    "servicioID": 1,
+                    "nombre": "Consulta Médica",
+                    "descripcion": "Servicio de atención médica general."
+                },
+                {
+                    "servicioID": 2,
+                    "nombre": "Urgencias",
+                    "descripcion": "Atención médica de emergencia."
+                },
+                ...
+            ]
+        }
+        """
     services_list = await database_sync_to_async(list)(Servicios.objects.all().order_by('servicioID'))
     serialized_data = []
     for object in services_list:

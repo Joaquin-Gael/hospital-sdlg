@@ -18,8 +18,40 @@ encrypter = Fernet(settings.FERNET_KEY)
 @JWT_router.post('/user/login/')
 async def user_login_handler(request, dni:Form[int], password:Form[str]):
     """
-    dni: int 8 characters
-    password: str 10>X characters
+    Authenticate a user and generate a JWT token.
+
+    This endpoint allows users to log in by providing their DNI
+    and password. If the credentials are valid, a JSON Web Token
+    (JWT) is generated and returned. The JWT contains user-specific
+    information and is encrypted for security.
+
+    Parameters:
+    - request: The HTTP request object. This is automatically provided
+      by the FastAPI framework.
+    - dni (Form[int]): The user's DNI (identification number),
+      which must be an integer of 8 characters.
+    - password (Form[str]): The user's password, which must be
+      greater than 10 characters.
+
+    Returns:
+    - JsonResponse: A JSON response containing:
+        - `access` (str): The generated JWT token for the authenticated user.
+
+    Raises:
+    - 400 Bad Request: If the user credentials are invalid or if an
+      error occurs during authentication.
+
+    Example request body:
+    Form data:
+    {
+        "dni": 12345678,
+        "password": "securepassword"
+    }
+
+    Example response:
+    {
+        "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
     """
     try:
         user = await database_sync_to_async(Usuarios.authenticate)(request,dni, password)

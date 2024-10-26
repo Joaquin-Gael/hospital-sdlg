@@ -1,5 +1,3 @@
-from sys import prefix
-
 from ninja import NinjaAPI, Swagger
 from .routers import *
 from security.views import security_router

@@ -23,6 +23,38 @@ specialty_router = Router()
 
 @specialty_router.get('/')
 async def list_specialties(request):
+    """
+        Retrieve a list of all medical specialties.
+
+        This endpoint returns a list of all medical specialties available in
+        the system. The specialties are ordered by their unique identifier.
+
+        Parameters:
+        - request: The HTTP request object. Automatically provided by the
+          Django Ninja framework.
+
+        Returns:
+        - JsonResponse: A JSON response containing the count of specialties
+          and a list of their details.
+
+        Example response:
+        {
+            "count": 3,
+            "specialties": [
+                {
+                    "especialidadID": 1,
+                    "nombre": "Cardiología",
+                    "descripcion": "Estudio y tratamiento de enfermedades del corazón."
+                },
+                {
+                    "especialidadID": 2,
+                    "nombre": "Pediatría",
+                    "descripcion": "Atención médica para niños y adolescentes."
+                },
+                ...
+            ]
+        }
+        """
     specialties_list = await database_sync_to_async(list)(Especialidades.objects.all().order_by('especialidadID'))
     serialized_data = []
     for object in specialties_list:
