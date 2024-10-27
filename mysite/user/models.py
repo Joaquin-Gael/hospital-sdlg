@@ -11,6 +11,8 @@ import io
 import random
 
 # Create your models here.
+def user_directory_path(instance, filename):
+    return f'user/profile_{instance.first_name}_{instance.last_name}.png'
 
 class UsuarioBase(AbstractUser):
     dni = models.CharField(max_length=100, unique=True,null=True,blank=True)
@@ -47,7 +49,7 @@ class UsuarioBase(AbstractUser):
 
     @property
     def get_full_name(self) -> str:
-        return f"{self.nombre} {self.apellido}"
+        return f"{self.first_name} {self.last_name}"
 
     @property
     def DNI(self):
@@ -76,8 +78,8 @@ class UsuarioBase(AbstractUser):
         return False
     
     def update_data(self,
-                    nombre = None,
-                    apellido = None,
+                    first_name = None,
+                    last_name = None,
                     email = None,
                     contraseña = None,
                     img = None,
@@ -86,8 +88,8 @@ class UsuarioBase(AbstractUser):
                     username = None) -> None:
 
         fields_to_update = {
-            'nombre': nombre,
-            'apellido': apellido,
+            'first_name': first_name,
+            'last_name': last_name,
             'email': email,
             'telefono': telefono,
             'imagen': img,
@@ -132,10 +134,10 @@ class UsuarioBase(AbstractUser):
             
     def set_dpp(self):
         try:
-            initials = f"{self.nombre[0].upper()}{self.apellido[0].upper()}"
+            initials = f"{self.first_name[0].upper()}{self.last_name[0].upper()}"
             image_buffer = self.gen_default_profile_picture(initials)
     
-            file_name = f"profile_{self.nombre}_{self.apellido}.png"
+            file_name = f"profile_{self.first_name}_{self.last_name}.png"
 
             self.imagen.save(file_name, ContentFile(image_buffer.read()), save=True)
         except Exception as e:
@@ -154,9 +156,7 @@ class UsuarioBase(AbstractUser):
 
 class Usuarios(UsuarioBase):
     userID = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, default='usuario_sin_nombre')
-    apellido = models.CharField(max_length=100, default='usuario_sin_apellido')
-    imagen = models.ImageField(upload_to='user/',default=f'user/profile_{nombre}_{apellido}.png',null=True, blank=True)
+    imagen = models.ImageField(upload_to=user_directory_path,null=True, blank=True)
 
     groups = models.ManyToManyField(
         Group,
@@ -173,3 +173,13 @@ class Usuarios(UsuarioBase):
         permissions:list[tuple[str,str]] = [
             ('view_panel_user', 'Can view panel user')
         ]
+        
+    def save(self, *args, **kwargs):
+        if not self.imagen:
+            self.set_dpp()
+        super().save(*args, **kwargs)
+        
+    def get_imagen_url(self):
+        if self.imagen:
+            return self.imagen.url
+        return None
