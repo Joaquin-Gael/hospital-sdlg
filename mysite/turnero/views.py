@@ -7,9 +7,10 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles.finders import find
 from django.utils.decorators import method_decorator
-from reportlab.pdfgen import canvas
+from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter
 from . import models
+from rest_framework import status
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
 from datetime import timedelta,datetime
@@ -57,37 +58,45 @@ class TurneroForm(View):
 
 
             try:
-                servicio = await database_sync_to_async(models.Servicios.objects.get)(servicioID=servicio)
-                especialidad = servicio.especialidadID
-                medicos = await database_sync_to_async(list)(models.Medicos.objects.filter(especialidadID=especialidad))
-
+                print("inicio")
+                servicio = await sync_to_async(lambda: models.Servicios.objects.get(servicioID=servicio))()
+                print("paso 1")
+                especialidad = await sync_to_async(lambda:servicio.especialidadID)()
+                print("paso 2")
+                medicos = await sync_to_async(lambda: list(models.Medicos.objects.filter(especialidadID=especialidad)))()
+                print("se selecciona médico")
                 medico = choice(medicos)
 
-                departamento = await database_sync_to_async(models.Departamentos.objects.get)(departamentoID=medico.especialidadID.departamentoID.departamentoID)
+                departamento = await sync_to_async(lambda: models.Departamentos.objects.get(departamentoID=medico.especialidadID.departamentoID.departamentoID))()
+                
+                print("inicia la creación de la cita")
+                cita = await sync_to_async(models.Citas.objects.create)(
+                    servicioID=servicio,
+                    userID=request.user,
+                    medicoID=medico,
+                    horarioID=await sync_to_async(lambda:models.Horario_medicos.objects.get(horarioID=horario))(),
+                    motivo=motivo,
+                    estado='Pendiente',
+                    departamentoID=departamento,
+                )
+                print("cita creada")
+                
+                print("inicia la creación del turno")
+                _turno = await sync_to_async(models.Turnos.objects.create)(
+                    citaID=cita,
+                    servicioID=servicio,
+                    medicoID=medico,
+                    motivo=motivo,
+                    estado='Pendiente',
+                    fecha=fecha,
+                    userID=request.user,
+                    fecha_limt=fecha
+                )
 
-                _cita = {
-                    'medicoID': medico,
-                    'horarioID': horario,
-                    'motivo': motivo,
-                    'estado': 'Pendiente',
-                    'departamentoID': departamento,
-                }
+                print(_turno)
+                print("solicitud realizada con éxito")
 
-                # Crear el turno
-                _turno = {
-                    'medicoID': medico,
-                    'motivo': motivo,
-                    'fecha': fecha,
-                    'userID': request.user
-                }
-
-                # Renderizar la página de éxito
-                return TemplateResponse(request, 'user/panel', {'turno_data': _turno})
-
-            except models.Servicios.DoesNotExist:
-                return response.JsonResponse({'error': 'Servicio no encontrado'}, status=404)
-            except models.Medicos.DoesNotExist:
-                return response.JsonResponse({'error': 'Médico no encontrado'}, status=404)
+                return TemplateResponse(request, 'user/panel.html')
             except Exception as e:
                 print(f'Error al generar turno: {e}')
                 return response.JsonResponse({'error': 'Error al generar turno'}, status=500)
@@ -95,8 +104,8 @@ class TurneroForm(View):
         except Exception as err:
             return response.JsonResponse({
                 'error':'invalid JSON'
-            },status=404)
-
+            },status=status.HTTP_400_BAD_REQUEST)
+            
 class TurnoData(View):
 
     @method_decorator(UserIDMiddleware)
