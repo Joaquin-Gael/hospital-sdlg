@@ -2,7 +2,7 @@ from ninja import Router, ModelSchema, File, Form
 from ninja.files import UploadedFile
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
-from API.models import Usuarios
+from API.models import Usuarios,Turnos
 
 # Create your views here.
 class UsuarioSchema(ModelSchema):
@@ -267,3 +267,49 @@ async def update_user(request, user_id:int, payload: UsuarioSchemaPut):
         return JsonResponse({'user':serialized_data},status=200)
     else:
         return JsonResponse({'detail':'Almenos un campo tiene que estar cambiado'}, status=400)
+    
+@user_router.get('/{user_id}/turnos/')
+async def get_by_user(request, user_id: int):
+    try:
+        turnos = await database_sync_to_async(list)(Turnos.objects.filter(userID=user_id))
+        print("inicio del bucle")
+        list_turn = []
+        for x in turnos:
+            data = {
+                'id': x.TurnoID,
+                'medico': {
+                    'id': x.citaID.medicoID.medicoID,
+                    'nombre': x.citaID.medicoID.nombre
+                },
+                'horario': {
+                    'id': x.citaID.horarioID.horarioID,
+                    'hora': str(x.citaID.horarioID.hora)
+                },
+                'motivo': x.motivo,
+                'estado': x.estado
+            }
+            list_turn.append(data)
+            print("excelente")
+        return JsonResponse({'Turnos':list_turn}, status=200)
+    except Exception as err:
+        print(err)
+        return JsonResponse({'err': str(err.__class__)}, status=404)
+
+@user_router.get('/{user_id}/data/')
+async def get_user_data(request, user_id: int):
+    try:
+        user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
+        print("incio")
+        data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'telefono': user.telefono,
+            'imagen': user.get_imagen_url(),
+            'dni': user.dni,
+        }
+        print("fin")
+        return JsonResponse({'user':data}, status=200)
+    except Exception as e:
+        print(e)
+        return JsonResponse({'err': str(e.__class__)}, status=404)
