@@ -1,6 +1,7 @@
 from django.db import models
 from user.models import UsuarioBase
 from django.contrib.auth.models import Group, Permission
+from user.models import user_directory_path
 
 # Create your models here.
 
@@ -51,9 +52,7 @@ class Servicios(models.Model):
     
 class Medicos(UsuarioBase):
     medicoID = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, default='medico_sin_nombre')
-    apellido = models.CharField(max_length=100, default='medico_sin_apellido')
-    imagen = models.ImageField(upload_to='medic/',default=f'medic/profile_{nombre}_{apellido}.png',null=True, blank=True)
+    imagen = models.ImageField(upload_to=user_directory_path,null=True, blank=True)
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
 
     groups = models.ManyToManyField(
@@ -73,6 +72,11 @@ class Medicos(UsuarioBase):
     @classmethod
     def get_medicos(cls):
         return cls.objects.all()
+    
+    def save(self, *args, **kwargs):
+        if not self.imagen:
+            self.set_dpp()
+        super().save(*args, **kwargs)
 
 class Horario_medicos(models.Model):
     horarioID = models.AutoField(primary_key=True)
