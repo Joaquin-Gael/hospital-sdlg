@@ -36,7 +36,7 @@ class Turnos(BaseModelTurnos):
     def get_turno_data(self):
         return {
             'TurnoID': self.TurnoID,
-            'Usuario': [self.userID.dni, self.userID.nombre, self.userID.apellido],
+            'Usuario': [self.userID.dni, self.userID.first_name, self.userID.last_name],
             'Médico': self.citaID.medicoID,
             'Motivo': self.estado,
             'Estado': self.estado,
