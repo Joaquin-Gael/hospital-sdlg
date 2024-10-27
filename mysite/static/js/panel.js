@@ -33,19 +33,19 @@ $(() => {
       }
 
       const data = await response.json();
-      let img = data.imagen;
-      if (data.imagen_url){
+      let img = data.user.imagen;
+      if (data.imagen_url) {
         img = data.imagen_url;
       }
       const userData = {
-        dni: data.dni,
-        nombre: data.nombre,
-        apellido: data.apellido,
-        username: data.username,
-        email: data.email,
-        contraseña: data.contraseña,
+        dni: data.user.dni,
+        nombre: data.user.nombre,
+        apellido: data.user.apellido,
+        username: data.user.username,
+        email: data.user.email,
+        contraseña: data.user.contraseña,
         imagen: img,
-        telefono: data.telefono,
+        telefono: data.user.telefono,
       };
       return userData;
     } catch (error) {
@@ -80,18 +80,18 @@ $(() => {
       return response.json();
     })
     .then((data) => {
-      let img = data.imagen;
-      if (data.imagen_url){
-        img = ' ';
+      let img = data.user.imagen;
+      if (data.imagen_url) {
+        img = data.imagen_url;
       }
-      console.log(data.username);
+      console.log(data.user.username);
       const userData = {
-        username: data.username,
-        email: data.email,
-        contraseña: data.contraseña,
+        username: data.user.username,
+        email: data.user.email,
+        contraseña: data.user.contraseña,
         imagen: img,
         CSRF: getToken(),
-        telefono: data.telefono, // Asegúrate de que este campo esté presente en tus datos
+        telefono: data.user.telefono, // Asegúrate de que este campo esté presente en tus datos
       };
       renderUserProfileForm(userData);
       initializeFileInput();
@@ -136,13 +136,21 @@ $(() => {
   // Renderizar lista de turnos
   const renderTurnosLinks = (turnosData) => {
     let turnos = "";
-    console.log(turnosData.length)
-    if (turnosData.length === 0){
+  
+    // Verificar si turnosData es una matriz
+    if (!Array.isArray(turnosData)) {
+      console.error("turnosData no es una matriz:", turnosData);
+      return;
+    }
+  
+    console.log(turnosData.length);
+  
+    if (turnosData.length === 0) {
       turnos += `
         <a class="btn btn-dark" href="/turnero/" > Sacar Turno </a>
       `;
       $("#turnosList").html(turnos);
-    }else{
+    } else {
       turnosData.forEach((data) => {
         turnos += `
           <a id="turnoLink${data.id}" class="list-group-item list-group-item-action panel-link">
