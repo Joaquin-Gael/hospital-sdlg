@@ -36,9 +36,9 @@ class RegisterUser(views.View):
         try:
             user = await sync_to_async(models.Usuarios)(
                 dni = request.POST.get('dni'),
-                nombre = request.POST.get('nombre'),
-                apellido = request.POST.get('apellido'),
-                fecha_nacimiento = request.POST.get('nacido'),
+                first_name = request.POST.get('nombre'),
+                last_name = request.POST.get('apellido'),
+                fecha_nacimiento = request.POST.get('born_date'),
                 email = request.POST.get('email'),
                 contraseña = request.POST.get('contraseña'),
                 username = request.POST.get('nombre') +' '+ request.POST.get('apellido')
@@ -127,8 +127,8 @@ class PanelUser(views.View):
 
             user = await database_sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
             await sync_to_async(user.update_data)(
-                nombre=request.POST.get('nombre'),
-                apellido=request.POST.get('apellido'),
+                first_name=request.POST.get('nombre'),
+                last_name=request.POST.get('apellido'),
                 contraseña=request.POST.get('contraseña'),
                 email=request.POST.get('email'),
                 img=request.FILES.get('imagen'),
