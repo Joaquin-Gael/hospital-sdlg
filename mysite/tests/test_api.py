@@ -25,8 +25,8 @@ class ApiUserViews(TestCase):
             Usuarios(
                 userID=random.choice(self.ids),
                 dni=random.choice(self.dnis),
-                nombre=faker.name(),
-                apellido=faker.last_name(),
+                first_name=faker.name(),
+                last_name=faker.last_name(),
                 contraseña=faker.password(),
                 fecha_nacimiento=faker.date_between(start_date=timezone.now()-timedelta(weeks=7_665), end_date=timezone.now()),
                 email=faker.email(),
@@ -35,8 +35,8 @@ class ApiUserViews(TestCase):
             Usuarios(
                 userID=random.choice(self.ids),
                 dni=random.choice(self.dnis),
-                nombre=faker.name(),
-                apellido=faker.last_name(),
+                first_name=faker.name(),
+                last_name=faker.last_name(),
                 contraseña=faker.password(),
                 fecha_nacimiento=faker.date_between(start_date=timezone.now() - timedelta(weeks=7_665),
                                                     end_date=timezone.now()),
