@@ -2,7 +2,8 @@ from ninja import Router, ModelSchema, Schema, File, Form
 from ninja.files import UploadedFile
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
-from API.models import Horario_medicos
+from API.models import Horario_medicos,Servicios,Medicos
+from django.shortcuts import get_object_or_404
 from typing import Optional
 from datetime import date
 
@@ -233,9 +234,73 @@ async def schedules_list_from_service(request, service_id: int):
            ]
        }
     """
-    schedules_list = await database_sync_to_async(list)(await database_sync_to_async(Horario_medicos.objects.get)(servicioID=service_id))
+    schedules_list = await database_sync_to_async(list)(await database_sync_to_async(Horario_medicos.objects.filter)(servicioID=service_id))
     serialized_data = []
     for object in schedules_list:
         serialized_data.append(ScheduleSchema.from_orm(object).dict())
 
     return JsonResponse({'count':len(schedules_list), 'schedules':serialized_data}, status=200)
+
+@schedule_router.get('/{service_id}/days', tags=['Service Days'])
+async def get_available_days(request, service_id: int):
+    """
+    Retrieve a list of available days for a specific service.
+
+    This endpoint fetches all available days associated with the
+    specified `service_id`. It returns a JSON response containing
+    the list of available days.
+
+    Parameters:
+    - request: The HTTP request object. This is automatically provided
+      by the FastAPI framework.
+    - service_id (int): The ID of the service for which to retrieve
+      the available days.
+
+    Returns:
+    - JsonResponse: A JSON response containing:
+        - `dias` (list): A list of available days for the specified service.
+
+    Raises:
+    - 404 Not Found: If no days are available for the specified `service_id`.
+
+    Example response:
+    {
+        "dias": [
+            {"dia": "Lunes"},
+            {"dia": "Martes"},
+            ...
+        ]
+    }
+    """
+    try:
+        # Obtener el servicio
+        servicio = await database_sync_to_async(get_object_or_404)(Servicios, servicioID=service_id)
+        print("paso 1")
+
+        # Obtener la especialidad del servicio
+        especialidad_id = await database_sync_to_async(lambda: servicio.especialidadID)()
+        print("paso 2")
+        # Obtener los médicos que pertenecen a esa especialidad
+        medicos = await database_sync_to_async(Medicos.objects.filter)(especialidadID=especialidad_id)
+        print("paso 3")
+        # Obtener los horarios de los médicos
+        horarios = await database_sync_to_async(Horario_medicos.objects.filter)(medicoID__in=await database_sync_to_async(lambda: medicos)())
+        print("paso 4")
+
+        # Obtener los días disponibles
+        dias_disponibles = set()
+        async for horario in horarios:
+            dia = await database_sync_to_async(lambda: horario.dia)()
+            dias_disponibles.add(str(dia))
+        print("paso 5")
+
+        # Ordenar los días disponibles
+        dias_disponibles = sorted(dias_disponibles)
+
+        # Crear la lista de días disponibles
+        list_dias = [{'day': dia} for dia in dias_disponibles]
+        print("paso todo")
+
+        return JsonResponse({'days_availables': list_dias}, status=200)
+    except Exception as err:
+        return JsonResponse({'err': str(err.__class__)}, status=404)
