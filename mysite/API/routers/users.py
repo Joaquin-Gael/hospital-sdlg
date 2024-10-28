@@ -295,21 +295,3 @@ async def get_by_user(request, user_id: int):
         print(err)
         return JsonResponse({'err': str(err.__class__)}, status=404)
 
-@user_router.get('/{user_id}/data/')
-async def get_user_data(request, user_id: int):
-    try:
-        user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
-        print("incio")
-        data = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'telefono': user.telefono,
-            'imagen': user.get_imagen_url(),
-            'dni': user.dni,
-        }
-        print("fin")
-        return JsonResponse({'user':data}, status=200)
-    except Exception as e:
-        print(e)
-        return JsonResponse({'err': str(e.__class__)}, status=404)
