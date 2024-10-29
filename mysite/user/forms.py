@@ -28,7 +28,7 @@ class CompleteUserData(forms.Form):
 
     born_date = forms.DateField(
         widget=forms.DateInput(
-            attrs={'class': 'form-control', 'placeholder': 'Fecha de Nacimiento', 'id':'id_fecha_nacimiento'}
+            attrs={'class': 'form-control', 'placeholder': 'Fecha de Nacimiento', 'id':'nacidoInput'}
         ),
         label='Fecha de Nacimiento'
     )
