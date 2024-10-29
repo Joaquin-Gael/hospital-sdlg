@@ -1,7 +1,6 @@
 from django.shortcuts import (get_object_or_404, render, redirect)
 from django.http import (Http404, HttpResponse, HttpResponseNotFound, response)
 from django.template.response import TemplateResponse
-from django.views import View
 from channels.db import database_sync_to_async
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,7 +12,6 @@ from . import models
 from rest_framework import status
 from .middlewares.userIDmiddleware import UserIDMiddleware
 from asgiref.sync import sync_to_async
-from datetime import timedelta,datetime
 from random import choice
 import json, io
 

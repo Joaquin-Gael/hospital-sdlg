@@ -1,11 +1,8 @@
-from ninja import Router, ModelSchema, Schema, File, Form
-from ninja.files import UploadedFile
+from ninja import Router, ModelSchema
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
 from API.models import Horario_medicos,Servicios,Medicos
 from django.shortcuts import get_object_or_404
-from typing import Optional
-from datetime import date
 
 # Create your views here.
 class ScheduleSchema(ModelSchema):
@@ -197,7 +194,7 @@ async def update_scheduel(request, schedule_id: int, payload: ScheduleSchemaPut)
     else:
         return JsonResponse({'detail':'se nesesita algun dato para cambiar'}, status=400)
 
-@schedule_router.get('/{service_id}/schedules', tags=['Service Schedules'])
+@schedule_router.get('/{service_id}/schedules/', tags=['Service Schedules'])
 async def schedules_list_from_service(request, service_id: int):
     """
        Retrieve a list of medical schedules for a specific service.
@@ -234,14 +231,17 @@ async def schedules_list_from_service(request, service_id: int):
            ]
        }
     """
-    schedules_list = await database_sync_to_async(list)(await database_sync_to_async(Horario_medicos.objects.filter)(servicioID=service_id))
+    schedules_list = await database_sync_to_async(list)(await database_sync_to_async(Horario_medicos.objects.filter)(
+        servicioID=service_id
+        )
+    )
     serialized_data = []
     for object in schedules_list:
         serialized_data.append(ScheduleSchema.from_orm(object).dict())
 
     return JsonResponse({'count':len(schedules_list), 'schedules':serialized_data}, status=200)
 
-@schedule_router.get('/{service_id}/days', tags=['Service Days'])
+@schedule_router.get('/{service_id}/days/', tags=['Service Days'])
 async def get_available_days(request, service_id: int):
     """
     Retrieve a list of available days for a specific service.
@@ -265,42 +265,40 @@ async def get_available_days(request, service_id: int):
 
     Example response:
     {
-        "dias": [
-            {"dia": "Lunes"},
-            {"dia": "Martes"},
+        "days_availables": [
+            "Lunes",
+            "Martes",
             ...
         ]
     }
     """
     try:
-        # Obtener el servicio
-        servicio = await database_sync_to_async(get_object_or_404)(Servicios, servicioID=service_id)
-        print("paso 1")
+        services = await database_sync_to_async(get_object_or_404)(
+            Servicios.objects.select_related('especialidadID'),
+            servicioID=service_id
+        )
 
-        # Obtener la especialidad del servicio
-        especialidad_id = await database_sync_to_async(lambda: servicio.especialidadID)()
-        print("paso 2")
-        # Obtener los médicos que pertenecen a esa especialidad
-        medicos = await database_sync_to_async(Medicos.objects.filter)(especialidadID=especialidad_id)
-        print("paso 3")
-        # Obtener los horarios de los médicos
-        horarios = await database_sync_to_async(Horario_medicos.objects.filter)(medicoID__in=await database_sync_to_async(lambda: medicos)())
-        print("paso 4")
+        specialty_id: int = await database_sync_to_async(lambda :services.especialidadID_id)()
+
+        schedules = await database_sync_to_async(list)(
+            Horario_medicos.objects.filter(
+                medicoID__especialidadID=specialty_id
+            )
+        )
 
         # Obtener los días disponibles
-        dias_disponibles = set()
-        async for horario in horarios:
-            dia = await database_sync_to_async(lambda: horario.dia)()
-            dias_disponibles.add(str(dia))
-        print("paso 5")
+        enable_days: set = set()
+        for schedule in schedules:
+            day = await database_sync_to_async(lambda :schedule.dia)()
+            enable_days.add(str(day))
 
         # Ordenar los días disponibles
-        dias_disponibles = sorted(dias_disponibles)
+        enable_days_list: list = sorted(enable_days)
 
         # Crear la lista de días disponibles
-        list_dias = [{'day': dia} for dia in dias_disponibles]
-        print("paso todo")
+        day_list: list = [day for day in enable_days_list]
 
-        return JsonResponse({'days_availables': list_dias}, status=200)
+        return JsonResponse({'days_availables': day_list}, status=200)
     except Exception as err:
+        print(err.args)
         return JsonResponse({'err': str(err.__class__)}, status=404)

@@ -233,15 +233,15 @@ async def update_medic(request, medic_id:int, payload: MedicosSchemaPut):
         - 400: If no fields are provided in the request to update.
         - 404: If the specified medical professional does not exist.
         """
-    data = {key: value for key, value in payload.dict(exclude_none=True).items() if value != 'string' and value != 0}
+    data = {key: value for key, value in payload.dict(exclude_none=True).items() if value != 'string' and value != 0 and value == ""}
     print(data)
     if data:
         old_medic = await database_sync_to_async(Medicos.objects.get)(medicoID=medic_id)
         for key, value in data.items():
             if key == 'contraseña':
-                old_medic.set_contraseña(value)
+                await database_sync_to_async(old_medic.set_contraseña)(value)
             elif key == 'password':
-                old_medic.set_password(value)
+                await database_sync_to_async(old_medic.set_password)(value)
             elif key == 'especialidadID':
                 setattr(old_medic, 'especialidadID_id', value)
             else:

@@ -28,6 +28,8 @@ JAZZMIN_SETTINGS = {
     "site_title":"Hospital SDLG Admin Panel",
     "site_header":"Hospital SDLG Admin Panel",
     "show_sidebar":True,
+    "site_logo":"img/Logo-SDLG.svg",
+    "site_brand":"SDLG Admin",
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.User": "fas fa-user",
@@ -61,7 +63,8 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido al panel de administración de Hospital SDLG",
     "changeform_format": "carousel",
     "related_modal_active": True,
-
+    "custom_css":"scss/ninja/css/styles.css",
+    "custom_js":"scss/ninja/js/init.js"
 }
 
 JAZZMIN_UI_TWEAKS = {

@@ -4,7 +4,8 @@
     "flatpickr": "^4.6.13",
     "i": "^0.3.7",
     "jquery": "^3.7.1",
-    "mercadopago": "^2.0.15"
+    "mercadopago": "^2.0.15",
+    "sass": "^1.80.4"
   },
   "devDependencies": {
     "typescript": "^5.5.4"

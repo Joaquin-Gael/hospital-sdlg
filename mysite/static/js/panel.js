@@ -104,7 +104,7 @@ $(() => {
     });
 
   // Fetch turnos data
-  fetch(`/API/users/${getUserID()}/turnos/`, {
+  fetch(`/API/users/${getUserID()}/schedules/`, {
     method: "GET",
   })
     .then((response) => {

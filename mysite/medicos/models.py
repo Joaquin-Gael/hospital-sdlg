@@ -49,6 +49,9 @@ class Servicios(models.Model):
     descripcion = models.CharField(max_length=255)
     precio = models.FloatField()
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Service_id: {self.servicioID} Nombre: {self.nombre} Precio: {self.precio}'
     
 class Medicos(UsuarioBase):
     medicoID = models.AutoField(primary_key=True)
@@ -67,7 +70,7 @@ class Medicos(UsuarioBase):
     )
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} {self.dni} {self.especialidadID.nombre}"
+        return f"{self.first_name} {self.last_name} {self.dni} {self.especialidadID.nombre}"
     
     @classmethod
     def get_medicos(cls):
@@ -79,18 +82,32 @@ class Medicos(UsuarioBase):
         super().save(*args, **kwargs)
 
 class Horario_medicos(models.Model):
+
+    class DaysWeek(models.TextChoices):
+        LUNES = 'lunes', 'Lunes'
+        MARTES = 'martes', 'Martes'
+        MIERCOLES = 'miercoles', 'Miércoles'
+        JUEVES = 'jueves', 'Jueves'
+        VIERNES = 'viernes', 'Viernes'
+        SABADO = 'sabado', 'Sábado'
+        DOMINGO = 'domingo', 'Domingo'
+
     horarioID = models.AutoField(primary_key=True)
     medicoID = models.ForeignKey(Medicos,on_delete=models.CASCADE)
-    dia = models.CharField(max_length=100)
+    dia = models.CharField(
+        max_length=12,
+        choices=DaysWeek.choices,
+        default=DaysWeek.LUNES
+    )
     hora = models.TimeField()
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
     servicioID = models.ForeignKey(Servicios,on_delete=models.CASCADE)
     departamentoID = models.ForeignKey(Departamentos,on_delete=models.CASCADE)
 
+
     def __str__(self) -> str:
-        return f"{self.medicoID} {self.hora}"
+        return f"{self.medicoID_id} {self.hora}"
     
     @classmethod
     def get_horarios(cls):
         return cls.objects.all()
-

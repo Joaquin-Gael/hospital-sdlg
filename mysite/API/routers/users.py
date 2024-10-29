@@ -3,6 +3,8 @@ from ninja.files import UploadedFile
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
 from API.models import Usuarios,Turnos
+import os
+
 
 # Create your views here.
 class UsuarioSchema(ModelSchema):
@@ -93,6 +95,10 @@ async def get_user(request, user_id:int):
         """
     user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
     serialized_user = UsuarioSchema.from_orm(user).dict()
+    is_authenticated = await database_sync_to_async(lambda :request.user.is_authenticated)()
+    user_request = await database_sync_to_async(lambda :request.user.userID)()
+    if is_authenticated and user_request == user.userID:
+        serialized_user['contraseña'] = user.get_contraseña
     return JsonResponse({"user": serialized_user}, status=200)
 
 @user_router.post('/')
@@ -201,6 +207,21 @@ async def update_user_image(request, user_id:int, imagen: UploadedFile = File())
     else:
         return JsonResponse({'detail':'Almenos un campo tiene que estar cambiado'}, status=400)
 
+@user_router.post('/{user_id}/imagen/', tags=['Media User'])
+async def create_user_image(request, user_id: int):
+    try:
+        old_user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
+        is_authenticated = await database_sync_to_async(lambda: request.user.is_authenticated)()
+        user_request = await database_sync_to_async(lambda: request.user.userID)()
+        if not is_authenticated and user_request == old_user.userID:
+            return JsonResponse({'detail':'Not Authenticated'}, status=403)
+        if not os.path.exists(old_user.imagen.path):
+            await database_sync_to_async(old_user.set_dpp)()
+            return JsonResponse({'detail':'Success'}, status=200)
+        return JsonResponse({'detail':'User already has image'}, status=400)
+    except Exception as e:
+        return JsonResponse({'detail':f'{e}'}, status=500)
+
 @user_router.put('/{user_id}/')
 async def update_user(request, user_id:int, payload: UsuarioSchemaPut):
     """
@@ -249,15 +270,14 @@ async def update_user(request, user_id:int, payload: UsuarioSchemaPut):
             }
         }
         """
-    data = {key: value for key, value in payload.dict(exclude_none=True).items() if value != 'string'}
+    data = {key: value for key, value in payload.dict(exclude_none=True).items() if value != 'string' and value == ""}
     if data:
-        print(data)
         old_user = await database_sync_to_async(Usuarios.objects.get)(userID=user_id)
         for key, value in data.items():
             if key == 'contraseña':
-                old_user.set_contraseña(value)
+                await database_sync_to_async(old_user.set_contraseña)(value)
             elif key == 'password':
-                old_user.set_password(value)
+                await database_sync_to_async(old_user.set_password)(value)
             else:
                 setattr(old_user, key, value)
 
@@ -268,30 +288,26 @@ async def update_user(request, user_id:int, payload: UsuarioSchemaPut):
     else:
         return JsonResponse({'detail':'Almenos un campo tiene que estar cambiado'}, status=400)
     
-@user_router.get('/{user_id}/turnos/')
+@user_router.get('/{user_id}/schedules/', tags=['Schedules Users'])
 async def get_by_user(request, user_id: int):
     try:
-        turnos = await database_sync_to_async(list)(Turnos.objects.filter(userID=user_id))
-        print("inicio del bucle")
-        list_turn = []
-        for x in turnos:
+        schedule_list = await database_sync_to_async(list)(Turnos.objects.filter(userID=user_id))
+        serialized_data = []
+        for schedule in schedule_list:
             data = {
-                'id': x.TurnoID,
+                'id': schedule.TurnoID,
                 'medico': {
-                    'id': x.citaID.medicoID.medicoID,
-                    'nombre': x.citaID.medicoID.nombre
+                    'id': schedule.citaID.medicoID.medicoID,
+                    'nombre': schedule.citaID.medicoID.nombre
                 },
                 'horario': {
-                    'id': x.citaID.horarioID.horarioID,
-                    'hora': str(x.citaID.horarioID.hora)
+                    'id': schedule.citaID.horarioID.horarioID,
+                    'hora': str(schedule.citaID.horarioID.hora)
                 },
-                'motivo': x.motivo,
-                'estado': x.estado
+                'motivo': schedule.motivo,
+                'estado': schedule.estado
             }
-            list_turn.append(data)
-            print("excelente")
-        return JsonResponse({'Turnos':list_turn}, status=200)
+            serialized_data.append(data)
+        return JsonResponse({'Turnos':serialized_data}, status=200)
     except Exception as err:
-        print(err)
         return JsonResponse({'err': str(err.__class__)}, status=404)
-

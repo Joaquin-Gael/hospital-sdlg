@@ -107,7 +107,7 @@ class UsuarioBase(AbstractUser):
 
         self.save()
         
-    def gen_default_profile_picture(self,initials: str, size=(32, 32)):
+    def _gen_default_profile_picture(self,initials: str, size=(32, 32)):
         try:
            colors = ['#242742','#51A3A3','#DAB081','#ABE166','#B80300','#6F2DBD']
            light_colors = ['#242742', '#BBDDDD', '#DFCC74', '#7ABB25', '#FF7370', '#B38BE4']
@@ -135,7 +135,7 @@ class UsuarioBase(AbstractUser):
     def set_dpp(self):
         try:
             initials = f"{self.first_name[0].upper()}{self.last_name[0].upper()}"
-            image_buffer = self.gen_default_profile_picture(initials)
+            image_buffer = self._gen_default_profile_picture(initials)
     
             file_name = f"profile_{self.first_name}_{self.last_name}.png"
 
@@ -143,16 +143,16 @@ class UsuarioBase(AbstractUser):
         except Exception as e:
             print(f"Error: {e.__class__}\nData: {e.args}")
 
-    def set_contraseña(self, value) -> None:
-        cipher = Fernet(settings.FERNET_KEY)
-        self.contraseña:str = cipher.encrypt(value.encode('utf-8')).decode('utf-8')
-
     @property
     def get_contraseña(self) -> str:
         if self.contraseña:
             cipher = Fernet(settings.FERNET_KEY)
             contraseña: str = cipher.decrypt(self.contraseña.encode('utf-8')).decode('utf-8')
             return contraseña
+
+    def set_contraseña(self, value) -> None:
+        cipher = Fernet(settings.FERNET_KEY)
+        self.contraseña: str = cipher.encrypt(value.encode('utf-8')).decode('utf-8')
 
 class Usuarios(UsuarioBase):
     userID = models.AutoField(primary_key=True)

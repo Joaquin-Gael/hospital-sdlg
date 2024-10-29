@@ -2,7 +2,6 @@ from ninja import Router, ModelSchema, Form, Field
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
 from API.models import Especialidades
-from API.serializers import BaseSerializer
 
 
 # Create your views here.
@@ -61,5 +60,12 @@ async def list_specialties(request):
         serialized_data.append(SpecialtySchema.from_orm(object).dict())
 
     return JsonResponse({'count':len(specialties_list), 'specialties':serialized_data}, status=200)
+
+@specialty_router.get('/speciality_id/')
+async def get_speciality(request, speciality_id: int):
+    speciality = await database_sync_to_async(Especialidades.objects.get)(especialidadID=speciality_id)
+    serialized_data = SpecialtySchema.from_orm(speciality).dict()
+
+    return JsonResponse({'speciality':serialized_data}, status=200)
 
 #TODO: hacer el resto de vistas

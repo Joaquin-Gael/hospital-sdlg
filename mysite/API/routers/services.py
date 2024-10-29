@@ -59,4 +59,11 @@ async def list_services(request):
 
     return JsonResponse({'count':len(services_list), 'services':serialized_data}, status=200)
 
+@service_router.get('/{service_id}/')
+async def get_service(request, service_id: int):
+    service = await database_sync_to_async(Servicios.objects.get)(servicioID=service_id)
+    serialized_data = ServiceSchema.from_orm(service).dict()
+
+    return JsonResponse({'service':serialized_data}, status=200)
+
 #TODO: Hacer el resto de las vistas de los servicios

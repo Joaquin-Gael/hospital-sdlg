@@ -2,7 +2,6 @@ from ninja import Router, ModelSchema, Schema, Form
 from channels.db import database_sync_to_async
 from django.http import JsonResponse
 from API.models import Departamentos
-from API.serializers import BaseSerializer
 
 # Create your views here.
 
@@ -66,4 +65,9 @@ async def list_department(request):
 
     return JsonResponse({'count': department_count, 'locations': serialized_data})
 
+@department_router.get('/{department_id}/')
+async def get_department(request, department_id: int):
+    department = await database_sync_to_async(Departamentos.objects.get)(departamentoID=department_id)
+    serialized_data = DepartamentSchema.from_orm(department).dict()
+    return JsonResponse({'department': serialized_data}, status=200)
 #TODO: hacer el resto de vistas

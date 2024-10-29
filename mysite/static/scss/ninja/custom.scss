@@ -38,7 +38,7 @@ $btn-padding-x: 1.2rem;
     transition: box-shadow 0.3s ease-in-out;
 
     &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 6px 16px rgba(0, 0, 0, 0.15);
     }
 
     &:active {
@@ -549,6 +549,71 @@ $btn-padding-x: 1.2rem;
         to {
             transform: scale(4); // Escalar el efecto
             opacity: 0; // Hacerlo invisible
+        }
+    }
+}
+
+.panel, .card {
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: $light;
+    color: $dark;
+}
+
+.panel-header {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: $primary;
+    margin-bottom: 0.5rem;
+}
+
+.panel-body {
+    font-size: 0.9rem;
+    color: $gray;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.panel-header {
+    background: linear-gradient(45deg, $primary, $secondary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px 6px 0 0;
+}
+
+
+.sidebar {
+    background-color: $dark;
+    color: $light;
+    padding: 1rem;
+
+    .nav-link {
+        // Estilo outline por defecto
+        position: relative; // Asegúrate de que los botones tengan posición relativa
+        overflow: hidden; // Evitar que el ripple se desborde del botón
+        z-index: 1; // Mantener el botón encima del ripple
+        background-color: transparent;
+        border: 2px solid $primary;
+        color: $primary;
+        font-weight: bold;
+        padding: $btn-padding-y $btn-padding-x;
+        border-radius: $btn-border-radius;
+        transition: background-color 0.3s, color 0.3s;
+
+        &:hover {
+            background-color: $primary;
+            color: white;
+        }
+
+        &.active {
+            background-color: $primary;
+            color: white;
         }
     }
 }
