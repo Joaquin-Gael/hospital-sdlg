@@ -68,6 +68,11 @@ class Medicos(UsuarioBase):
         blank=True,
     )
 
+    class Meta:
+        permissions = [
+            ('view_panel_medic', 'Can view panel medic')
+        ]
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.dni} {self.especialidadID.nombre}"
     

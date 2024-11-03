@@ -13,6 +13,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('turnero/', include('turnero.urls')),
     path('user/', include('user.urls')),
+    path('medic/', include('medicos.urls')),
     path('API/', api.urls, name='api'),
     path('tinymce/', include('tinymce.urls')),
     path('',lambda request: redirect('Home')),

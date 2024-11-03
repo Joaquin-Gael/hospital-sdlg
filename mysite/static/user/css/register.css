@@ -42,17 +42,54 @@ input[type="file"] {
     border-radius: 0;
 }
 
-/* Espaciado para el ícono de Google */
-.fab.fa-google {
-    font-size: 1.5rem;
-}
-
-.fab.fa-google {
-    font-size: 1.2rem;
-}
 
 /* Estilo general */
 body {
     background-color: #f8f9fa; /* Fondo claro */
     color: #000000; /* Texto negro */
+}
+
+.social-btn {
+    background-color: #ffffff;
+    color: #757575;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.social-btn:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn svg {
+    margin-right: 10px;
+}
+
+.google-btn {
+    background-color: #ffffff;
+    color: #757575;
+}
+
+.facebook-btn {
+    background-color: #1877F2;
+    color: #ffffff;
+}
+
+.twitter-btn {
+    background-color: #08090C;
+    color: #ffffff;
+}
+
+.twitter-btn:hover {
+    background-color: #08090C;
+    color: #fff;
+}
+
+.github-btn {
+    background-color: #333;
+    color: #ffffff;
 }

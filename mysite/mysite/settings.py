@@ -63,8 +63,8 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido al panel de administración de Hospital SDLG",
     "changeform_format": "carousel",
     "related_modal_active": True,
-    "custom_css":"scss/ninja/css/styles.css",
-    "custom_js":"scss/ninja/js/init.js"
+    "custom_css":"admin_panel/css/styles.css",
+    "custom_js":"admin_panel/js/init.js"
 }
 
 JAZZMIN_UI_TWEAKS = {

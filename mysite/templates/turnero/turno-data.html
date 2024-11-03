@@ -6,12 +6,6 @@
     - Turno Data
 {% endblock title %}
 
-{% block breadcrumb %}
-<li class="breadcrumb-item">
-    <a href="/turnero/turnos/{{turno.TurnoID}}/">Turno {{turno.TurnoID}}</a>
-</li>
-{% endblock breadcrumb %}
-
 {% block main %}
 <div class="container my-5">
     <!-- Turn Details Section -->
@@ -40,7 +34,7 @@
 <script>
     localStorage.setItem('turnoID','{{turno.TurnoID}}')
 </script>
-<script type="module" src="{% static 'js/deleteTurno.js' %}"></script>
+<script type="module" src="{% static 'turnero/js/deleteTurno.js' %}"></script>
 {% endblock scripts %}
 
 {% block styles %}

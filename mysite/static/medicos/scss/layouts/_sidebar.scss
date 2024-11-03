@@ -1,0 +1,122 @@
+// ----------------------------------------------
+// SideBar Style
+// ----------------------------------------------
+
+.left-sidebar {
+  width: $sidebar-width-full;
+  background-color: $white;
+  position: absolute;
+  transition: .2s ease-in;
+  height: 100%;
+  z-index: 11;
+  border-right: 1px solid rgb(229, 234, 239);
+
+
+  .scroll-sidebar {
+    overflow-y: auto;
+    padding: $sidebar-spacing-x;
+    height: calc(100vh - 70px);
+    border-radius: $border-radius;
+
+    .simplebar-track.simplebar-horizontal {
+      visibility: hidden !important;
+    }
+  }
+}
+
+.brand-logo {
+  min-height: $header-height;
+  padding: $sidebar-spacing-x;
+}
+
+.unlimited-access {
+  padding: 18px 22px 25px;
+  margin: 0 -5px;
+
+  .unlimited-access-img {
+    margin: -35px -5px 0 -43px;
+  }
+}
+
+.nav-small-cap {
+  padding: 5px 2px;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--bs-heading-color);
+
+  .nav-small-cap-icon {
+    display: none;
+  }
+}
+
+.sidebar-nav {
+  ul {
+    .sidebar-item {
+      .sidebar-link {
+        color: $sidebar-text;
+        display: flex;
+        font-size: 15px;
+        white-space: nowrap;
+        align-items: center;
+        line-height: 25px;
+        position: relative;
+        padding: 10px;
+        border-radius: 26px;
+        gap: 5px;
+        margin-bottom: 2px;
+        font-weight: $font-weight-normal;
+        
+        span:first-child {
+          display: flex;
+          padding: 5px 11px; 
+        }
+
+        .ti {
+          flex-shrink: 0;
+          font-size: 21px;
+        }
+
+        &:hover {
+          background-color: rgba($primary, 0.1);
+          color: $primary;
+
+          &.has-arrow::after {
+            border-color: $primary;
+          }
+        }
+      }
+
+      .sidebar-link.active {
+        &:hover {
+          &.has-arrow::after {
+            border-color: $white;
+          }
+        }
+      }
+
+      .link-disabled {
+        opacity: $link-disabled;
+      }
+
+      &.selected>.sidebar-link.active,
+      &.selected>.sidebar-link,
+      >.sidebar-link.active {
+        background-color: $primary;
+        color: $white;
+      }
+
+    }
+  }
+
+  .sidebar-list {
+    .sidebar-list-item {
+      padding: 8px 0;
+    }
+  }
+}
+
+.collapse.in {
+  display: block;
+}

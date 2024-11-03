@@ -1,5 +1,5 @@
-import { successMessage, errorMessage } from "./utils/messages.js";
-import { getToken, getUserID } from "./utils/tokens.js";
+import { successMessage, errorMessage } from "../../js/utils/messages.js";
+import { getToken, getUserID } from "../../js/utils/tokens.js";
 
 $(() => {
   // Helper function to remove placeholders

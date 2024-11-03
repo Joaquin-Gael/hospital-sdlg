@@ -7,53 +7,7 @@
 {% endblock title %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'css/register.css' %}">
-<style>
-    .social-btn {
-        background-color: #ffffff;
-        color: #757575;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        justify-content: center;
-        border: 1px solid #ddd;
-        padding: 8px 16px;
-        font-size: 16px;
-    }
-
-    .social-btn:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .social-btn svg {
-        margin-right: 10px;
-    }
-
-    .google-btn {
-        background-color: #ffffff;
-        color: #757575;
-    }
-
-    .facebook-btn {
-        background-color: #1877F2;
-        color: #ffffff;
-    }
-
-    .twitter-btn {
-        background-color: #08090C;
-        color: #ffffff;
-    }
-
-    .twitter-btn:hover {
-        background-color: #08090C;
-        color: #fff;
-    }
-
-    .github-btn {
-        background-color: #333;
-        color: #ffffff;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'user/css/register.css' %}">
 {% endblock styles %}
 
 {% block main %}
@@ -199,6 +153,6 @@
 {% endblock main %}
 
 {% block scripts %}
-<script type="module" src="{% static 'js/register.js' %}"></script>
+<script type="module" src="{% static 'user/js/register.js' %}"></script>
 <script type="module" src="{% static 'js/_bornPiker.js' %}"></script>
 {% endblock scripts %}

@@ -1,5 +1,5 @@
-import { successMessage, errorMessage } from './utils/messages.js';
-import { getToken } from './utils/tokens.js';
+import { successMessage, errorMessage } from '../../js/utils/messages.js';
+import { getToken } from '../../js/utils/tokens.js';
 
 $(() => {
     const turnoID = localStorage.getItem('turnoID');
