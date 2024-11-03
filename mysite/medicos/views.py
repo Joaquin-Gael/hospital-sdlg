@@ -15,10 +15,16 @@ class MedicPanel(View):
     async def dispatch(self, request, *args, **kwargs):
         is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
         has_perms = await sync_to_async(request.user.has_perm)('view_panel_medic')
-
+        #TODO: terminar de implementar la logica de authenticacion
         print(is_authenticated, has_perms)
         return await super().dispatch(request, *args, **kwargs)
 
     async def get(self, request):
         messages.success(request, message='Autorizado')
+        #TODO: hacer el resto de logica con la DB
+        #TODO: enviar contexto serializado en dict para tabla
         return TemplateResponse(request, 'medicos/panel.html')
+
+    #TODO: hacer el resto de methods
+
+#TODO: hacer mas vistas que tengan que ver con los medocos

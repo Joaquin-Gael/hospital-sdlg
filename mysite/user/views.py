@@ -66,6 +66,8 @@ class RegisterUser(views.View):
             },status=400)
 
 class LoginUser(views.View):
+    #TODO: diferenciar con emails que si tengan cuanta con los que no
+    # y manejar errores en base a ello
     
     @method_decorator(LoginUnRequired)
     def dispatch(self, *args, **kwargs):

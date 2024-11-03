@@ -7,3 +7,5 @@ admin.site.register(models.Medicos)
 admin.site.register(models.Horario_medicos)
 admin.site.register(models.Ubicaciones)
 admin.site.register(models.Especialidades)
+
+#TODO: mejorar como definimos admin de los medicos
