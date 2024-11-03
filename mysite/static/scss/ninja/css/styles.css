@@ -12320,34 +12320,15 @@ textarea.form-control-lg {
   color: #212121;
 }
 
-.panel-header {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #6200ea;
-  margin-bottom: 0.5rem;
-}
-
-.panel-body {
-  font-size: 0.9rem;
-  color: #7a7a7a;
-}
-
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.panel-header {
-  background: linear-gradient(45deg, #6200ea, #03dac5);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px 6px 0 0;
-}
-
 .sidebar {
-  background-color: #212121;
-  color: #f5f5f5;
+  background-color: #343A40;
+  color: #FFFFFF;
   padding: 1rem;
 }
 .sidebar .nav-link {
@@ -12355,20 +12336,64 @@ textarea.form-control-lg {
   overflow: hidden;
   z-index: 1;
   background-color: transparent;
-  border: 2px solid #6200ea;
-  color: #6200ea;
+  border: 2px solid #343A40;
+  color: #17A2B8;
   font-weight: bold;
-  padding: 0.4rem 1.2rem;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: 0px;
   transition: background-color 0.3s, color 0.3s;
 }
 .sidebar .nav-link:hover {
-  background-color: #6200ea;
-  color: white;
+  background-color: #138496;
+  color: #FFFFFF;
 }
 .sidebar .nav-link.active {
-  background-color: #6200ea;
-  color: white;
+  background-color: #138496;
+  color: #FFFFFF;
+}
+.sidebar .nav-header {
+  font-weight: bold;
+  color: #B0BEC5;
+  padding: 0.5rem 0;
+}
+.sidebar .user-panel .info a {
+  color: #17A2B8;
+  font-weight: bold;
+}
+.sidebar .user-panel .info a:hover {
+  color: #138496;
+}
+
+.main-header {
+  background-color: rgba(255, 255, 255, 0.6);
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  padding: 15px 20px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+}
+
+.view-port {
+  margin-right: 65px;
+  padding-right: 0;
+}
+@media (max-width: 768px) {
+  .view-port {
+    margin-right: 10px;
+  }
+}
+@media (max-width: 576px) {
+  .view-port {
+    margin-right: 5px;
+    padding-right: 15px;
+  }
+}
+
+.content-wrapper {
+  padding-top: 65px;
 }
 
 /*# sourceMappingURL=styles.css.map */

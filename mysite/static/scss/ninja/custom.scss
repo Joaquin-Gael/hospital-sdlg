@@ -32,6 +32,10 @@ $btn-color: white; // Color de texto por defecto
 $btn-padding-y: 0.4rem;
 $btn-padding-x: 1.2rem;
 
+// Variables for colors and spacing
+$navbar-bg-color: rgba(255, 255, 255, 0.6); // Color de fondo translúcido
+$navbar-blur: 10px; // Desenfoque del fondo
+
 // Sombra de Material Design para los botones
 @mixin material-button-shadow {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -562,17 +566,6 @@ $btn-padding-x: 1.2rem;
     color: $dark;
 }
 
-.panel-header {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: $primary;
-    margin-bottom: 0.5rem;
-}
-
-.panel-body {
-    font-size: 0.9rem;
-    color: $gray;
-}
 
 .card:hover {
     transform: translateY(-3px);
@@ -580,40 +573,78 @@ $btn-padding-x: 1.2rem;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.panel-header {
-    background: linear-gradient(45deg, $primary, $secondary);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 6px 6px 0 0;
-}
-
 
 .sidebar {
-    background-color: $dark;
-    color: $light;
+    background-color: #343A40; // Fondo oscuro de la sidebar
+    color: #FFFFFF; // Texto blanco
     padding: 1rem;
 
     .nav-link {
-        // Estilo outline por defecto
-        position: relative; // Asegúrate de que los botones tengan posición relativa
-        overflow: hidden; // Evitar que el ripple se desborde del botón
-        z-index: 1; // Mantener el botón encima del ripple
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
         background-color: transparent;
-        border: 2px solid $primary;
-        color: $primary;
+        border: 2px solid #343A40; // Bordes del mismo color que el fondo
+        color: #17A2B8; // Color azul claro para los enlaces
         font-weight: bold;
-        padding: $btn-padding-y $btn-padding-x;
-        border-radius: $btn-border-radius;
+        padding: 0.5rem 1rem; // Ajusta el padding según sea necesario
+        border-radius: 0px; // Ajusta el border-radius según sea necesario
         transition: background-color 0.3s, color 0.3s;
 
         &:hover {
-            background-color: $primary;
-            color: white;
+            background-color: #138496; // Azul más oscuro al pasar el mouse
+            color: #FFFFFF; // Texto blanco
         }
 
         &.active {
-            background-color: $primary;
-            color: white;
+            background-color: #138496; // Azul más oscuro para el estado activo
+            color: #FFFFFF; // Texto blanco
         }
     }
+
+    .nav-header {
+        font-weight: bold;
+        color: #B0BEC5; // Color gris claro para los encabezados
+        padding: 0.5rem 0; // Espaciado para los encabezados
+    }
+
+    .user-panel {
+        .info a {
+            color: #17A2B8; // Color del enlace del usuario
+            font-weight: bold;
+            &:hover {
+                color: #138496; // Color al pasar el mouse
+            }
+        }
+    }
+}
+
+.main-header {
+    background-color: $navbar-bg-color; // Color de fondo translúcido
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur($navbar-blur);
+    padding: 15px 20px; // Espaciado interno
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+}
+
+.view-port {
+    margin-right: 65px; // Márgen inicial para pantallas grandes
+    padding-right: 0;   // Asegura que no haya padding derecho
+
+    @media (max-width: 768px) {
+        margin-right: 10px; // Reduce margen en pantallas medianas
+    }
+
+    @media (max-width: 576px) {
+        margin-right: 5px; // Ajusta margen para pantallas pequeñas
+        padding-right: 15px; // Añade padding en lugar de margen para mantener el contenido dentro del viewport
+    }
+}
+
+.content-wrapper{
+    padding-top: 65px;
 }
