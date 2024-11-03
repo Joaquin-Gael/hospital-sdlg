@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import login, logout
 from django.core.files.base import ContentFile
+from django.core.exceptions import ValidationError
 from PIL import Image, ImageDraw,ImageFont
 from django.utils import timezone
 from django.conf import settings
@@ -11,8 +12,6 @@ import io
 import random
 
 # Create your models here.
-def user_directory_path(instance, filename):
-    return f'user/profile_{instance.first_name}_{instance.last_name}.png'
 
 class UsuarioBase(AbstractUser):
     dni = models.CharField(max_length=100, unique=True,null=True,blank=True)
@@ -154,9 +153,24 @@ class UsuarioBase(AbstractUser):
         cipher = Fernet(settings.FERNET_KEY)
         self.contraseña: str = cipher.encrypt(value.encode('utf-8')).decode('utf-8')
 
+
+def _discount_validator(value):
+    match value:
+        case _ if 1<=value<=100:
+            return value
+        case _:
+            raise ValidationError('%()s must be into: (1<=Value<=100; Value ∈ Z)')
+
+class ObraSociales(models.Model):
+    obraID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=20)
+    discount = models.IntegerField()
+    desciption = models.TextField(max_length=500)
+
 class Usuarios(UsuarioBase):
     userID = models.AutoField(primary_key=True)
-    imagen = models.ImageField(upload_to=user_directory_path,null=True, blank=True)
+    obraID = models.ForeignKey(ObraSociales, on_delete=models.SET_NULL)
+    imagen = models.ImageField(upload_to='user/',null=True, blank=True)
 
     groups = models.ManyToManyField(
         Group,

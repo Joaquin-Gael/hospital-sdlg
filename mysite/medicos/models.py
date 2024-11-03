@@ -1,7 +1,6 @@
 from django.db import models
 from user.models import UsuarioBase
 from django.contrib.auth.models import Group, Permission
-from user.models import user_directory_path
 
 # Create your models here.
 
@@ -55,7 +54,7 @@ class Servicios(models.Model):
     
 class Medicos(UsuarioBase):
     medicoID = models.AutoField(primary_key=True)
-    imagen = models.ImageField(upload_to=user_directory_path,null=True, blank=True)
+    imagen = models.ImageField(upload_to='medic/',null=True, blank=True)
     especialidadID = models.ForeignKey(Especialidades,on_delete=models.CASCADE)
 
     groups = models.ManyToManyField(
