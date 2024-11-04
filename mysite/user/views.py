@@ -1,5 +1,3 @@
-from re import template
-
 from django.shortcuts import render, redirect
 from django.http import response
 from django.template.response import TemplateResponse
@@ -21,6 +19,7 @@ from .middlewares.saveUserData import LoginUnRequired
 class RegisterUser(views.View):
 
     async def get(self, request):
+        obras_sociales = models.ObrasSociales.objects.all()
         if request.GET:
             completed_user_data_form = await sync_to_async(CompleteUserData)(request.GET)
             if completed_user_data_form.is_valid():
@@ -30,20 +29,25 @@ class RegisterUser(views.View):
                     new_dni = user_data.get('')
                 )
         complete_user_data_form = await sync_to_async(CompleteUserData)()
-        return TemplateResponse(request, 'user/register.html', {'completed_form':complete_user_data_form})
+        return TemplateResponse(request, 'user/register.html', {'obras':obras_sociales,'completed_form':complete_user_data_form})
     
     async def post(self, request):
         try:
+            obraid = request.POST.get('obra')
+            print(f"la obra es {obraid}")
+            obra = await sync_to_async(lambda:models.ObrasSociales.objects.get(obraID=obraid))()
             user = await sync_to_async(models.Usuarios)(
                 dni = request.POST.get('dni'),
                 first_name = request.POST.get('nombre'),
                 last_name = request.POST.get('apellido'),
-                fecha_nacimiento = request.POST.get('born_date'),
+                fecha_nacimiento = request.POST.get('nacido'),
                 email = request.POST.get('email'),
                 contraseña = request.POST.get('contraseña'),
+                obraID = obra,
                 username = request.POST.get('nombre') +' '+ request.POST.get('apellido')
             )
             await sync_to_async(user.set_password)(request.POST.get('contraseña'))
+            print(f"el id obra es: {obra}")
             try:
                 imagen = await sync_to_async(request.FILES.get)('imagen')
                 if imagen:
@@ -66,8 +70,6 @@ class RegisterUser(views.View):
             },status=400)
 
 class LoginUser(views.View):
-    #TODO: diferenciar con emails que si tengan cuanta con los que no
-    # y manejar errores en base a ello
     
     @method_decorator(LoginUnRequired)
     def dispatch(self, *args, **kwargs):
