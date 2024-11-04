@@ -161,7 +161,7 @@ def _discount_validator(value):
         case _:
             raise ValidationError('%()s must be into: (1<=Value<=100; Value ∈ Z)')
 
-class ObraSociales(models.Model):
+class ObrasSociales(models.Model):
     obraID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20)
     discount = models.IntegerField()
