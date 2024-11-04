@@ -7,7 +7,53 @@
 {% endblock title %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'user/css/register.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<style>
+    .social-btn {
+        background-color: #ffffff;
+        color: #757575;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+
+    .social-btn:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-btn svg {
+        margin-right: 10px;
+    }
+
+    .google-btn {
+        background-color: #ffffff;
+        color: #757575;
+    }
+
+    .facebook-btn {
+        background-color: #1877F2;
+        color: #ffffff;
+    }
+
+    .twitter-btn {
+        background-color: #08090C;
+        color: #ffffff;
+    }
+
+    .twitter-btn:hover {
+        background-color: #08090C;
+        color: #fff;
+    }
+
+    .github-btn {
+        background-color: #333;
+        color: #ffffff;
+    }
+</style>
 {% endblock styles %}
 
 {% block main %}
@@ -101,7 +147,7 @@
                 <!-- Fecha de nacimiento -->
                 <div class="form-floating mb-3">
                     <input type="date" id="nacidoInput" class="form-control" name="born_date" placeholder="Fecha de nacimiento">
-                    <label for="nacidoInput">Fecha de Nacimiento</label>
+                    <label for="id_fecha_nacimiento">Fecha de Nacimiento</label>
                 </div>
 
                 <!-- Nombre -->
@@ -134,6 +180,25 @@
                     <input class="form-control" type="file" id="imagenInput" accept="image/*">
                 </div>
 
+                 <!-- Obra Social -->
+                 <div class="form-floating mb-3">
+                    <select id="obraSocialSelect" class="form-select" aria-label="Obra Social">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                    </select>
+                    <label for="obraSocialSelect">¿Tienes obra social?</label>
+                </div>
+
+                <!-- Lista de Obras Sociales -->
+                <div id="obrasSocialesList" class="form-floating mb-3" style="display: none;">
+                    <select name="obra" id="obra" class="form-select" aria-label="Obras Sociales">
+                        {% for obra in obras %}
+                            <option value="{{ obra.obraID }}">{{ obra.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="obra">Selecciona tu obra social</label>
+                </div>
+
                 <!-- Botón Registrar -->
                 <div class="mt-4">
                     <button id="registrarButton" class="btn btn-dark w-100" type="button">
@@ -153,6 +218,16 @@
 {% endblock main %}
 
 {% block scripts %}
-<script type="module" src="{% static 'user/js/register.js' %}"></script>
+<script type="module" src="{% static 'js/register.js' %}"></script>
 <script type="module" src="{% static 'js/_bornPiker.js' %}"></script>
+<script>
+    document.getElementById('obraSocialSelect').addEventListener('change', function() {
+        var obraSocialList = document.getElementById('obrasSocialesList');
+        if (this.value === 'si') {
+            obraSocialList.style.display = 'block';
+        } else {
+            obraSocialList.style.display = 'none';
+        }
+    });
+</script>
 {% endblock scripts %}
