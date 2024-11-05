@@ -115,18 +115,20 @@
                 <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                     <ul class="navbar-nav">
                         {% if user.is_authenticated %}
-                        <li class="nav-item"><a href="/turnero/" class="nav-link">Turnos</a></li>
-                        <li class="nav-item"><a href="/blog/atencionalpaciente/" class="nav-link">Atención al
-                                Paciente</a></li>
-                        <li class="nav-item"><a href="/blog/nosotros/" class="nav-link">Nosotros</a></li>
-                        <li class="nav-item"><a href="/blog/contacto/" class="nav-link">Contacto</a></li>
-                        <li class="nav-item"><a href="/user/panel/" class="nav-link">Panel</a></li>
+                            <li class="nav-item"><a href="/turnero/" class="nav-link">Turnos</a></li>
+                            <li class="nav-item">
+                                <a href="/blog/atencionalpaciente/" class="nav-link">Atención al Paciente</a>
+                            </li>
+                            <li class="nav-item"><a href="/blog/nosotros/" class="nav-link">Nosotros</a></li>
+                            <li class="nav-item"><a href="/blog/contacto/" class="nav-link">Contacto</a></li>
+                            <li class="nav-item"><a href="/{{user.role}}/panel/" class="nav-link">Panel</a></li>
                         {% else %}
-                        <li class="nav-item"><a href="/blog/atencionalpaciente/" class="nav-link">Atención al
-                                Paciente</a></li>
-                        <li class="nav-item"><a href="/blog/nosotros/" class="nav-link">Nosotros</a></li>
-                        <li class="nav-item"><a href="/blog/contacto/" class="nav-link">Contacto</a></li>
-                        <li class="nav-item"><a href="/user/register/" class="nav-link">Registrarme</a></li>
+                            <li class="nav-item">
+                                <a href="/blog/atencionalpaciente/" class="nav-link">Atención al Paciente</a>
+                            </li>
+                            <li class="nav-item"><a href="/blog/nosotros/" class="nav-link">Nosotros</a></li>
+                            <li class="nav-item"><a href="/blog/contacto/" class="nav-link">Contacto</a></li>
+                            <li class="nav-item"><a href="/user/register/" class="nav-link">Registrarme</a></li>
                         {% endif %}
                     </ul>
                     <div class="social-icons">
@@ -165,6 +167,7 @@
         {% endif %}
 
         <!-- Body Content -->
+        <pre>{{ user.role }}</pre>
         {% block main %}
         {% endblock main %}
 

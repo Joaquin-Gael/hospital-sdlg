@@ -76,14 +76,14 @@ class Medicos(UsuarioBase):
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.dni} {self.especialidadID.nombre}"
     
-    @classmethod
-    def get_medicos(cls):
-        return cls.objects.all()
-    
     def save(self, *args, **kwargs):
         if not self.imagen:
             self.set_dpp()
         super().save(*args, **kwargs)
+
+    @property
+    def role(self):
+        return 'medic'
 
 class Horario_medicos(models.Model):
 

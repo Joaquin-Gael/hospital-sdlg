@@ -19,17 +19,9 @@
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
-    <aside class="left-sidebar">
+    <aside class="left-sidebar my-5">
       <!-- Sidebar scroll-->
       <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="./index.html" class="text-nowrap logo-img">
-            <img src="../assets/images/logos/logo-light.svg" alt="" />
-          </a>
-          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-            <i class="ti ti-x fs-8"></i>
-          </div>
-        </div>
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
           <ul id="sidebarnav">
@@ -38,7 +30,7 @@
               <span class="hide-menu">Home</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'MedicPanel' %}" aria-expanded="false">
                 <span>
                   <iconify-icon icon="solar:home-smile-bold-duotone" class="fs-6"></iconify-icon>
                 </span>
@@ -64,101 +56,162 @@
       <!-- End Sidebar scroll-->
     </aside>
     <!--  Sidebar End -->
-    <!--  Main wrapper -->
-    <div class="body-wrapper my-5">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">View by page title and screen class</h5>
-              <div class="table-responsive">
-                <table class="table text-nowrap align-middle mb-0">
-                  <thead>
-                    <tr class="border-2 border-bottom border-primary border-0">
-                      <th scope="col" class="ps-0">Page Title</th>
-                      <th scope="col" >Link</th>
-                      <th scope="col" class="text-center">Pageviews</th>
-                      <th scope="col" class="text-center">Page Value</th>
-                    </tr>
-                  </thead>
-                  <tbody class="table-group-divider">
-                    <tr>
-                      <th scope="row" class="ps-0 fw-medium">
-                        <span class="table-link1 text-truncate d-block">Welcome to our
-                          website</span>
-                      </th>
-                      <td>
-                        <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/index.html</a>
-                      </td>
-                      <td class="text-center fw-medium">18,456</td>
-                      <td class="text-center fw-medium">$2.40</td>
-                    </tr>
-                  --TODO: Hacer la coneccion con la DB
-                  </tbody>
-                </table>
-              </div>
+    <!-- Main wrapper -->
+<div class="body-wrapper my-5">
+    <div class="row">
+        <!-- Citas Card -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Citas</h5>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap align-middle mb-0">
+                            <thead>
+                                <tr class="border-2 border-bottom border-primary border-0">
+                                    <th scope="col" class="ps-0">Cita ID</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col" class="text-center">Paciente</th>
+                                    <th scope="col" class="text-center">Motivo</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for schedule in schedules %}
+                                <tr>
+                                    <th scope="row" class="ps-0 fw-medium">
+                                        <span class="table-link1 text-truncate d-block">
+                                            {{ schedule.citaID }}
+                                        </span>
+                                    </th>
+                                    <td>
+                                        <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">
+                                            {{ schedule.fecha }}
+                                        </a>
+                                    </td>
+                                    <td class="text-center fw-medium">
+                                        {{ schedule.paciente }}  <!-- Asegúrate de tener este campo en tu objeto schedule -->
+                                    </td>
+                                    <td class="text-center fw-medium">
+                                        {{ schedule.motivo }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">Sessions by
-                device<span><iconify-icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="tooltip-success" data-bs-title="Locations"></iconify-icon></span>
-              </h5>
-              <div class="row">
-                <div class="col-4">
-                  <iconify-icon icon="solar:laptop-minimalistic-line-duotone" class="fs-7 d-flex text-primary"></iconify-icon>
-                  <span class="fs-11 mt-2 d-block text-nowrap">Computers</span>
-                  <h4 class="mb-0 mt-1">87%</h4>
-                </div>
-                <div class="col-4">
-                  <iconify-icon icon="solar:smartphone-line-duotone" class="fs-7 d-flex text-secondary"></iconify-icon>
-                  <span class="fs-11 mt-2 d-block text-nowrap">Smartphone</span>
-                  <h4 class="mb-0 mt-1">9.2%</h4>
-                </div>
-                <div class="col-4">
-                  <iconify-icon icon="solar:tablet-line-duotone" class="fs-7 d-flex text-success"></iconify-icon>
-                  <span class="fs-11 mt-2 d-block text-nowrap">Tablets</span>
-                  <h4 class="mb-0 mt-1">3.1%</h4>
-                </div>
-              </div>
 
-              <div class="vstack gap-4 mt-7 pt-2">
-                <div>
-                  <div class="hstack justify-content-between">
-                    <span class="fs-3 fw-medium">Computers</span>
-                    <h6 class="fs-3 fw-medium text-dark lh-base mb-0">87%</h6>
-                  </div>
-                  <div class="progress mt-6" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar bg-primary" style="width: 100%"></div>
-                  </div>
+        <!-- Pacientes Atendidos por Día de la Semana Card -->
+<div class="col-lg-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">
+                Pacientes atendidos por día
+                <span>
+                    <iconify-icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-custom-class="tooltip-success" data-bs-title="Cantidad de pacientes atendidos por día"></iconify-icon>
+                </span>
+            </h5>
+            <div class="row" id="daysContainer">
+                <div class="col-6" data-day="Lunes">
+                    <span class="fs-11 mt-2 d-block">Lunes <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">10</h4>
                 </div>
-
-                <div>
-                  <div class="hstack justify-content-between">
-                    <span class="fs-3 fw-medium">Smartphones</span>
-                    <h6 class="fs-3 fw-medium text-dark lh-base mb-0">9.2%</h6>
-                  </div>
-                  <div class="progress mt-6" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar bg-secondary" style="width: 50%"></div>
-                  </div>
+                <div class="col-6" data-day="Martes">
+                    <span class="fs-11 mt-2 d-block">Martes <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">15</h4>
                 </div>
-
-                <div>
-                  <div class="hstack justify-content-between">
-                    <span class="fs-3 fw-medium">Tablets</span>
-                    <h6 class="fs-3 fw-medium text-dark lh-base mb-0">3.1%</h6>
-                  </div>
-                  <div class="progress mt-6" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar bg-success" style="width: 35%"></div>
-                  </div>
+                <div class="col-6" data-day="Miércoles">
+                    <span class="fs-11 mt-2 d-block">Miércoles <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">20</h4>
                 </div>
-
-              </div>
+                <div class="col-6" data-day="Jueves">
+                    <span class="fs-11 mt-2 d-block">Jueves <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">8</h4>
+                </div>
+                <div class="col-6" data-day="Viernes">
+                    <span class="fs-11 mt-2 d-block">Viernes <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">25</h4>
+                </div>
+                <div class="col-6" data-day="Sábado">
+                    <span class="fs-11 mt-2 d-block">Sábado <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">5</h4>
+                </div>
+                <div class="col-6" data-day="Domingo">
+                    <span class="fs-11 mt-2 d-block">Domingo <span class="badge bg-primary today-badge" style="display: none;">Hoy</span></span>
+                    <h4 class="mb-0 mt-1">12</h4>
+                </div>
             </div>
-          </div>
+            <div class="vstack gap-4 mt-3">
+                <div>
+                    <div class="hstack justify-content-between">
+                        <span class="fs-5 fw-medium">Total Pacientes</span>
+                        <h6 class="fs-5 fw-medium text-dark mb-0">105</h6>
+                    </div>
+                    <div class="progress mt-2" role="progressbar" aria-label="Total Pacientes" aria-valuenow="105" aria-valuemin="0" aria-valuemax="200">
+                        <div class="progress-bar bg-primary" style="width: 52.5%"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
+</div>
+
+<script>
+    // Obtiene el día actual
+    const today = new Date();
+    const daysOfWeek = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const currentDay = daysOfWeek[today.getDay()]; // Devuelve el nombre del día actual
+
+    // Muestra el badge del día actual en el contenedor
+    const daysContainer = document.getElementById('daysContainer');
+    const dayElements = daysContainer.querySelectorAll('[data-day]');
+
+    dayElements.forEach(dayElement => {
+        if (dayElement.dataset.day === currentDay) {
+            const badge = dayElement.querySelector('.today-badge');
+            badge.style.display = 'inline'; // Muestra el badge
+        }
+    });
+</script>
+
+
+      <!-- Formulario de Respuesta a Pacientes -->
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">
+                Respuesta a Pacientes
+                <span>
+                    <iconify-icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-custom-class="tooltip-success" data-bs-title="Envía un correo electrónico formal a los pacientes"></iconify-icon>
+                </span>
+            </h5>
+            <form id="responseForm" method="post" action="/send-email">
+                <div class="mb-3">
+                    <label for="patientEmail" class="form-label">Correo Electrónico del Paciente</label>
+                    <input type="email" class="form-control" id="patientEmail" name="patientEmail" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Asunto</label>
+                    <input type="text" class="form-control" id="subject" name="subject" required placeholder="Asunto del correo">
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Mensaje</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required placeholder="Escriba su mensaje aquí..."></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Enviar Respuesta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
     </div>
   </div>
 </div>

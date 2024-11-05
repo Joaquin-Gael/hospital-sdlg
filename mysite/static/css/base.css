@@ -322,3 +322,14 @@ h2,
 .position-fixed {
     position: fixed;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Estilo para el contenedor */
+.container {
+    max-width: 1200px;
+    animation: fadeIn 0.5s ease-in; /* Desvanecimiento al cargar */
+}

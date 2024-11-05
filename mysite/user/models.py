@@ -169,7 +169,7 @@ class ObrasSociales(models.Model):
 
 class Usuarios(UsuarioBase):
     userID = models.AutoField(primary_key=True)
-    obraID = models.ForeignKey(ObraSociales, null=True, on_delete=models.SET_NULL)
+    obraID = models.ForeignKey(ObrasSociales, null=True, on_delete=models.SET_NULL)
     imagen = models.ImageField(upload_to='user/',null=True, blank=True)
 
     groups = models.ManyToManyField(
@@ -197,3 +197,7 @@ class Usuarios(UsuarioBase):
         if self.imagen:
             return self.imagen.url
         return None
+
+    @property
+    def role(self):
+        return 'medic'

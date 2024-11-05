@@ -1,8 +1,3 @@
-/* Estilo para el contenedor */
-.container {
-    max-width: 1200px;
-}
-
 /* Estilo para las tarjetas */
 .card {
     border: 2px solid black;
@@ -19,11 +14,10 @@
     background-color: #000000;
     border: 2px solid #ffffff;
     color: #ffffff;
-}
 
-.btn-danger {
-    background-color: #ea4335;
-    border: 2px solid #ffffff;
+    &:hover{
+        transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+    }
 }
 
 /* Estilo para los inputs */
@@ -34,12 +28,6 @@
 
 .form-floating label {
     color: #000000;
-}
-
-/* Estilo para los botones de subida de imagen */
-input[type="file"] {
-    border: 2px solid #000000;
-    border-radius: 0;
 }
 
 
@@ -62,6 +50,7 @@ body {
 }
 
 .social-btn:hover {
+    transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -93,3 +82,45 @@ body {
     background-color: #333;
     color: #ffffff;
 }
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid #dee2e6;
+  }
+
+  span {
+    padding: 0 1rem; // Espacio alrededor del texto
+    color: #6c757d; // Color de texto
+    font-weight: 500;
+  }
+}
+
+.input-group-text {
+    background-color: #fff; // Fondo blanco para el ícono
+    color: #000; // Texto (ícono) en negro
+    border: 1px solid #ced4da; // Borde igual al input
+    border-right: none; // Quita el borde derecho para unir con el input
+    display: flex;
+    align-items: center;
+}
+
+.form-control[type="file"] {
+    border-left: none; // Quita el borde izquierdo para unir con el ícono
+    color: #000; // Texto en negro
+    background-color: #92BCEA; // Fondo blanco
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #7699D4; // Fondo gris claro en hover
+    }
+}
+

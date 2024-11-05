@@ -7,61 +7,107 @@
 {% endblock title %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'css/register.css' %}">
-<style>
-    .social-btn {
-        background-color: #ffffff;
-        color: #757575;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        justify-content: center;
-        border: 1px solid #ddd;
-        padding: 8px 16px;
-        font-size: 16px;
-    }
-
-    .social-btn:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .social-btn svg {
-        margin-right: 10px;
-    }
-
-    .google-btn {
-        background-color: #ffffff;
-        color: #757575;
-    }
-
-    .facebook-btn {
-        background-color: #1877F2;
-        color: #ffffff;
-    }
-
-    .twitter-btn {
-        background-color: #08090C;
-        color: #ffffff;
-    }
-
-    .twitter-btn:hover {
-        background-color: #08090C;
-        color: #fff;
-    }
-
-    .github-btn {
-        background-color: #333;
-        color: #ffffff;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'user/css/register.css' %}">
 {% endblock styles %}
 
 {% block main %}
 <div class="container my-5">
     <div id="response" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
     <div class="row">
+        <!-- Registro normal -->
+        <div class="col-lg-6 col-sm-12">
+            <form id="registerForm" class="card p-4 shadow-sm" enctype="multipart/form-data">
+                <h5 class="text-center">Registrarse</h5>
+                {% csrf_token %}
+                
+                <!-- DNI -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="dniInput" class="form-control" placeholder="00000000">
+                    <label for="dniInput">DNI</label>
+                </div>
+
+                <!-- Fecha de nacimiento -->
+                <div class="form-floating mb-3">
+                    <input type="date" id="nacidoInput" class="form-control" name="born_date" placeholder="Fecha de nacimiento">
+                    <label for="id_fecha_nacimiento">Fecha de Nacimiento</label>
+                </div>
+
+                <!-- Nombre -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="nombreInput" class="form-control" placeholder="Nombre">
+                    <label for="nombreInput">Nombre</label>
+                </div>
+
+                <!-- Apellido -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="apellidoInput" class="form-control" placeholder="Doe">
+                    <label for="apellidoInput">Apellido</label>
+                </div>
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <input type="email" id="emailInput" class="form-control" placeholder="name@example.com">
+                    <label for="emailInput">Email</label>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="contraseñaInput" class="form-control" placeholder="Contraseña">
+                    <label for="contraseñaInput">Contraseña</label>
+                </div>
+
+                 <!-- Obra Social -->
+                 <div class="form-floating mb-3">
+                    <select id="obraSocialSelect" class="form-select form-control" aria-label="Obra Social">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                    </select>
+                    <label for="obraSocialSelect">¿Tienes obra social?</label>
+                </div>
+
+                <!-- Lista de Obras Sociales -->
+                <div id="obrasSocialesList" class="form-floating mb-3" style="display: none;">
+                    <select name="obra" id="obraInput" class="form-select form-control" aria-label="Obras Sociales">
+                        {% for obra in obras %}
+                            <option value="{{ obra.obraID }}">{{ obra.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="obraInput">Selecciona tu obra social</label>
+                </div>
+
+                <div class="divider">
+                    <span>
+                        Opcional
+                    </span>
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3 position-relative">
+                    <label for="imagenInput" class="form-label">Imagen de perfil</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white text-dark">
+                            <i class="bi bi-camera"></i>
+                        </span>
+                        <input class="form-control" type="file" id="imagenInput" accept="image/*">
+                    </div>
+                </div>
+
+                <!-- Botón Registrar -->
+                <div class="mt-4">
+                    <button id="registrarButton" class="btn btn-dark w-100" type="button">
+                        <span>Registrar</span>
+                        <span class="ms-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </span>
+                    </button>
+                </div>
+                <p class="text-center mt-4">
+                    ¿Ya tienes cuenta? <a href="/user/login/">Inicia sesión</a>
+                </p>
+            </form>
+        </div>
         <!-- Registro con Otros -->
-        <div class="col-md-6 mb-4">
+        <div class="col-lg-6 col-sm-12 mb-4">
             <div>
                 <div class="card p-4 shadow-sm">
                     <h5 class="text-center">Registrarse con Otros</h5>
@@ -132,93 +178,12 @@
             </div>
             {% endif %}
         </div>
-        <!-- Registro normal -->
-        <div class="col-md-6">
-            <form id="registerForm" class="card p-4 shadow-sm" enctype="multipart/form-data">
-                <h5 class="text-center">Registrarse</h5>
-                {% csrf_token %}
-                
-                <!-- DNI -->
-                <div class="form-floating mb-3">
-                    <input type="text" id="dniInput" class="form-control" placeholder="00000000">
-                    <label for="dniInput">DNI</label>
-                </div>
-
-                <!-- Fecha de nacimiento -->
-                <div class="form-floating mb-3">
-                    <input type="date" id="nacidoInput" class="form-control" name="born_date" placeholder="Fecha de nacimiento">
-                    <label for="id_fecha_nacimiento">Fecha de Nacimiento</label>
-                </div>
-
-                <!-- Nombre -->
-                <div class="form-floating mb-3">
-                    <input type="text" id="nombreInput" class="form-control" placeholder="Nombre">
-                    <label for="nombreInput">Nombre</label>
-                </div>
-
-                <!-- Apellido -->
-                <div class="form-floating mb-3">
-                    <input type="text" id="apellidoInput" class="form-control" placeholder="Doe">
-                    <label for="apellidoInput">Apellido</label>
-                </div>
-
-                <!-- Email -->
-                <div class="form-floating mb-3">
-                    <input type="email" id="emailInput" class="form-control" placeholder="name@example.com">
-                    <label for="emailInput">Email</label>
-                </div>
-
-                <!-- Contraseña -->
-                <div class="form-floating mb-3">
-                    <input type="password" id="contraseñaInput" class="form-control" placeholder="Contraseña">
-                    <label for="contraseñaInput">Contraseña</label>
-                </div>
-
-                <!-- Imagen -->
-                <div class="mb-3">
-                    <label for="imagenInput" class="form-label">Imagen de perfil</label>
-                    <input class="form-control" type="file" id="imagenInput" accept="image/*">
-                </div>
-
-                 <!-- Obra Social -->
-                 <div class="form-floating mb-3">
-                    <select id="obraSocialSelect" class="form-select" aria-label="Obra Social">
-                        <option value="no">No</option>
-                        <option value="si">Sí</option>
-                    </select>
-                    <label for="obraSocialSelect">¿Tienes obra social?</label>
-                </div>
-
-                <!-- Lista de Obras Sociales -->
-                <div id="obrasSocialesList" class="form-floating mb-3" style="display: none;">
-                    <select name="obra" id="obra" class="form-select" aria-label="Obras Sociales">
-                        {% for obra in obras %}
-                            <option value="{{ obra.obraID }}">{{ obra.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="obra">Selecciona tu obra social</label>
-                </div>
-
-                <!-- Botón Registrar -->
-                <div class="mt-4">
-                    <button id="registrarButton" class="btn btn-dark w-100" type="button">
-                        <span>Registrar</span>
-                        <span class="ms-2">
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </span>
-                    </button>
-                </div>
-                <p class="text-center mt-4">
-                    ¿Ya tienes cuenta? <a href="/user/login/">Inicia sesión</a>
-                </p>
-            </form>
-        </div>
     </div>
 </div>
 {% endblock main %}
 
 {% block scripts %}
-<script type="module" src="{% static 'js/register.js' %}"></script>
+<script type="module" src="{% static 'user/js/register.js' %}"></script>
 <script type="module" src="{% static 'js/_bornPiker.js' %}"></script>
 <script>
     document.getElementById('obraSocialSelect').addEventListener('change', function() {

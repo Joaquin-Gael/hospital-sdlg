@@ -1,3 +1,4 @@
+import django
 from ninja import Router, ModelSchema, File, Form
 from ninja.files import UploadedFile
 from channels.db import database_sync_to_async
@@ -137,21 +138,27 @@ async def create_medic(request, payload: Form[MedicosSchema], imagen: UploadedFi
         Raises:
         - 400: If the required fields are not provided in the payload.
         """
-    new_medic = Medicos()
-    data = payload.dict()
-    del data['contraseña']
-    del data['imagen']
-    if imagen:
-        new_medic.imagen.save(imagen.name, imagen)
-    for field_name, value in data.items():
-        if field_name == 'password':
-            new_medic.set_password(value)
-            new_medic.set_contraseña(value)
-        else:
-            setattr(new_medic, field_name, value)
-    serialized_data = MedicosSchema.from_orm(new_medic).dict()
-    await database_sync_to_async(new_medic.save)()
-    return serialized_data
+    try:
+        new_medic = Medicos()
+        data = payload.dict()
+        del data['contraseña']
+        del data['imagen']
+        if imagen:
+            new_medic.imagen.save(imagen.name, imagen)
+        for field_name, value in data.items():
+            if field_name == 'password':
+                new_medic.set_password(value)
+                new_medic.set_contraseña(value)
+            else:
+                setattr(new_medic, field_name, value)
+        serialized_data = MedicosSchema.from_orm(new_medic).dict()
+        await database_sync_to_async(new_medic.save)()
+        return JsonResponse(serialized_data, status=200)
+    except django.db.utils.IntegrityError as e:
+        return JsonResponse({'detail':f'{e.__class__.__name__}','args':f'{e.args}'}, status=500)
+    except ValueError as e:
+        return JsonResponse({'detail':'Porfavor asegure que todos los typos de datos correspondan', 'args':f'{e.args}'}
+                            ,status=400)
 
 @medic_router.put('/{medic_id}/imagen/', tags=['Media Medic'])
 async def update_medic_image(request, medic_id:int, imagen: UploadedFile = File()):

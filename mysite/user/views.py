@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
-from django.http import response
 from django.template.response import TemplateResponse
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from channels.db import database_sync_to_async
-from asgiref.sync import sync_to_async
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from asgiref.sync import sync_to_async
@@ -19,7 +17,6 @@ from .middlewares.saveUserData import LoginUnRequired
 class RegisterUser(views.View):
 
     async def get(self, request):
-        obras_sociales = models.ObrasSociales.objects.all()
         if request.GET:
             completed_user_data_form = await sync_to_async(CompleteUserData)(request.GET)
             if completed_user_data_form.is_valid():
@@ -28,6 +25,7 @@ class RegisterUser(views.View):
                 await sync_to_async(user.set_dni)(
                     new_dni = user_data.get('')
                 )
+        obras_sociales = await database_sync_to_async(models.ObrasSociales.objects.all)()
         complete_user_data_form = await sync_to_async(CompleteUserData)()
         return TemplateResponse(request, 'user/register.html', {'obras':obras_sociales,'completed_form':complete_user_data_form})
     
@@ -60,12 +58,12 @@ class RegisterUser(views.View):
             await sync_to_async(user.set_contraseña)(request.POST.get('contraseña'))
             await database_sync_to_async(user.save)()
             await sync_to_async(user.authenticate)(request,user.dni, request.POST.get('contraseña'))
-            return response.JsonResponse({
+            return JsonResponse({
                 'msg':'¡Usuario creado con éxito! \nBienvenido {}'.format(user.username)
             })
         except Exception as e:
             print(f'Error: {e.__class__}\nData: {e.args}\n2')
-            return response.JsonResponse({
+            return JsonResponse({
                 'error':'Error al crear el usuario \nInfo: {}'.format(e.args)
             },status=400)
 
