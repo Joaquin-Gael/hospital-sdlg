@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Función para obtener los días disponibles desde la API
     async function getAvailableDays(servicioID) {
         try {
-            const response = await fetch(`/API/schedules/${servicioID}/days`);
+            const response = await fetch(`/API/schedules/${servicioID}/days/`);
             const data = await response.json();
-            return data.days_availables.map(day => day.day);
+            return data.days_availables;
         } catch (error) {
             console.error('Error fetching available days:', error);
             return [];
