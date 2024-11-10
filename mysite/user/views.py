@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
 from django.http.response import HttpResponseRedirect, JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from channels.db import database_sync_to_async
 from django.utils.decorators import method_decorator
@@ -145,7 +147,7 @@ class PanelUser(views.View):
 
         except Exception as err:
             print(f'Error: {err.__class__}\nData: {err.args}')
-            return response.JsonResponse({
+            return JsonResponse({
                 'error':f'{err}'
             },status=404)
 
@@ -163,3 +165,5 @@ class LogoutUser(LoginRequiredMixin,views.View):
         models.Usuarios.logout(request)
         messages.success(request, message='Sesión cerrada exitosamente')
         return redirect('Home')
+
+            

@@ -38,3 +38,4 @@ class CompleteUserData(forms.Form):
             pass
         except Exception as e:
             pass
+        
