@@ -18,18 +18,17 @@ RECAPTCHA_PUBLIC_KEY  = '6LdK6jcqAAAAANLSDYCNgrMlwX8pR6FtHBT9k1Ef'
 RECAPTCHA_PRIVATE_KEY = '6LdK6jcqAAAAAFi6nxjs0wkvpM57q3NNwIhDgs9P'
 RECAPTCHA_USE_SSL = False
 
+MERCADOPAGO_ACCESS_TOKEN = 'APP_USR-4556212774758822-110913-aefa428caf58df12d71f76eb2b56f1c2-2088605534'
 
 JWT_HASH = "HS256"
 FERNET_KEY:str = 'bp3-2Zt5nUsRlXq82F-_m0apVBvkyJpwWNP3UIOIl8c='
 
-DB_PROD = False
+DB_PROD = True
 
 JAZZMIN_SETTINGS = {
     "site_title":"Hospital SDLG Admin Panel",
     "site_header":"Hospital SDLG Admin Panel",
     "show_sidebar":True,
-    "site_logo":"img/Logo-SDLG.svg",
-    "site_brand":"SDLG Admin",
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.User": "fas fa-user",
@@ -63,8 +62,7 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido al panel de administración de Hospital SDLG",
     "changeform_format": "carousel",
     "related_modal_active": True,
-    "custom_css":"admin_panel/css/styles.css",
-    "custom_js":"admin_panel/js/init.js"
+
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -112,7 +110,9 @@ TIRDSHPARTY_APPS = [
     'django_recaptcha',
     'crispy_forms', 
     'channels',
-    'tinymce'
+    'tinymce',
+    'paypal.standard.ipn',
+
 ]
 
 DJANGO_APPS = [
@@ -140,6 +140,8 @@ if DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'http://localhost:8000',
         'http://127.0.0.1:8000',
+        'https://*.ngrok-free.app',
+        'https://*.ngrok.io'
     ]
 else:
     CSRF_TRUSTED_ORIGINS = []
@@ -299,3 +301,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+PAYPAL_TEST = True 
+PAYPAL_RECEIVER_EMAIL = 'sb-wg3an33517964@business.example.com'
