@@ -8,179 +8,182 @@
 
 {% block styles %}
 <style>
-    /* Estilos globales */
     body {
-        background-color: #f4f7f9;
-        /* Fondo suave para toda la página */
-        font-family: Arial, sans-serif;
-        /* Fuente más moderna */
-        color: #333;
-        /* Color del texto */
+        background-color: #f8f9fa;
+        /* Fondo claro para el formulario */
     }
 
-    .btn {
-        border-radius: 0;
-        transition: background-color 0.3s ease;
-        /* Transición suave en botones */
-    }
-
-    .btn-dark {
-        background-color: #333;
-        /* Cambiado a un gris más oscuro */
-        border: 2px solid #ffffff;
-        color: #ffffff;
-    }
-
-    .btn-dark:hover {
-        background-color: #555;
-        /* Color al pasar el mouse */
-    }
-
-    /* Estilo para las tarjetas */
-    .card {
-        border: 2px solid #cccccc;
-        border-radius: 8px;
+    .form-container {
+        border: 2px solid black;
+        /* Bordes negros para el contenedor del formulario */
+        border-radius: 0.5rem;
         /* Bordes redondeados */
-        background-color: #ffffff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Sombra suave */
-        margin-bottom: 20px;
-        /* Espacio entre tarjetas */
+        padding: 2rem;
+        /* Espaciado interno */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        /* Sombra sutil */
+        margin-top: 5rem;
+        /* Margen superior */
     }
 
     h4 {
-        font-weight: 600;
-        /* Hacer el título más prominente */
-        color: #007bff;
-        /* Color azul */
+        color: #003366;
+        /* Azul oscuro tradicional */
+        font-size: 1.75rem;
+        /* Tamaño de fuente más grande */
+        font-weight: bold;
+        /* Negrita */
+        text-align: center;
+        /* Centrar el texto */
+        margin-bottom: 1rem;
+        /* Espaciado inferior */
     }
 
-    .form-floating label {
-        color: #555;
-        /* Color de las etiquetas */
+    .form-label {
+        font-weight: bold;
+        /* Negrita para las etiquetas */
+        color: black;
+        /* Color negro para las etiquetas */
     }
 
-    .form-floating .form-control {
-        border-radius: 5px;
-        /* Bordes redondeados en controles de formulario */
+    .form-control,
+    .form-select {
+        border: 2px solid black;
+        /* Bordes negros para los campos */
+        border-radius: 0.25rem;
+        /* Bordes redondeados */
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #0056b3;
+        /* Color de borde en foco */
         box-shadow: none;
-        /* Eliminar la sombra de los controles */
-    }
-
-    .form-control:focus {
-        border-color: #007bff;
-        /* Color de borde al enfocarse */
-        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
-        /* Sombra en el enfoque */
-    }
-
-    .step {
-        margin-top: 20px;
-        /* Espaciado entre pasos */
+        /* Sin sombra en foco */
     }
 
     .invalid-feedback {
         font-size: 0.9rem;
-        /* Tamaño de fuente más pequeño para mensajes de error */
+        /* Tamaño de fuente para mensajes de error */
+        color: #dc3545;
+        /* Rojo para mensajes de error */
     }
 
-    .card-title {
-        font-size: 1.5rem;
-        /* Tamaño de fuente del título de la tarjeta */
+    .text-muted {
+        font-size: 0.9rem;
+        /* Tamaño de fuente más pequeño para subtítulos */
+    }
+
+    .row {
+        margin-bottom: 1.5rem;
+        /* Espaciado entre filas */
+    }
+
+    .btn-primary {
+        background-color: #003366;
+        /* Azul oscuro para el botón */
+        border: none;
+        /* Sin borde */
+        border-radius: 0.5rem;
+        /* Bordes redondeados */
+        font-weight: bold;
+        /* Negrita */
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        /* Color más claro al pasar el mouse */
     }
 </style>
 {% endblock styles %}
 
 {% block main %}
-<div class="container card p-4">
+<div class="container form-container">
     <div id="response" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 
-    <form id="turneroForm" class="needs-validation">
+    <form id="turneroForm" class="needs-validation" action="{% url 'Turnero' %}" method="post">
         {% csrf_token %}
+        {% if obrasocial.nombre == 1 %}
+        <h4>Solicitud de Turno</h4>
+        <p class="text-center text-muted">Por favor completa los campos requeridos</p>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="servicioSelect" class="form-label">Servicio</label>
+                <select name="servicio" id="servicioSelect" class="form-select" required>
+                    <option value="" disabled selected>Selecciona un servicio</option>
+                    {% for servicio in servicios %}
+                    <option value="{{ servicio.servicioID }}">{{ servicio.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Por favor selecciona un servicio.</div>
+            </div>
 
-        <!-- Paso 1 -->
-        <div class="step" id="step-1">
-            <h4 class="mb-4 text-center">Solicitud de Turno - Selecciona el Servicio y Motivo de Atención</h4>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <select name="servicio" id="servicioSelect" class="form-select" required>
-                            <option value="" disabled selected>Área médica</option>
-                            {% for servicio in servicios %}
-                            <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - Precio: ${{ servicio.precio }}</option>
-                            {% endfor %}
-                        </select>
-                        <label for="servicioSelect">Servicio</label>
-                        <div class="invalid-feedback">Por favor selecciona un servicio.</div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <textarea class="form-control" name="motivo" id="motivoTextarea" style="height: 150px"
-                            required></textarea>
-                        <label for="motivoTextarea">Motivo</label>
-                        <div class="invalid-feedback">Por favor ingresa el motivo de la consulta.</div>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <label for="horarioSelect" class="form-label">Horario</label>
+                <select name="horario" id="horarioSelect" class="form-select" required>
+                    <option value="" disabled selected>Selecciona un horario</option>
+                </select>
+                <div class="invalid-feedback">Por favor selecciona un horario.</div>
             </div>
         </div>
 
-        <!-- Paso 2 -->
-        <div class="step d-none" id="step-2">
-            <h4 class="mb-4 text-center">Elige tu Horario y Fecha de Atención</h4>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <select name="horario" id="horarioSelect" class="form-select" required>
-                            <option value="" disabled selected>Selecciona un horario</option>
-                            {% for horario in horarios %}
-                            <option value="{{ horario.horarioID }}">{{ horario.hora_inicio }} - {{ horario.hora_fin }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        <label for="horarioSelect">Horarios</label>
-                        <div class="invalid-feedback">Por favor selecciona un horario.</div>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="date-picker" class="form-label">Fecha</label>
+                <input name="fecha" type="date" id="date-picker" class="form-control" required>
+                <div class="invalid-feedback">Por favor selecciona una fecha.</div>
+            </div>
 
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="date" id="date-picker" class="form-control datepicker" placeholder="Elige una fecha" required>
-                        <label for="date-picker">Fecha</label>
-                        <div class="invalid-feedback">Por favor selecciona una fecha.</div>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <label for="motivoTextarea" class="form-label">Motivo</label>
+                <textarea class="form-control" name="motivo" id="motivoTextarea" style="height: 150px" required></textarea>
+                <div class="invalid-feedback">Por favor ingresa el motivo de la consulta.</div>
             </div>
         </div>
 
-        <!-- Paso 3: Confirmación del Turno -->
-        <div class="step d-none" id="step-3">
-            <h4 class="mb-4 text-center">Detalles del turno</h4>
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h4 class="card-title text-info mb-3">
-                        <span id="medico-nombre"></span> <small class="text-muted"></span></small>
-                    </h4>
-                    <p class="card-text fs-5">
-                        <strong class="text-secondary">Motivo:</strong> <span id="motivo-confirmacion"
-                            class="fw-bold"></span><br>
-                        <strong class="text-secondary">Horario:</strong> <span id="horario-confirmacion"
-                            class="fw-bold"></span><br>
-                        <strong class="text-secondary">Fecha:</strong> <span id="fecha-confirmacion"
-                            class="fw-bold"></span>
-                    </p>
-                    <div class="d-grid mt-4">
-                </div>
+        <div class="d-flex justify-content-end mt-4">
+            <button id="solicitarButton" type="button" class="btn btn-dark">Solicitar</button>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-6">
+                <label for="servicioSelect" class="form-label">Servicio</label>
+                <select name="servicio" id="servicioSelect" class="form-select" required>
+                    <option value="" disabled selected>Selecciona un servicio</option>
+                    {% for servicio in servicios %}
+                    <option value="{{ servicio.servicioID }}">{{ servicio.nombre }} - Precio: ${{ servicio.precio }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Por favor selecciona un servicio.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="horarioSelect" class="form-label">Horario</label>
+                <select name="horario" id="horarioSelect" class="form-select" required>
+                    <option value="" disabled selected>Selecciona un horario</option>
+                </select>
+                <div class="invalid-feedback">Por favor selecciona un horario.</div>
             </div>
         </div>
 
-        <!-- Navegación del formulario -->
-        <div class="d-flex justify-content-between mt-4">
-            <button id="prevButton" type="button" class="btn btn-dark d-none">Anterior</button>
-            <button id="nextButton" type="button" class="btn btn-dark">Siguiente</button>
-            <button id="solicitarButton" type="button" class="btn btn-dark d-none">Solicitar</button>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="date-picker" class="form-label">Fecha</label>
+                <input name="fecha" type="date" id="date-picker" class="form-control" required>
+                <div class="invalid-feedback">Por favor selecciona una fecha.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="motivoTextarea" class="form-label">Motivo</label>
+                <textarea class="form-control" name="motivo" id="motivoTextarea" style="height: 150px" required></textarea>
+                <div class="invalid-feedback">Por favor ingresa el motivo de la consulta.</div>
+            </div>
         </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <button id="nextButton" type="button" class="btn btn-primary">Continuar</button>
+        </div>
+        {% endif %}
     </form>
 </div>
 {% endblock main %}
@@ -188,26 +191,11 @@
 {% block scripts %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        let currentStep = 1;
-        const totalSteps = 3;
-        const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
-        const submitButton = document.getElementById('solicitarButton');
 
-        const showStep = (step) => {
-            document.querySelectorAll('.step').forEach(function (el, index) {
-                el.classList.toggle('d-none', index + 1 !== step);
-            });
-
-            prevButton.classList.toggle('d-none', step === 1);
-            nextButton.classList.toggle('d-none', step === totalSteps);
-            submitButton.classList.toggle('d-none', step !== totalSteps);
-        };
-
-        const validateStep = (step) => {
+        const validateForm = () => {
             const form = document.getElementById('turneroForm');
-            const stepElement = document.getElementById(`step-${step}`);
-            const inputs = stepElement.querySelectorAll('input, select, textarea');
+            const inputs = form.querySelectorAll('input, select, textarea');
             let valid = true;
 
             inputs.forEach(input => {
@@ -223,35 +211,13 @@
         };
 
         nextButton.addEventListener('click', function () {
-            if (validateStep(currentStep)) {
-                currentStep = Math.min(currentStep + 1, totalSteps);
-
-                if (currentStep === 3) {
-                    const servicioSelect = document.getElementById('servicioSelect');
-                    const medico = servicioSelect.options[servicioSelect.selectedIndex].text;
-                    const especialidad = servicioSelect.options[servicioSelect.selectedIndex].dataset.especialidad;
-                    const motivo = document.getElementById('motivoTextarea').value;
-                    const horarioSelect = document.getElementById('horarioSelect');
-                    const horario = horarioSelect.options[horarioSelect.selectedIndex].text;
-                    const fecha = document.getElementById('date-picker').value;
-
-                    // Actualizar campos en la confirmación
-                    document.getElementById('medico-nombre').innerText = medico;
-                    document.getElementById('motivo-confirmacion').innerText = motivo;
-                    document.getElementById('horario-confirmacion').innerText = horario;
-                    document.getElementById('fecha-confirmacion').innerText = fecha;
-                }
-
-                showStep(currentStep);
+            event.preventDefault()
+            if (validateForm()) {
+                document.getElementById('turneroForm').submit();
             } else {
                 const form = document.getElementById('turneroForm');
                 form.classList.add('was-validated');
             }
-        });
-
-        prevButton.addEventListener('click', function () {
-            currentStep = Math.max(currentStep - 1, 1);
-            showStep(currentStep);
         });
 
         const forms = document.querySelectorAll('.needs-validation');
@@ -269,18 +235,25 @@
 
         const listarHorarios = async (servicioID) => {
             try {
-                const response = await fetch(`/API/schedules/${servicioID}/horarios`);
+                const response = await fetch(`/API/schedules/${servicioID}/schedules`);
                 const data = await response.json();
 
-                if (Array.isArray(data.schedules) && data.length > 0) {
-                    horarios = data;
+                if (Array.isArray(data.schedules) && data.schedules.length > 0) {
+                    horarios = data.schedules;
+
+                    horarios.sort((a, b) => {
+                        const timeA = new Date(`1970-01-01T${a.hora}Z`);
+                        const timeB = new Date(`1970-01-01T${b.hora}Z`);
+                        return timeA - timeB;
+                    });
+
                     let opciones = '';
                     const horasVistas = new Set();
 
                     horarios.forEach((horario) => {
                         if (!horasVistas.has(horario.hora)) {
                             horasVistas.add(horario.hora);
-                            opciones += `<option value='${horario.id}'>${horario.hora}</option>`;
+                            opciones += `<option value='${horario.horarioID}'>${horario.hora}</option>`;
                         }
                     });
 
@@ -297,9 +270,7 @@
             const servicioID = servicioSelect.value;
             listarHorarios(servicioID);
         });
-        showStep(currentStep);
     });
-
 </script>
 <script type="module" src="{% static 'turnero/js/form.js' %}"></script>
 <script type="module" src="{% static 'js/_datePiker.js' %}"></script>
