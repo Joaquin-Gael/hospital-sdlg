@@ -155,12 +155,26 @@ class Turnos(BaseModelTurnos):
     def __str__(self):
         return f"Turno de {self.userID} el día {self.fecha}"
 
+class TransaccionPaypal(models.Model):
+    transID = models.AutoField(primary_key=True)
+    payer_id = models.CharField(max_length=250)
+    payment_date = models.DateTimeField()
+    payment_status = models.CharField(max_length=250)
+    invoice = models.IntegerField()
+    first_name_paypal = models.CharField(max_length=250)
+    payer_status = models.CharField(max_length=250)
+    payer_email = models.CharField(max_length=250)
+    txn_id = models.CharField(max_length=250)
+    receiver_id = models.CharField(max_length=250)
+    payment_gross = models.FloatField()
+    custom = models.CharField(max_length=250)    
+
 class CajaTurnero(models.Model):
     cajaID = models.AutoField(primary_key=True)
     citaID = models.ForeignKey(Citas,on_delete=models.CASCADE)
     fecha_created = models.DateTimeField(auto_now=True)
     ingreso = models.FloatField(default=0)
-    egreso = models.FloatField(default=0)
+    egreso = models.FloatField(default=0)  
     saldo = models.FloatField(default=0)
     estado = models.CharField(max_length=25)
     fecha = models.DateField(default=timezone.now)

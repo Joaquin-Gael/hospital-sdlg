@@ -19,8 +19,28 @@ urlpatterns = [
         name='Comprobante'
     ),
     path(
-        'turnoPago',
-        views.PagarTurno.as_view(),
-        name="turnoPago"
+        'pay-turno/',
+        views.PayTurnoView.as_view(),
+        name='pay-turno'
+    ),
+    path(
+        'mercado-pago-webhook/', 
+         views.MercadoPagoWebhookView.as_view(), 
+         name='mercado-pago-webhook'
+    ),
+    path(
+        '',
+        views.PaypalIPNView.as_view(),
+        name='paypal-ipn'
+    ),
+    path(
+        'payment-success/<int:servicioID>/',
+        views.PaymentSuccessful.as_view(),
+        name='payment-success'
+    ),
+    path(
+        'payment-failed/<int:servicioID>/',
+        views.PaymentFailed.as_view(),
+        name='payment-failed'
     ),
 ]
