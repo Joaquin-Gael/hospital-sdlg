@@ -1,0 +1,65 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+- Pago exitoso
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .payment-success-container {
+        border: 2px solid #28a745; /* Borde verde para indicar éxito */
+        border-radius: 0.5rem; /* Bordes redondeados */
+        padding: 2rem; /* Espaciado interno */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        text-align: center;
+        background-color: white; /* Fondo blanco */
+        max-width: 600px; /* Ancho máximo del contenedor */
+        margin: auto; /* Centrar el contenedor */
+    }
+
+    .success-title {
+        color: #28a745; /* Título verde para indicar éxito */
+        font-size: 1.75rem; /* Tamaño de fuente más grande */
+        font-weight: bold; /* Negrita */
+        margin-bottom: 1.5rem; /* Espaciado inferior */
+    }
+
+    .success-message {
+        color: black; /* Color negro */
+        font-size: 1rem; /* Tamaño de fuente */
+        margin-bottom: 1.5rem; /* Espaciado inferior */
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Color de fondo del botón */
+        color: white; /* Color del texto del botón */
+        border: none; /* Sin bordes */
+        border-radius: 0.5rem; /* Bordes redondeados */
+        padding: 0.5rem 1rem; /* Espaciado interno */
+        cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+        text-decoration: none; /* Sin subrayado */
+        font-size: 1rem; /* Tamaño de fuente */
+        display: inline-flex; /* Flexbox para alinear el icono */
+        align-items: center; /* Alinear verticalmente el icono */
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* Color de fondo al pasar el cursor */
+    }
+
+    .fas.fa-arrow-right {
+        margin-left: 0.5rem; /* Espaciado a la izquierda del icono */
+    }
+</style>
+{ % endblock styles % }
+
+{% block main %}
+<div class="payment-success-container">
+    <h1>Pago Exitoso</h1>
+    <p>Tu pago ha sido procesado con éxito.</p>
+    <p>Si quieres conocer o ver más detalles sobre tus turnos o citas, accede al panel de usuario.</p>
+    <a href="/{{user.role}}/panel/" class="btn-primary">Ir al Panel de Usuario</a>
+</div>
+{% endblock main %}
