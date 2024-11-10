@@ -18,6 +18,7 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
     path('',lambda request: redirect('Home')),
     path('not/found/404',views.NotFound.as_view(), name='NotFound'),
+    path('',include('paypal.standard.ipn.urls'))
 ]
 
 handler404 = views.NotFound.as_view()
