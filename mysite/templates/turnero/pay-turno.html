@@ -1,0 +1,118 @@
+{% extends 'layouts/nav_foot.html' %}
+
+{% load static %}
+
+{% block title %}
+- Pagar turno
+{% endblock title %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: #f8f9fa; /* Fondo claro */
+    }
+
+    .payment-container {
+        border: 2px solid black; /* Bordes negros para el contenedor */
+        border-radius: 0.5rem; /* Bordes redondeados */
+        padding: 2rem; /* Espaciado interno */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        margin-top: 5rem; /* Margen superior */
+    }
+
+    h4 {
+        color: #003366; /* Azul oscuro tradicional */
+        font-size: 1.75rem; /* Tamaño de fuente más grande */
+        font-weight: bold; /* Negrita */
+        text-align: center; /* Centrar el texto */
+        margin-bottom: 1.5rem; /* Espaciado inferior */
+    }
+
+    .method {
+        display: flex; /* Usar flexbox para alinear icono y texto */
+        align-items: center; /* Centrar verticalmente */
+        margin-bottom: 1.5rem; /* Espaciado entre métodos */
+        cursor: pointer; /* Cambiar el cursor al pasar sobre el método */
+    }
+
+    .method-icon {
+        font-size: 2rem; /* Tamaño del icono */
+        color: #003366; /* Color azul */
+        margin-right: 1rem; /* Espaciado a la derecha del icono */
+    }
+
+    .method-title {
+        font-weight: bold; /* Negrita para el título del método */
+        color: black; /* Color negro */
+    }
+
+    .qr-image {
+        margin-top: 1rem; /* Espaciado superior para la imagen del QR */
+        display: none; /* Ocultar inicialmente */
+        max-width: 100%; /* Ajustar el ancho de la imagen */
+        width: 200px; /* Tamaño adecuado para leer el QR */
+        height: 200px; /* Tamaño adecuado para leer el QR */
+    }
+
+    .payment-button {
+        margin-top: 1rem; /* Espaciado superior para el botón de pago */
+        display: block; /* Mostrar el botón como un bloque */
+        text-align: center; /* Centrar el texto del botón */
+        background-color: #007bff; /* Color de fondo del botón */
+        color: white; /* Color del texto del botón */
+        border: none; /* Sin bordes */
+        border-radius: 0.5rem; /* Bordes redondeados */
+        padding: 0.5rem 1rem; /* Espaciado interno */
+        cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+        text-decoration: none; /* Sin subrayado */
+    }
+
+    .payment-button:hover {
+        background-color: #0056b3; /* Color de fondo al pasar el cursor */
+    }
+</style>
+{% endblock styles %}
+
+{% block main %}
+<div class="container payment-container">
+    <h4>Escoge un método de pago</h4>
+
+    <div class="method" id="qrMethod">
+        <i class="fas fa-qrcode method-icon"></i> <!-- Icono QR -->
+        <span class="method-title">Pagar con QR</span>
+    </div>
+
+    <img id="qrImage" src="{% static 'qr/qr_code.png' %}" alt="Código QR" class="qr-image">
+
+    <div class="method" id="mercadoPagoMethod">
+        <i class="fas fa-handshake method-icon"></i> <!-- Icono de dos manos estrechándose -->
+        <a href="{{ payment_url }}" class="method-title">Pagar con MercadoPago</a>
+    </div>
+
+    <div class="method" id="paypalMethod">
+        <i class="fab fa-paypal method-icon"></i> <!-- Icono PayPal -->
+        <span class="method-title">Pagar con PayPal</span>
+    </div>
+ <!-- Imagen del QR, se renderiza dinámicamente -->
+</div>
+{% endblock main%}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const qrMethod = document.getElementById('qrMethod');
+        const paypalMethod = document.getElementById('paypalMethod');
+        const qrImage = document.getElementById('qrImage');
+
+        qrMethod.addEventListener('click', function () {
+            // Mostrar el QR
+            qrImage.style.display = 'block';
+        });
+
+        paypalMethod.addEventListener('click', function () {
+            // Aquí puedes agregar la lógica para PayPal
+            qrImage.style.display = 'none'; // Ocultar el QR si se selecciona PayPal
+        });
+    });
+</script>
+{% endblock scripts%}
