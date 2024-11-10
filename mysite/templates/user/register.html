@@ -22,43 +22,43 @@
                 
                 <!-- DNI -->
                 <div class="form-floating mb-3">
-                    <input type="text" id="dniInput" class="form-control" placeholder="00000000">
+                    <input type="text" id="dniInput" class="form-control" placeholder="00000000" required>
                     <label for="dniInput">DNI</label>
                 </div>
 
                 <!-- Fecha de nacimiento -->
                 <div class="form-floating mb-3">
-                    <input type="date" id="nacidoInput" class="form-control" name="born_date" placeholder="Fecha de nacimiento">
+                    <input type="date" id="nacidoInput" class="form-control" name="born_date" placeholder="Fecha de nacimiento" required>
                     <label for="id_fecha_nacimiento">Fecha de Nacimiento</label>
                 </div>
 
                 <!-- Nombre -->
                 <div class="form-floating mb-3">
-                    <input type="text" id="nombreInput" class="form-control" placeholder="Nombre">
+                    <input type="text" id="nombreInput" class="form-control" placeholder="Nombre" required>
                     <label for="nombreInput">Nombre</label>
                 </div>
 
                 <!-- Apellido -->
                 <div class="form-floating mb-3">
-                    <input type="text" id="apellidoInput" class="form-control" placeholder="Doe">
+                    <input type="text" id="apellidoInput" class="form-control" placeholder="Doe" required>
                     <label for="apellidoInput">Apellido</label>
                 </div>
 
                 <!-- Email -->
                 <div class="form-floating mb-3">
-                    <input type="email" id="emailInput" class="form-control" placeholder="name@example.com">
+                    <input type="email" id="emailInput" class="form-control" placeholder="name@example.com" required>
                     <label for="emailInput">Email</label>
                 </div>
 
                 <!-- Contraseña -->
                 <div class="form-floating mb-3">
-                    <input type="password" id="contraseñaInput" class="form-control" placeholder="Contraseña">
+                    <input type="password" id="contraseñaInput" class="form-control" placeholder="Contraseña" required>
                     <label for="contraseñaInput">Contraseña</label>
                 </div>
 
                  <!-- Obra Social -->
                  <div class="form-floating mb-3">
-                    <select id="obraSocialSelect" class="form-select form-control" aria-label="Obra Social">
+                    <select id="obraSocialSelect" class="form-select form-control" aria-label="Obra Social" required>
                         <option value="no">No</option>
                         <option value="si">Sí</option>
                     </select>
@@ -67,9 +67,9 @@
 
                 <!-- Lista de Obras Sociales -->
                 <div id="obrasSocialesList" class="form-floating mb-3" style="display: none;">
-                    <select name="obra" id="obraInput" class="form-select form-control" aria-label="Obras Sociales">
+                    <select name="obra" id="obraInput" class="form-select form-control" aria-label="Obras Sociales" required>
                         {% for obra in obras %}
-                            <option value="{{ obra.obraID }}">{{ obra.nombre }}</option>
+                            <option value="{{ obra.obraID }}">{{ obra.name }}</option>
                         {% endfor %}
                     </select>
                     <label for="obraInput">Selecciona tu obra social</label>
