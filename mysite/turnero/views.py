@@ -129,7 +129,7 @@ class PayTurnoView(View):
                 }
             ],
             "back_urls": {
-                "success": "https://9457-181-228-78-24.ngrok-free.app/user/panel/",
+                "success": "https://148c-181-228-78-24.ngrok-free.app/turnero/payment-success/",
                 "failure": "https://www.google.com/",
                 "pending": "https://www.youtube.com/"
             },
@@ -202,11 +202,12 @@ class PayTurnoView(View):
         except Exception as err:
             print(f'Error: {err.__class__}\nData: {err.args}')
             return response.JsonResponse({'error': f'{err}'}, status=404)
-            
+"""            
 @method_decorator(csrf_exempt, name='dispatch')
 class MercadoPagoWebhookView(View):
     async def get(self, request):
-        return HttpResponseRedirect(reverse('payment_success'))
+        success(request, '¡Pago realizado correctamente!')
+        return TemplateResponse(request,'turnero/payment-success.html')
 
     async def post(self, request):
         data = json.loads(request.body)
@@ -215,10 +216,6 @@ class MercadoPagoWebhookView(View):
         try:
             payment_id = data['data']['id']
             payment_status = 'approved'  
-
-
-            cita = await sync_to_async(lambda: models.Citas.objects.filter(estado='Sin Pagar').first())()
-            turno = await sync_to_async(lambda: models.Turnos.objects.filter(estado='Sin Pagar').first())()
 
             if not cita or not turno:
                 raise ValueError("Cita o turno no encontrados para el usuario actual")
@@ -231,15 +228,28 @@ class MercadoPagoWebhookView(View):
 
             return HttpResponse(status=200)
 
-        except Exception as e:
-            print("Error:", e)  
-            return HttpResponse(status=500)
-        
-class PaymentSuccessful(View):
-    def get(self, request, servicio_id):
-        success(request, '¡Pago realizado correctamente!')
-        return redirect(request, 'user/panel.html', servicio_id=servicio_id) 
+        except Exception as err:
+            print("un error we")
+            print(f'Error: {err.__class__}\nData: {err.args}')
+            return response.JsonResponse({
+                'error':f'{err}'
+            },status=404)
+"""
 
+class PaymentSuccessful(View):
+    async def get(self, request):
+        success(request, '¡Pago realizado correctamente!')
+        return TemplateResponse(request, 'turnero/payment-success.html')
+
+    async def post(self, request):
+        try:
+            return redirect('PanelUser')
+        except Exception as err:
+            print(f'Error: {err.__class__}\nData: {err.args}')
+            return response.JsonResponse({
+                'error':f'{err}'
+            },status=404)
+            
 class PaymentFailed(View):
     def get(self, request, servicio_id):
         error(request, 'Error al realizar el pago.')
@@ -293,10 +303,9 @@ class TurnoData(View):
             return response.JsonResponse({
                 'url':'/user/panel/'
             },status=200)
-        except models.Turnos.DoesNotExist:
-            return HttpResponseNotFound("Turno no encontrado",status=404)
         except Exception as err:
-            return HttpResponse("Error al eliminar el turno",status=500)
+            print(f'Error: {err.__class__}\nData: {err.args}')
+            return HttpResponse(status=404)
     
     async def post(self, request, id):
         try:
@@ -304,6 +313,25 @@ class TurnoData(View):
 
         except Exception as err:
             pass
+
+class TurnoData(View):
+    async def get(self, request, id):
+        try:
+            turno = await database_sync_to_async(get_object_or_404)(models.Turnos, TurnoID=id)
+            context = {
+                'turno': turno
+            }
+            return TemplateResponse(request, 'turnero/turno-data.html', context)
+        except models.Turnos.DoesNotExist:
+            return response.JsonResponse({'error': 'Turno no encontrado'}, status=404)
+        
+    async def delete(self, request, id):
+        try:
+            turno = await sync_to_async(get_object_or_404)(models.Turnos, TurnoID=id)
+            await sync_to_async(turno.delete)()
+            return response.JsonResponse({'url': reverse('PanelUser')})
+        except models.Turnos.DoesNotExist:
+            return response.JsonResponse({'error': 'Turno no encontrado'}, status=404)
 
 class ComprobanteDownloadView(LoginRequiredMixin, View):
     def get(self, request, id):
@@ -329,8 +357,8 @@ class ComprobanteDownloadView(LoginRequiredMixin, View):
 
             p.setFont("Helvetica", 12)
             p.drawString(40, 680, f"Código del Turno: YY-{turno.TurnoID}")
-            p.drawString(40, 660, f"Paciente: {usuario.nombre} {usuario.apellido}")
-            p.drawString(40, 640, f"Médico: {medico.nombre} {medico.apellido}")
+            p.drawString(40, 660, f"Paciente: {usuario.first_name} {usuario.last_name}")
+            p.drawString(40, 640, f"Médico: {medico.first_name} {medico.last_name}")
             p.drawString(40, 620, f"Horario: {horario.hora}")
             p.drawString(40, 600, f"Departamento: {departamento.nombre}")
             p.drawString(40, 580, f"Fecha: {turno.fecha}")
