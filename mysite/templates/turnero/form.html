@@ -103,9 +103,9 @@
 
     <form id="turneroForm" class="needs-validation" action="{% url 'Turnero' %}" method="post">
         {% csrf_token %}
-        {% if obrasocial.nombre == 1 %}
         <h4>Solicitud de Turno</h4>
         <p class="text-center text-muted">Por favor completa los campos requeridos</p>
+        {% if obrasocial.nombre == 1 %}
         <div class="row">
             <div class="col-md-6">
                 <label for="servicioSelect" class="form-label">Servicio</label>
