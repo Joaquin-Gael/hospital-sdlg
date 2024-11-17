@@ -10,7 +10,6 @@ $(() => {
     $("#testimonioForm").removeClass("placeholder-glow");
   };
 
-
   // Mostrar un mensaje en formato de toast
   const showToast = (messageHtml) => {
     $("#response").append(messageHtml);
@@ -104,7 +103,7 @@ $(() => {
     });
 
   // Fetch turnos data
-  fetch(`/API/users/${getUserID()}/schedules/`, {
+  fetch(`/API/users/${getUserID()}/turnos/`, {
     method: "GET",
   })
     .then((response) => {
@@ -114,9 +113,8 @@ $(() => {
       return response.json();
     })
     .then((data) => {
-      renderTurnosLinks(data);
+      renderTurnosLinks(data.Turnos);
       initializeTurnosClickEvents();
-      removePlaceholders();
     })
     .catch((error) => {
       console.error(error);
@@ -136,15 +134,15 @@ $(() => {
   // Renderizar lista de turnos
   const renderTurnosLinks = (turnosData) => {
     let turnos = "";
-  
+
     // Verificar si turnosData es una matriz
     if (!Array.isArray(turnosData)) {
       console.error("turnosData no es una matriz:", turnosData);
       return;
     }
-  
+
     console.log(turnosData.length);
-  
+
     if (turnosData.length === 0) {
       turnos += `
         <a class="btn btn-dark" href="/turnero/" > Sacar Turno </a>
@@ -153,12 +151,13 @@ $(() => {
     } else {
       turnosData.forEach((data) => {
         turnos += `
-          <a id="turnoLink${data.id}" class="list-group-item list-group-item-action panel-link">
+          <a id="turnoLink${data.id}" class="list-group-item list-group-item-action panel-link" href="/turnero/turnos/${data.id}/">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">${data.id} ${data.horario.hora}</h5>
+              <h5 class="mb-1">Hora: ${data.horario.hora}</h5>
               <small>${data.estado}</small>
             </div>
-            <p class="mb-1">${data.medico.nombre} - ${data.motivo}</p>
+            <p class="mb-1">Médico responsable: ${data.medico.first_name} ${data.medico.last_name} - Motivo del turno: ${data.motivo}</p>
+            <p class="mb-1">Departamento: ${data.departamento.nombre} - ${data.departamento.descripcion}</p>
           </a>
         `;
       });
