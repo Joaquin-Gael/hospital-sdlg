@@ -53,13 +53,16 @@
         margin-left: 0.5rem; /* Espaciado a la izquierda del icono */
     }
 </style>
-{ % endblock styles % }
+{% endblock styles %}
 
 {% block main %}
 <div class="payment-success-container">
-    <h1>Pago Exitoso</h1>
-    <p>Tu pago ha sido procesado con éxito.</p>
-    <p>Si quieres conocer o ver más detalles sobre tus turnos o citas, accede al panel de usuario.</p>
-    <a href="/{{user.role}}/panel/" class="btn-primary">Ir al Panel de Usuario</a>
+    <h1 class="success-title">Pago Exitoso</h1>
+    <p class="success-message">Tu pago ha sido procesado con éxito.</p>
+    <p class="success-message">Si quieres conocer o ver más detalles sobre tus turnos o citas, accede al panel de usuario.</p>
+    <form method="post" action="{% url 'PanelUser' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary">Ir al Panel de Usuario</button>
+    </form>
 </div>
 {% endblock main %}
