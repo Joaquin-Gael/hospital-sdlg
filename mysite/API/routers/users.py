@@ -288,26 +288,34 @@ async def update_user(request, user_id:int, payload: UsuarioSchemaPut):
     else:
         return JsonResponse({'detail':'Almenos un campo tiene que estar cambiado'}, status=400)
     
-@user_router.get('/{user_id}/schedules/', tags=['Schedules Users'])
+@user_router.get('/{user_id}/turnos/', tags=['Turnos Users'])
 async def get_by_user(request, user_id: int):
     try:
-        schedule_list = await database_sync_to_async(list)(Turnos.objects.filter(userID=user_id))
+        print('Buscando turnos...')
+        turno_list:list = Turnos.objects.filter(userID_id=user_id)
         serialized_data = []
-        for schedule in schedule_list:
+        async for turno in turno_list:
             data = {
-                'id': schedule.TurnoID,
+                'id': turno.TurnoID,
                 'medico': {
-                    'id': schedule.citaID.medicoID.medicoID,
-                    'nombre': schedule.citaID.medicoID.nombre
+                    'id': await database_sync_to_async(lambda:turno.citaID.medicoID.medicoID)(),
+                    'first_name': await database_sync_to_async(lambda:turno.citaID.medicoID.first_name)(),
+                    'last_name': await database_sync_to_async(lambda:turno.citaID.medicoID.last_name)()
                 },
                 'horario': {
-                    'id': schedule.citaID.horarioID.horarioID,
-                    'hora': str(schedule.citaID.horarioID.hora)
+                    'id': await database_sync_to_async(lambda:turno.citaID.horarioID.horarioID)(),
+                    'hora': await database_sync_to_async(lambda:str(turno.citaID.horarioID.hora))()
                 },
-                'motivo': schedule.motivo,
-                'estado': schedule.estado
+                'motivo': turno.motivo,
+                'estado': turno.estado,
+                'departamento': {
+                    'id': await database_sync_to_async(lambda:turno.citaID.departamentoID.departamentoID)(),
+                    'nombre': await database_sync_to_async(lambda:turno.citaID.departamentoID.nombre)(),
+                    'descripcion': await database_sync_to_async(lambda:turno.citaID.departamentoID.descripcion)()
+                }
             }
             serialized_data.append(data)
-        return JsonResponse({'Turnos':serialized_data}, status=200)
+        return JsonResponse({'Turnos': serialized_data}, status=200)
     except Exception as err:
-        return JsonResponse({'err': str(err.__class__)}, status=404)
+        print(f'Error: {err.__class__}\nData: {err.args}')
+        return JsonResponse({'error': f'{err}'}, status=404)
