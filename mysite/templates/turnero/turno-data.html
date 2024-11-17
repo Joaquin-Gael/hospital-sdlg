@@ -8,22 +8,21 @@
 
 {% block main %}
 <div class="container my-5">
-    <!-- Turn Details Section -->
     <section class="mb-5">
         <h1 class="h2 mb-4">Detalles del Turno</h1>
         <div class="card p-4">
             <div class="card-body">
-                <p class="mb-2"><strong>Nombre del Paciente:</strong> <span id="nombre-paciente">{{turno.userID.nombre}} {{turno.userID.apellido}}</span></p>
-                <p class="mb-2"><strong>Fecha del Turno:</strong> <span id="fecha-turno">{{turno.fecha}}</span></p>
-                <p class="mb-2"><strong>Hora del Turno:</strong> <span id="hora-turno">{{turno.citaID.horarioID.hora_inicio}} - {{turno.citaID.horarioID.hora_fin}}</span></p>
-                <p class="mb-2"><strong>Especialidad:</strong> <span id="especialidad">{{turno.citaID.medicoID.especialidadID.nombre}}</span></p>
-                <p class="mb-2"><strong>Médico:</strong> <span id="medico">{{turno.citaID.medicoID.nombre}} {{turno.citaID.medicoID.especialidadID.apellido}}</span></p>
-                <p><strong>Estado:</strong> <span id="estado">{{turno.estado}}</span></p>
+                <p class="mb-2"><strong>Nombre del Paciente:</strong> <span id="nombre-paciente"> {{ turno.userID.first_name }} {{ turno.userID.last_name }}</span></p>
+                <p class="mb-2"><strong>Fecha del Turno:</strong> <span id="fecha-turno"> {{ turno.fecha }}</span></p>
+                <p class="mb-2"><strong>Hora del Turno:</strong> <span id="hora-turno"> {{ turno.citaID.horarioID.hora }} p.m. </span></p>
+                <p class="mb-2"><strong>Especialidad:</strong> <span id="especialidad"> {{ turno.citaID.medicoID.especialidadID.nombre }} </span></p>
+                <p class="mb-2"><strong>Médico:</strong> <span id="medico"> {{ turno.citaID.medicoID.first_name }} {{ turno.citaID.medicoID.last_name}}</span></p>
+                <p><strong>Estado:</strong> <span id="estado"> {{ turno.estado }}</span></p>
             </div>
         </div>
         <div class="mt-4">
             <a role="button" class="btn btn-primary me-2" href="{% url 'PanelUser' %}">Regresar a la Lista de Turnos</a>
-            <a role="button" class="btn btn-info me-2" href="/turnero/comprobantes/{{turno.TurnoID}}/">Descargar Comprobante</a>
+            <a role="button" class="btn btn-info me-2" href="{% url 'Comprobante' turno.TurnoID %}">Descargar Comprobante</a>
             <a id="deleteTurno" role="button" class="btn btn-danger">Cancelar</a>
         </div>
     </section>
@@ -32,7 +31,7 @@
 
 {% block scripts %}
 <script>
-    localStorage.setItem('turnoID','{{turno.TurnoID}}')
+    localStorage.setItem('turnoID', '{{ turno.TurnoID }}');
 </script>
 <script type="module" src="{% static 'turnero/js/deleteTurno.js' %}"></script>
 {% endblock scripts %}
