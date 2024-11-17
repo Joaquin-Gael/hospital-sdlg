@@ -24,17 +24,12 @@ urlpatterns = [
         name='pay-turno'
     ),
     path(
-        'mercado-pago-webhook/', 
-         views.MercadoPagoWebhookView.as_view(), 
-         name='mercado-pago-webhook'
-    ),
-    path(
         '',
         views.PaypalIPNView.as_view(),
         name='paypal-ipn'
     ),
     path(
-        'payment-success/<int:servicioID>/',
+        'payment-success/',
         views.PaymentSuccessful.as_view(),
         name='payment-success'
     ),
