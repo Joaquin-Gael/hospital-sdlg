@@ -11,6 +11,7 @@ from asgiref.sync import sync_to_async
 from django import views
 from django.urls import reverse_lazy
 from . import models
+from turnero.models import Turnos,Citas
 from .forms import LoginUserForm, CompleteUserData
 from .middlewares.saveUserData import LoginUnRequired
 
@@ -109,14 +110,15 @@ class LoginUser(views.View):
 class PanelUser(views.View):
     async def get(self, request):
         try:
-            is_authenticated = await sync_to_async(lambda:request.user.is_authenticated)()
+            is_authenticated = await sync_to_async(lambda: request.user.is_authenticated)()
             if not is_authenticated:
                 return HttpResponseRedirect(
                     redirect_to=reverse_lazy('NotFound')
                 )
-            #user:models.Usuarios = sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
-            return TemplateResponse(request, 'user/panel.html')
-    
+                
+            user = await database_sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
+            return TemplateResponse(request, 'user/panel.html', {'user': user})
+
         except models.Usuarios.DoesNotExist:
             messages.error(request=request, message='Usuario no encontrado')
             return TemplateResponse(request, 'user/panel.html')
@@ -130,6 +132,16 @@ class PanelUser(views.View):
                 )
 
             user = await database_sync_to_async(models.Usuarios.objects.get)(userID=request.user.userID)
+            
+            cita = await sync_to_async(lambda: Citas.objects.filter(estado='Sin Pagar', userID=user).order_by('-fecha_created').first())()
+            turno = await sync_to_async(lambda: Turnos.objects.filter(estado='Sin Pagar', userID=user).order_by('-fecha_created').first())()
+
+            cita.estado = 'Pagado'
+            await sync_to_async(cita.save)()
+
+            turno.estado = 'Pagado'
+            await sync_to_async(turno.save)()
+            
             await sync_to_async(user.update_data)(
                 first_name=request.POST.get('nombre'),
                 last_name=request.POST.get('apellido'),
@@ -141,7 +153,7 @@ class PanelUser(views.View):
 
             messages.success(request, 'Datos actualizados correctamente')
             return HttpResponseRedirect(
-                redirect_to=reverse_lazy('Home'),
+                redirect_to=reverse_lazy('PanelUser'),
                 status=302
             )
 
